@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reset Password</title>
+</head>
+
+<body style="font-family:Segoe UI; text-align:center; padding:50px; background:#56ab2f; color:white;">
+
+<h2>Reset Password</h2>
+
+<form method="POST">
+    <input name="username" placeholder="Username" required><br><br>
+    <input type="password" name="password" placeholder="New Password" required><br><br>
+    <button>Reset</button>
+</form>
+
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
+
+</body>
+</html>

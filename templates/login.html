@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI'; }
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+}
+
+.card {
+    width: 100%;
+    max-width: 360px;
+    padding: 40px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+h2 { color: white; margin-bottom: 25px; }
+
+.input-group { position: relative; margin-bottom: 20px; }
+
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+}
+
+.toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.extra {
+    margin-top: 10px;
+    font-size: 14px;
+    color: white;
+}
+
+a {
+    display: block;
+    margin-top: 15px;
+    color: white;
+    text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>Login</h2>
+
+<form method="POST">
+
+    <div class="input-group">
+        <input name="username" placeholder="Username" required>
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <span class="toggle" onclick="togglePass()">👁️</span>
+    </div>
+
+    <label class="extra">
+        <input type="checkbox" name="remember"> Remember me
+    </label>
+
+    <button type="submit">Login</button>
+
+</form>
+
+<a href="/reset">Forgot password?</a>
+<a href="/register">Create account</a>
+
+</div>
+
+<script>
+function togglePass(){
+    const p = document.getElementById("password");
+    p.type = p.type === "password" ? "text" : "password";
+}
+</script>
+
+</body>
+</html>

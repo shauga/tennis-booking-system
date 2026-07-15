@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Court Booking</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    background: url("https://images.unsplash.com/photo-1599058917212-d750089bc07e")
+                no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    padding: 50px;
+    border-radius: 16px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+h1 {
+    font-size: 52px;
+    margin-bottom: 15px;
+}
+
+p {
+    margin-bottom: 30px;
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 30px;
+    margin: 10px;
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+    <h1>🎾 Court Booking</h1>
+    <p>Book courts instantly. Track usage. Play smarter.</p>
+
+    <a href="/login" class="btn">Login</a>
+    <a href="/register" class="btn">Register</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Landlord Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+}
+
+.navbar {
+    background: #3f7f26;
+    color: white;
+    padding: 20px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar h2 {
+    margin: 0;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.container {
+    padding: 30px;
+}
+
+.card {
+    background: rgba(255,255,255,0.25);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.stat-box {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08);
+}
+
+.stat-box h1 {
+    color: #2e7d32;
+    margin: 0;
+    font-size: 38px;
+}
+
+.stat-box p {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.filter-form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.filter-form input,
+.filter-form select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 7px;
+    border: none;
+    box-sizing: border-box;
+}
+
+button,
+.btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 7px;
+    background: #2e7d32;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+button:hover,
+.btn:hover {
+    background: #1b5e20;
+}
+
+.clear-btn {
+    background: #757575;
+}
+
+.clear-btn:hover {
+    background: #424242;
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.chart-box {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08);
+    height: 350px;
+}
+
+.chart-box h3 {
+    margin-top: 0;
+}
+
+canvas {
+    max-height: 280px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th {
+    background: #2e7d32;
+    color: white;
+    padding: 14px;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+tr:hover {
+    background: #f7f7f7;
+}
+
+.role-form {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.role-form select {
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.edit {
+    color: #2e7d32;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.delete {
+    color: #d32f2f;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.flash {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.status-booked {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.status-attended {
+    color: #1976d2;
+    font-weight: bold;
+}
+
+.status-no-show {
+    color: #f57c00;
+    font-weight: bold;
+}
+
+.status-cancelled {
+    color: #757575;
+    font-weight: bold;
+}
+
+.empty {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+@media(max-width: 1100px) {
+    .stats-grid,
+    .chart-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filter-form {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width: 700px) {
+    .stats-grid,
+    .chart-grid,
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    table {
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>🏠 Landlord Dashboard</h2>
+    <div>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="card">
+    <h2>Usage Analytics</h2>
+
+    <div class="stats-grid">
+        <div class="stat-box">
+            <h1>{{ total_bookings }}</h1>
+            <p>Total Bookings</p>
+        </div>
+
+        <div class="stat-box">
+            <h1>{{ most_used_court }}</h1>
+            <p>Most Used Court</p>
+        </div>
+
+        <div class="stat-box">
+            <h1>{{ peak_hour }}</h1>
+            <p>Peak Hour</p>
+        </div>
+
+        <div class="stat-box">
+            <h1>{{ frequent_user }}</h1>
+            <p>Frequent User</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Search & Filter Bookings</h2>
+
+    <form class="filter-form" method="GET" action="/admin">
+        <div>
+            <label>Search Resident</label>
+            <input type="text" name="search" placeholder="Enter username" value="{{ search }}">
+        </div>
+
+        <div>
+            <label>Date</label>
+            <input type="date" name="date" value="{{ date_filter }}">
+        </div>
+
+        <div>
+            <label>Court</label>
+            <select name="court">
+                <option value="">All Courts</option>
+                <option value="Court 1" {% if court_filter == "Court 1" %}selected{% endif %}>Court 1</option>
+                <option value="Court 2" {% if court_filter == "Court 2" %}selected{% endif %}>Court 2</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Status</label>
+            <select name="status">
+                <option value="">All Statuses</option>
+                <option value="booked" {% if status_filter == "booked" %}selected{% endif %}>Booked</option>
+                <option value="attended" {% if status_filter == "attended" %}selected{% endif %}>Attended</option>
+                <option value="no-show" {% if status_filter == "no-show" %}selected{% endif %}>No Show</option>
+                <option value="cancelled" {% if status_filter == "cancelled" %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+
+        <button type="submit">Apply</button>
+        <a class="btn clear-btn" href="/admin">Clear</a>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Analytics Charts</h2>
+
+    <div class="chart-grid">
+        <div class="chart-box">
+            <h3>Court Usage</h3>
+            <canvas id="courtChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h3>Peak Booking Hours</h3>
+            <canvas id="hourChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h3>Booking Status</h3>
+            <canvas id="statusChart"></canvas>
+        </div>
+
+        <div class="chart-box">
+            <h3>Bookings by Date</h3>
+            <canvas id="dateChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Manage Users</h2>
+
+    {% if users %}
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Building</th>
+            <th>Flat No.</th>
+            <th>Mobile</th>
+            <th>Role</th>
+            <th>Change Role</th>
+            <th>Delete</th>
+        </tr>
+
+        {% for u in users %}
+<tr>
+    <td>{{ u.username }}</td>
+
+    <td>
+        {% if u.building %}
+            {{ u.building }}
+        {% else %}
+            -
+        {% endif %}
+    </td>
+
+    <td>
+        {% if u.flat_number %}
+            {{ u.flat_number }}
+        {% else %}
+            -
+        {% endif %}
+    </td>
+
+    <td>{{ u.mobile_number }}</td>
+
+    <td>
+        {% if u.role == "player" %}
+            Resident
+        {% elif u.role == "guard" %}
+            Guard
+        {% elif u.role == "landlord" %}
+            Landlord
+        {% endif %}
+    </td>
+
+    <td>
+        <form class="role-form" method="POST" action="/change-role/{{ u.id }}">
+            <select name="role">
+                <option value="player" {% if u.role == "player" %}selected{% endif %}>Resident</option>
+                <option value="guard" {% if u.role == "guard" %}selected{% endif %}>Guard</option>
+                <option value="landlord" {% if u.role == "landlord" %}selected{% endif %}>Landlord</option>
+            </select>
+
+            <button type="submit">Update</button>
+        </form>
+    </td>
+
+    <td>
+        {% if u.id != session.user_id %}
+            <a class="delete" href="/delete-user/{{ u.id }}">Delete</a>
+        {% else %}
+            Current User
+        {% endif %}
+    </td>
+
+</tr>
+{% endfor %}
+    </table>
+    {% else %}
+        <div class="empty">No users found.</div>
+    {% endif %}
+</div>
+
+<div class="card">
+
+    <h2>Manage Bookings</h2>
+
+    <a class="btn" href="/export-bookings">
+        📄 Export CSV
+    </a>
+
+    <br><br>
+
+    {% if bookings %}
+    <table>
+        <tr>
+            <th>Resident</th>
+            <th>Building</th>
+            <th>Flat</th>
+            <th>Mobile</th>
+            <th>Date</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Court</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for b in bookings %}
+        <tr>
+            <td>{{ user_lookup.get(b.user_id, {}).get("username", "Unknown") }}</td>
+            <td>{{ user_lookup.get(b.user_id, {}).get("building", "-") }}</td>
+            <td>{{ user_lookup.get(b.user_id, {}).get("flat", "-") }}</td>
+            <td>{{ user_lookup.get(b.user_id, {}).get("mobile", "-") }}</td>
+            <td>{{ b.date }}</td>
+            <td>{{ b.start }}</td>
+            <td>{{ b.end }}</td>
+            <td>{{ b.court }}</td>
+            <td>
+                {% if b.status == "booked" %}
+                    <span class="status-booked">Booked</span>
+                {% elif b.status == "attended" %}
+                    <span class="status-attended">Attended</span>
+                {% elif b.status == "no-show" %}
+                    <span class="status-no-show">No Show</span>
+                {% elif b.status == "cancelled" %}
+                    <span class="status-cancelled">Cancelled</span>
+                {% else %}
+                    {{ b.status }}
+                {% endif %}
+            </td>
+            <td>
+                <a class="edit" href="/edit/{{ b.id }}">Edit</a>
+                |
+                <a class="delete" href="/delete/{{ b.id }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <div class="empty">No bookings match the current filters.</div>
+    {% endif %}
+</div>
+
+</div>
+
+<script>
+function createChart(id, type, labels, data) {
+    const element = document.getElementById(id);
+
+    if (!element) {
+        return;
+    }
+
+    new Chart(element, {
+        type: type,
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Bookings",
+                data: data,
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+}
+
+createChart(
+    "courtChart",
+    "bar",
+    {{ court_labels|tojson }},
+    {{ court_values|tojson }}
+);
+
+createChart(
+    "hourChart",
+    "bar",
+    {{ hour_labels|tojson }},
+    {{ hour_values|tojson }}
+);
+
+createChart(
+    "statusChart",
+    "doughnut",
+    {{ status_labels|tojson }},
+    {{ status_values|tojson }}
+);
+
+createChart(
+    "dateChart",
+    "line",
+    {{ date_labels|tojson }},
+    {{ date_values|tojson }}
+);
+</script>
+
+</body>
+</html>

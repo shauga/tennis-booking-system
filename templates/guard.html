@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Guard Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+}
+
+.navbar {
+    background: #3f7f26;
+    color: white;
+    padding: 20px 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar h2 {
+    margin: 0;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
+.container {
+    padding: 30px;
+}
+
+.card {
+    background: rgba(255,255,255,0.25);
+    padding: 25px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.stat-box {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.stat-box h1 {
+    margin: 0;
+    color: #2e7d32;
+    font-size: 36px;
+}
+
+.stat-box p {
+    margin-top: 8px;
+    font-weight: bold;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.filter-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 7px;
+    box-sizing: border-box;
+}
+
+button, .btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 7px;
+    background: #2e7d32;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+}
+
+button:hover, .btn:hover {
+    background: #1b5e20;
+}
+
+.clear-btn {
+    background: #757575;
+}
+
+.clear-btn:hover {
+    background: #424242;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th {
+    background: #2e7d32;
+    color: white;
+    padding: 14px;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+tr:hover {
+    background: #f7f7f7;
+}
+
+.status-booked {
+    color: #f57c00;
+    font-weight: bold;
+}
+
+.status-attended {
+    color: #2e7d32;
+    font-weight: bold;
+}
+
+.status-no-show {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.status-cancelled {
+    color: #757575;
+    font-weight: bold;
+}
+
+.action-attended {
+    background: #2e7d32;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin: 3px;
+}
+
+.action-noshow {
+    background: #d32f2f;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin: 3px;
+}
+
+.action-reset {
+    background: #1976d2;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-block;
+    margin: 3px;
+}
+
+.flash {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.empty {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+@media(max-width: 1050px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filter-form {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media(max-width: 650px) {
+    .stats-grid,
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+
+    table {
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>🛡 Guard Dashboard</h2>
+    <div>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<div class="card">
+    <h2>Summary — {{ selected_date }}</h2>
+
+    <div class="stats-grid">
+        <div class="stat-box">
+            <h1>{{ total }}</h1>
+            <p>Total Bookings</p>
+        </div>
+
+        <div class="stat-box">
+            <h1>{{ attended }}</h1>
+            <p>Arrived</p>
+        </div>
+
+        <div class="stat-box">
+            <h1>{{ booked }}</h1>
+            <p>Pending</p>
+        </div>
+
+        <div class="stat-box">
+            <h1>{{ no_show }}</h1>
+            <p>No Shows</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Search & Filter</h2>
+
+    <form class="filter-form" method="GET" action="/guard">
+        <div>
+            <label>Search Resident</label>
+            <input type="text" name="search" placeholder="Enter username" value="{{ search }}">
+        </div>
+
+        <div>
+            <label>Date</label>
+            <input type="date" name="date" value="{{ selected_date }}">
+        </div>
+
+        <div>
+            <label>Court</label>
+            <select name="court">
+                <option value="">All Courts</option>
+                <option value="Court 1" {% if court_filter == "Court 1" %}selected{% endif %}>Court 1</option>
+                <option value="Court 2" {% if court_filter == "Court 2" %}selected{% endif %}>Court 2</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Status</label>
+            <select name="status">
+                <option value="">All Statuses</option>
+                <option value="booked" {% if status_filter == "booked" %}selected{% endif %}>Booked</option>
+                <option value="attended" {% if status_filter == "attended" %}selected{% endif %}>Arrived</option>
+                <option value="no-show" {% if status_filter == "no-show" %}selected{% endif %}>No Show</option>
+                <option value="cancelled" {% if status_filter == "cancelled" %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+
+        <button type="submit">Apply</button>
+        <a class="btn clear-btn" href="/guard">Clear</a>
+    </form>
+</div>
+
+<div class="card">
+    <h2>Bookings for {{ selected_date }}</h2>
+
+    {% if bookings %}
+    <table>
+        <tr>
+            <th>Resident</th>
+            <th>Flat</th>
+            <th>Mobile</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Court</th>
+            <th>Status</th>
+            <th>Attendance</th>
+        </tr>
+
+        {% for b in bookings %}
+        <tr>
+            <td>{{ user_lookup.get(b.user_id, {}).get("username", "Unknown") }}</td>
+            <td>{{ user_lookup.get(b.user_id, {}).get("flat", "-") }}</td>
+            <td>{{ user_lookup.get(b.user_id, {}).get("mobile", "-") }}</td>
+            <td>{{ b.start }}</td>
+            <td>{{ b.end }}</td>
+            <td>{{ b.court }}</td>
+            <td>
+                {% if b.status == "booked" %}
+                    <span class="status-booked">Booked</span>
+                {% elif b.status == "attended" %}
+                    <span class="status-attended">Arrived</span>
+                {% elif b.status == "no-show" %}
+                    <span class="status-no-show">No Show</span>
+                {% elif b.status == "cancelled" %}
+                    <span class="status-cancelled">Cancelled</span>
+                {% else %}
+                    {{ b.status }}
+                {% endif %}
+            </td>
+            <td>
+                {% if b.status != "cancelled" %}
+                    <a class="action-attended" href="/mark/{{ b.id }}/attended">✔ Arrived</a>
+                    <a class="action-noshow" href="/mark/{{ b.id }}/no-show">✖ No Show</a>
+                    <a class="action-reset" href="/mark/{{ b.id }}/booked">Reset</a>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <div class="empty">No bookings match the current filters for this date.</div>
+    {% endif %}
+</div>
+
+</div>
+
+</body>
+</html>

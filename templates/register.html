@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    padding: 20px;
+}
+
+.card {
+    width: 100%;
+    max-width: 380px;
+    padding: 40px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    text-align: center;
+}
+
+h2 {
+    color: white;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+input, select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    outline: none;
+}
+
+.toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.strength {
+    height: 6px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    background: #ccc;
+}
+
+.bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    background: #1b5e20;
+}
+
+.error {
+    color: #ffdddd;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+a {
+    display: block;
+    margin-top: 15px;
+    color: white;
+    text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+<h2>Create Account</h2>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+<form method="POST" onsubmit="return validateForm()">
+
+    <div class="input-group">
+        <input name="username" placeholder="Username" required>
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="password" name="password" placeholder="Password" required onkeyup="strengthCheck()">
+        <span class="toggle" onclick="togglePass()">👁️</span>
+    </div>
+
+    <div class="strength">
+        <div class="bar" id="bar"></div>
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="confirm" placeholder="Confirm Password" required>
+    </div>
+
+    <div class="input-group">
+        <select name="role" id="role" required onchange="toggleResidentFields()">
+            <option value="">Select Role</option>
+            <option value="player">Resident</option>
+            <option value="guard">Guard</option>
+            <option value="landlord">Landlord</option>
+        </select>
+    </div>
+
+    <div id="residentFields">
+        <div class="input-group">
+            <select name="building" id="building">
+                <option value="">Select Building</option>
+                <option value="GS1">GS1</option>
+                <option value="GS2">GS2</option>
+                <option value="GS3">GS3</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <input name="flat_number" id="flat_number" placeholder="Flat Number (Optional)">
+        </div>
+    </div>
+
+    <div class="input-group">
+        <input name="mobile_number" placeholder="Mobile Number" required>
+    </div>
+
+    <button type="submit">Create Account</button>
+
+</form>
+
+<a href="/login">Already have an account?</a>
+
+</div>
+
+<script>
+function togglePass(){
+    const p = document.getElementById("password");
+    p.type = p.type === "password" ? "text" : "password";
+}
+
+function strengthCheck(){
+    const val = document.getElementById("password").value;
+    const bar = document.getElementById("bar");
+
+    let s = 0;
+    if(val.length > 5) s++;
+    if(/[A-Z]/.test(val)) s++;
+    if(/[0-9]/.test(val)) s++;
+    if(/[^A-Za-z0-9]/.test(val)) s++;
+
+    bar.style.width = (s * 25) + "%";
+
+    if(s <= 1) bar.style.background = "red";
+    else if(s == 2) bar.style.background = "orange";
+    else if(s == 3) bar.style.background = "yellow";
+    else bar.style.background = "green";
+}
+
+function toggleResidentFields(){
+    const role = document.getElementById("role").value;
+    const residentFields = document.getElementById("residentFields");
+    const building = document.getElementById("building");
+
+    if(role === "player"){
+        residentFields.style.display = "block";
+        building.required = true;
+    } else {
+        residentFields.style.display = "none";
+        building.required = false;
+        building.value = "";
+        document.getElementById("flat_number").value = "";
+    }
+}
+
+function validateForm(){
+    const p = document.getElementById("password").value;
+    const c = document.getElementById("confirm").value;
+
+    if(p !== c){
+        alert("Passwords do not match!");
+        return false;
+    }
+
+    return true;
+}
+
+toggleResidentFields();
+</script>
+
+</body>
+</html>
