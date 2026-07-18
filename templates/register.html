@@ -23,8 +23,8 @@
 
             background:
                 linear-gradient(
-                    rgba(0, 0, 0, 0.48),
-                    rgba(0, 0, 0, 0.68)
+                    rgba(0, 0, 0, 0.50),
+                    rgba(0, 0, 0, 0.70)
                 ),
                 url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1800&q=85");
 
@@ -33,30 +33,28 @@
             background-repeat: no-repeat;
         }
 
-        .card {
+        .register-card {
             width: 100%;
-            max-width: 520px;
-            padding: 46px 42px;
+            max-width: 540px;
+            padding: 44px 42px;
 
-            background: rgba(15, 18, 15, 0.68);
+            background: rgba(15, 18, 15, 0.70);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
 
             border: 1px solid rgba(255, 255, 255, 0.16);
             border-radius: 24px;
 
-            box-shadow: 0 24px 65px rgba(0, 0, 0, 0.48);
+            box-shadow: 0 24px 65px rgba(0, 0, 0, 0.50);
 
             color: white;
-            text-align: center;
-
             animation: cardEntrance 0.7s ease;
         }
 
         @keyframes cardEntrance {
             from {
                 opacity: 0;
-                transform: translateY(25px);
+                transform: translateY(24px);
             }
 
             to {
@@ -65,8 +63,13 @@
             }
         }
 
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
         .logo {
-            font-size: 46px;
+            font-size: 48px;
             margin-bottom: 10px;
         }
 
@@ -76,30 +79,28 @@
         }
 
         .subtitle {
-            margin-bottom: 28px;
-            color: rgba(255, 255, 255, 0.76);
+            color: rgba(255, 255, 255, 0.74);
             font-size: 15px;
             line-height: 1.5;
         }
 
         .error {
-            margin-bottom: 18px;
-            padding: 12px 14px;
+            margin-bottom: 20px;
+            padding: 13px 15px;
 
+            background: rgba(180, 30, 30, 0.34);
             border: 1px solid rgba(255, 130, 130, 0.38);
             border-radius: 10px;
 
-            background: rgba(160, 25, 25, 0.35);
             color: #ffe0e0;
-
             font-size: 14px;
             font-weight: 600;
+            text-align: center;
         }
 
         .input-group {
             position: relative;
-            margin-bottom: 17px;
-            text-align: left;
+            margin-bottom: 18px;
         }
 
         .input-group label {
@@ -114,15 +115,15 @@
         input,
         select {
             width: 100%;
-            min-height: 52px;
+            min-height: 54px;
             padding: 14px 16px;
 
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             outline: none;
 
-            background: rgba(255, 255, 255, 0.94);
-            color: #1e1e1e;
+            background: rgba(255, 255, 255, 0.95);
+            color: #202020;
 
             font-size: 16px;
 
@@ -134,19 +135,23 @@
 
         input:focus,
         select:focus {
-            border-color: #83d653;
-            box-shadow: 0 0 0 4px rgba(131, 214, 83, 0.18);
+            border-color: #82d653;
+            box-shadow: 0 0 0 4px rgba(130, 214, 83, 0.18);
             transform: translateY(-1px);
         }
 
-        .password-input {
-            padding-right: 48px;
+        select {
+            cursor: pointer;
         }
 
-        .toggle {
+        .password-input {
+            padding-right: 50px;
+        }
+
+        .password-toggle {
             position: absolute;
-            right: 14px;
-            bottom: 15px;
+            right: 15px;
+            bottom: 16px;
 
             border: none;
             background: transparent;
@@ -156,35 +161,57 @@
             line-height: 1;
         }
 
-        .strength {
-            height: 7px;
-            margin-top: -7px;
+        .strength-wrapper {
+            margin-top: -8px;
             margin-bottom: 18px;
-
-            overflow: hidden;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.18);
         }
 
-        .bar {
+        .strength-track {
+            height: 7px;
+            overflow: hidden;
+
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+        }
+
+        .strength-bar {
             width: 0%;
             height: 100%;
             border-radius: 999px;
-
             transition:
                 width 0.3s ease,
                 background-color 0.3s ease;
         }
 
-        .resident-section {
-            padding-top: 4px;
+        .strength-text {
+            display: block;
+            margin-top: 7px;
+
+            color: rgba(255, 255, 255, 0.64);
+            font-size: 12px;
+        }
+
+        #residentFields {
+            display: none;
+            animation: revealFields 0.3s ease;
+        }
+
+        @keyframes revealFields {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .register-button {
             width: 100%;
-            min-height: 54px;
+            min-height: 55px;
             margin-top: 5px;
-            padding: 14px;
 
             border: none;
             border-radius: 12px;
@@ -204,7 +231,7 @@
 
         .register-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(101, 194, 53, 0.34);
+            box-shadow: 0 12px 28px rgba(101, 194, 53, 0.35);
         }
 
         .register-button:active {
@@ -216,9 +243,9 @@
             align-items: center;
             gap: 12px;
 
-            margin: 26px 0 20px;
+            margin: 27px 0 20px;
 
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.48);
             font-size: 13px;
         }
 
@@ -230,13 +257,16 @@
             background: rgba(255, 255, 255, 0.18);
         }
 
-        .login-text {
-            color: rgba(255, 255, 255, 0.76);
+        .login-area {
+            text-align: center;
+        }
+
+        .login-area p {
+            color: rgba(255, 255, 255, 0.75);
             font-size: 14px;
         }
 
         .login-link {
-            display: inline-block;
             margin-left: 4px;
 
             color: #b9ed9b;
@@ -249,11 +279,12 @@
         }
 
         .home-link {
-            display: inline-block;
+            display: block;
             margin-top: 25px;
 
-            color: rgba(255, 255, 255, 0.65);
+            color: rgba(255, 255, 255, 0.62);
             font-size: 13px;
+            text-align: center;
             text-decoration: none;
         }
 
@@ -265,18 +296,16 @@
             body {
                 align-items: flex-start;
                 padding: 16px;
-                background-position: center;
             }
 
-            .card {
-                max-width: 100%;
-                margin: 18px 0;
+            .register-card {
+                margin: 16px 0;
                 padding: 34px 22px;
                 border-radius: 20px;
             }
 
             .logo {
-                font-size: 40px;
+                font-size: 41px;
             }
 
             h1 {
@@ -298,15 +327,17 @@
 
 <body>
 
-    <main class="card">
+    <main class="register-card">
 
-        <div class="logo">🎾</div>
+        <header class="card-header">
+            <div class="logo">🎾</div>
 
-        <h1>Create Account</h1>
+            <h1>Create Your Account</h1>
 
-        <p class="subtitle">
-            Register for secure access to your compound tennis court booking system.
-        </p>
+            <p class="subtitle">
+                Register for secure access to your compound tennis court booking system.
+            </p>
+        </header>
 
         {% if error %}
             <div class="error">{{ error }}</div>
@@ -338,12 +369,12 @@
                     placeholder="Create a password"
                     autocomplete="new-password"
                     required
-                    onkeyup="strengthCheck()"
+                    oninput="strengthCheck()"
                 >
 
                 <button
                     type="button"
-                    class="toggle"
+                    class="password-toggle"
                     id="passwordToggle"
                     onclick="togglePass()"
                     aria-label="Show password"
@@ -352,8 +383,14 @@
                 </button>
             </div>
 
-            <div class="strength">
-                <div class="bar" id="bar"></div>
+            <div class="strength-wrapper">
+                <div class="strength-track">
+                    <div class="strength-bar" id="bar"></div>
+                </div>
+
+                <span class="strength-text" id="strengthText">
+                    Password strength
+                </span>
             </div>
 
             <div class="input-group">
@@ -384,7 +421,7 @@
                 </select>
             </div>
 
-            <div id="residentFields" class="resident-section">
+            <div id="residentFields">
 
                 <div class="input-group">
                     <label for="building">Building</label>
@@ -402,8 +439,8 @@
 
                     <input
                         type="text"
-                        name="flat_number"
                         id="flat_number"
+                        name="flat_number"
                         placeholder="Flat number (optional)"
                     >
                 </div>
@@ -424,19 +461,19 @@
             </div>
 
             <button type="submit" class="register-button">
-                Create Account
+                Create My Account
             </button>
 
         </form>
 
         <div class="divider">Already registered?</div>
 
-        <p class="login-text">
-            Already have an account?
-            <a href="/login" class="login-link">
-                Sign in
-            </a>
-        </p>
+        <div class="login-area">
+            <p>
+                Already have an account?
+                <a href="/login" class="login-link">Sign in →</a>
+            </p>
+        </div>
 
         <a href="/" class="home-link">
             ← Return to homepage
@@ -449,20 +486,20 @@
             const passwordInput = document.getElementById("password");
             const toggleButton = document.getElementById("passwordToggle");
 
-            const passwordIsHidden = passwordInput.type === "password";
+            const isHidden = passwordInput.type === "password";
 
-            passwordInput.type = passwordIsHidden ? "text" : "password";
-            toggleButton.textContent = passwordIsHidden ? "🙈" : "👁️";
-
+            passwordInput.type = isHidden ? "text" : "password";
+            toggleButton.textContent = isHidden ? "🙈" : "👁️";
             toggleButton.setAttribute(
                 "aria-label",
-                passwordIsHidden ? "Hide password" : "Show password"
+                isHidden ? "Hide password" : "Show password"
             );
         }
 
         function strengthCheck() {
             const password = document.getElementById("password").value;
             const bar = document.getElementById("bar");
+            const text = document.getElementById("strengthText");
 
             let strength = 0;
 
@@ -473,14 +510,26 @@
 
             bar.style.width = `${strength * 25}%`;
 
-            if (strength <= 1) {
+            if (password.length === 0) {
+                bar.style.width = "0%";
+                text.textContent = "Password strength";
+                text.style.color = "rgba(255,255,255,0.64)";
+            } else if (strength <= 1) {
                 bar.style.background = "#ff5c5c";
+                text.textContent = "Weak password";
+                text.style.color = "#ffb6b6";
             } else if (strength === 2) {
                 bar.style.background = "#ff9f43";
+                text.textContent = "Fair password";
+                text.style.color = "#ffd0a0";
             } else if (strength === 3) {
                 bar.style.background = "#e7d84b";
+                text.textContent = "Good password";
+                text.style.color = "#fff3a0";
             } else {
                 bar.style.background = "#78d64b";
+                text.textContent = "Strong password";
+                text.style.color = "#b9ed9b";
             }
         }
 
