@@ -1,378 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Guard Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    background: linear-gradient(135deg, #56ab2f, #a8e063);
-}
-
-.navbar {
-    background: #3f7f26;
-    color: white;
-    padding: 20px 35px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.navbar h2 {
-    margin: 0;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-    margin-left: 20px;
-    font-weight: bold;
-}
-
-.container {
-    padding: 30px;
-}
-
-.card {
-    background: rgba(255,255,255,0.25);
-    padding: 25px;
-    border-radius: 16px;
-    margin-bottom: 25px;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-}
-
-.stat-box {
-    background: white;
-    padding: 22px;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.stat-box h1 {
-    margin: 0;
-    color: #2e7d32;
-    font-size: 36px;
-}
-
-.stat-box p {
-    margin-top: 8px;
-    font-weight: bold;
-}
-
-.filter-form {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr auto auto;
-    gap: 15px;
-    align-items: end;
-}
-
-.filter-form label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input, select {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 7px;
-    box-sizing: border-box;
-}
-
-button, .btn {
-    padding: 10px 14px;
-    border: none;
-    border-radius: 7px;
-    background: #2e7d32;
-    color: white;
-    cursor: pointer;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-block;
-}
-
-button:hover, .btn:hover {
-    background: #1b5e20;
-}
-
-.clear-btn {
-    background: #757575;
-}
-
-.clear-btn:hover {
-    background: #424242;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-th {
-    background: #2e7d32;
-    color: white;
-    padding: 14px;
-}
-
-td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
-}
-
-tr:hover {
-    background: #f7f7f7;
-}
-
-.status-booked {
-    color: #f57c00;
-    font-weight: bold;
-}
-
-.status-attended {
-    color: #2e7d32;
-    font-weight: bold;
-}
-
-.status-no-show {
-    color: #d32f2f;
-    font-weight: bold;
-}
-
-.status-cancelled {
-    color: #757575;
-    font-weight: bold;
-}
-
-.action-attended {
-    background: #2e7d32;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-block;
-    margin: 3px;
-}
-
-.action-noshow {
-    background: #d32f2f;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-block;
-    margin: 3px;
-}
-
-.action-reset {
-    background: #1976d2;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-block;
-    margin: 3px;
-}
-
-.flash {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
-
-.empty {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    font-weight: bold;
-}
-
-@media(max-width: 1050px) {
-    .stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .filter-form {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media(max-width: 650px) {
-    .stats-grid,
-    .filter-form {
-        grid-template-columns: 1fr;
-    }
-
-    .navbar {
-        flex-direction: column;
-        gap: 12px;
-        text-align: center;
-    }
-
-    table {
-        font-size: 13px;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guard Dashboard | Compound Tennis Booking</title>
+    <style>
+        :root{--accent:#79d143;--accent-dark:#4ea326;--accent-soft:rgba(121,209,67,.18);--glass:rgba(15,19,16,.78);--glass-light:rgba(255,255,255,.09);--border:rgba(255,255,255,.15);--text:#fff;--muted:rgba(255,255,255,.7);--danger:#cf3c3c;--blue:#2979c7;--radius-large:24px;--radius-medium:15px;--radius-small:11px}
+        *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+        body{min-height:100vh;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);background:linear-gradient(rgba(0,0,0,.63),rgba(0,0,0,.82)),url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=2000&q=85");background-size:cover;background-position:center;background-attachment:fixed}
+        button,input,select{font:inherit}
+        .navbar{position:sticky;top:0;z-index:1000;min-height:78px;padding:16px 34px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:rgba(9,13,10,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border);box-shadow:0 10px 35px rgba(0,0,0,.25)}
+        .navbar-brand{display:flex;align-items:center;gap:13px}.brand-icon{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,var(--accent-dark),var(--accent));font-size:23px;box-shadow:0 8px 24px rgba(95,190,45,.25)}
+        .brand-text h1{font-size:21px;line-height:1.2}.brand-text p{margin-top:3px;color:var(--muted);font-size:12px}.navbar-links{display:flex;align-items:center;gap:9px}
+        .nav-link{padding:10px 14px;border:1px solid transparent;border-radius:10px;color:rgba(255,255,255,.86);text-decoration:none;font-size:14px;font-weight:650;transition:.2s ease}.nav-link:hover{background:var(--glass-light);border-color:var(--border);transform:translateY(-2px)}.logout-link{background:rgba(255,85,85,.12);border-color:rgba(255,100,100,.2)}
+        .page-container{width:min(1500px,100%);margin:0 auto;padding:34px 28px 55px}.welcome-section{margin-bottom:26px}.welcome-section h2{font-size:clamp(28px,4vw,42px);margin-bottom:8px}.welcome-section p{color:var(--muted);line-height:1.6}
+        .glass-card{margin-bottom:25px;padding:28px;background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:var(--radius-large);box-shadow:0 22px 60px rgba(0,0,0,.3);animation:riseIn .55s ease both}@keyframes riseIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+        .section-heading{margin-bottom:20px}.section-heading h2{font-size:25px;margin-bottom:7px}.section-heading p{color:var(--muted);font-size:14px;line-height:1.5}.flash{margin-bottom:20px;padding:15px 17px;background:rgba(30,115,45,.58);border:1px solid rgba(120,220,125,.34);border-radius:var(--radius-small);color:#e8ffe8;font-weight:650;line-height:1.5}
+        .stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.stat-box{min-height:150px;padding:23px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:var(--radius-medium);text-align:center;transition:.2s ease}.stat-box:hover{transform:translateY(-4px);background:rgba(255,255,255,.12);border-color:rgba(121,209,67,.4)}.stat-icon{margin-bottom:10px;font-size:28px}.stat-box h3{color:var(--accent);font-size:36px;line-height:1}.stat-box p{margin-top:11px;color:rgba(255,255,255,.86);font-size:15px;font-weight:650}
+        .filter-form{display:grid;grid-template-columns:minmax(180px,2fr) minmax(145px,1fr) minmax(135px,1fr) minmax(145px,1fr) auto auto;gap:15px;align-items:end}.input-group label{display:block;margin-bottom:8px;color:rgba(255,255,255,.88);font-size:14px;font-weight:650}
+        input,select{width:100%;min-height:51px;padding:13px 15px;border:1px solid rgba(255,255,255,.17);border-radius:11px;outline:none;background:rgba(255,255,255,.95);color:#202020;transition:.2s ease}input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);transform:translateY(-1px)}
+        .filter-button,.clear-button{min-height:51px;padding:13px 18px;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:11px;color:#fff;text-decoration:none;font-weight:750;cursor:pointer;transition:.2s ease}.filter-button{background:linear-gradient(135deg,var(--accent-dark),var(--accent))}.filter-button:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(95,190,45,.3)}.clear-button{background:rgba(255,255,255,.12);border:1px solid var(--border)}.clear-button:hover{background:rgba(255,255,255,.18);transform:translateY(-3px)}
+        .table-wrapper{width:100%;overflow-x:auto;border-radius:13px}table{width:100%;min-width:1050px;border-collapse:collapse;background:rgba(255,255,255,.96);color:#202020}th,td{padding:14px 13px;border-bottom:1px solid #ddd;text-align:center;white-space:nowrap}th{background:#317d35;color:#fff;font-size:13px}tbody tr:hover{background:#edf8e8}
+        .status-booked,.status-attended,.status-no-show,.status-cancelled{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:750}.status-booked{background:#ffead4;color:#c46200}.status-attended{background:#dff4d8;color:#2d7a26}.status-no-show{background:#ffe0e0;color:#bf2727}.status-cancelled{background:#e6e6e6;color:#606060}
+        .attendance-actions{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}.action-attended,.action-noshow,.action-reset{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:8px;color:#fff;text-decoration:none;font-size:12px;font-weight:750;transition:.2s ease}.action-attended{background:#2e8b39}.action-noshow{background:var(--danger)}.action-reset{background:var(--blue)}.action-attended:hover,.action-noshow:hover,.action-reset:hover{transform:translateY(-2px);filter:brightness(1.08)}
+        .empty{padding:20px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:11px;color:var(--muted);text-align:center;font-weight:650}
+        @media(max-width:1120px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-form{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-button,.clear-button{width:100%}}
+        @media(max-width:700px){body{background-attachment:scroll}.navbar{position:static;padding:15px 16px;align-items:flex-start;flex-direction:column}.navbar-links{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.nav-link{padding:10px 8px;background:rgba(255,255,255,.07);border-color:var(--border);text-align:center}.page-container{padding:24px 14px 40px}.glass-card{padding:20px 16px;border-radius:19px}.welcome-section h2{font-size:29px}.stats-grid,.filter-form{grid-template-columns:1fr}.stat-box{min-height:125px}.stat-box h3{font-size:31px}input,select,.filter-button,.clear-button{min-height:55px;font-size:16px}.table-wrapper{border-radius:10px;-webkit-overflow-scrolling:touch}table{min-width:900px}}
+        @media(max-width:430px){.navbar-links{grid-template-columns:1fr}.brand-icon{width:41px;height:41px}.brand-text h1{font-size:18px}.section-heading h2{font-size:22px}.glass-card{padding:18px 13px}}
+    </style>
 </head>
-
 <body>
-
-<div class="navbar">
-    <h2>🛡 Guard Dashboard</h2>
-    <div>
-        <a href="/profile">Profile</a>
-        <a href="/logout">Logout</a>
+<nav class="navbar">
+    <div class="navbar-brand">
+        <div class="brand-icon">🛡️</div>
+        <div class="brand-text"><h1>Guard Dashboard</h1><p>Compound Tennis Court Booking</p></div>
     </div>
-</div>
-
-<div class="container">
-
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for message in messages %}
-            <div class="flash">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
-
-<div class="card">
-    <h2>Summary — {{ selected_date }}</h2>
-
-    <div class="stats-grid">
-        <div class="stat-box">
-            <h1>{{ total }}</h1>
-            <p>Total Bookings</p>
+    <div class="navbar-links"><a href="/profile" class="nav-link">Profile</a><a href="/logout" class="nav-link logout-link">Logout</a></div>
+</nav>
+<main class="page-container">
+    <section class="welcome-section"><h2>Booking supervision</h2><p>Review reservations, verify resident details and record court attendance.</p></section>
+    {% with messages = get_flashed_messages() %}{% if messages %}{% for message in messages %}<div class="flash">{{ message }}</div>{% endfor %}{% endif %}{% endwith %}
+    <section class="glass-card">
+        <div class="section-heading"><h2>Summary — {{ selected_date }}</h2><p>Attendance and booking totals for the selected day.</p></div>
+        <div class="stats-grid">
+            <article class="stat-box"><div class="stat-icon">📋</div><h3>{{ total }}</h3><p>Total Bookings</p></article>
+            <article class="stat-box"><div class="stat-icon">✅</div><h3>{{ attended }}</h3><p>Arrived</p></article>
+            <article class="stat-box"><div class="stat-icon">⏳</div><h3>{{ booked }}</h3><p>Pending</p></article>
+            <article class="stat-box"><div class="stat-icon">⚠️</div><h3>{{ no_show }}</h3><p>No Shows</p></article>
         </div>
-
-        <div class="stat-box">
-            <h1>{{ attended }}</h1>
-            <p>Arrived</p>
-        </div>
-
-        <div class="stat-box">
-            <h1>{{ booked }}</h1>
-            <p>Pending</p>
-        </div>
-
-        <div class="stat-box">
-            <h1>{{ no_show }}</h1>
-            <p>No Shows</p>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <h2>Search & Filter</h2>
-
-    <form class="filter-form" method="GET" action="/guard">
-        <div>
-            <label>Search Resident</label>
-            <input type="text" name="search" placeholder="Enter username" value="{{ search }}">
-        </div>
-
-        <div>
-            <label>Date</label>
-            <input type="date" name="date" value="{{ selected_date }}">
-        </div>
-
-        <div>
-            <label>Court</label>
-            <select name="court">
-                <option value="">All Courts</option>
-                <option value="Court 1" {% if court_filter == "Court 1" %}selected{% endif %}>Court 1</option>
-                <option value="Court 2" {% if court_filter == "Court 2" %}selected{% endif %}>Court 2</option>
-            </select>
-        </div>
-
-        <div>
-            <label>Status</label>
-            <select name="status">
-                <option value="">All Statuses</option>
-                <option value="booked" {% if status_filter == "booked" %}selected{% endif %}>Booked</option>
-                <option value="attended" {% if status_filter == "attended" %}selected{% endif %}>Arrived</option>
-                <option value="no-show" {% if status_filter == "no-show" %}selected{% endif %}>No Show</option>
-                <option value="cancelled" {% if status_filter == "cancelled" %}selected{% endif %}>Cancelled</option>
-            </select>
-        </div>
-
-        <button type="submit">Apply</button>
-        <a class="btn clear-btn" href="/guard">Clear</a>
-    </form>
-</div>
-
-<div class="card">
-    <h2>Bookings for {{ selected_date }}</h2>
-
-    {% if bookings %}
-    <table>
-        <tr>
-            <th>Resident</th>
-            <th>Flat</th>
-            <th>Mobile</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Court</th>
-            <th>Status</th>
-            <th>Attendance</th>
-        </tr>
-
-        {% for b in bookings %}
-        <tr>
-            <td>{{ user_lookup.get(b.user_id, {}).get("username", "Unknown") }}</td>
-            <td>{{ user_lookup.get(b.user_id, {}).get("flat", "-") }}</td>
-            <td>{{ user_lookup.get(b.user_id, {}).get("mobile", "-") }}</td>
-            <td>{{ b.start }}</td>
-            <td>{{ b.end }}</td>
-            <td>{{ b.court }}</td>
-            <td>
-                {% if b.status == "booked" %}
-                    <span class="status-booked">Booked</span>
-                {% elif b.status == "attended" %}
-                    <span class="status-attended">Arrived</span>
-                {% elif b.status == "no-show" %}
-                    <span class="status-no-show">No Show</span>
-                {% elif b.status == "cancelled" %}
-                    <span class="status-cancelled">Cancelled</span>
-                {% else %}
-                    {{ b.status }}
-                {% endif %}
-            </td>
-            <td>
-                {% if b.status != "cancelled" %}
-                    <a class="action-attended" href="/mark/{{ b.id }}/attended">✔ Arrived</a>
-                    <a class="action-noshow" href="/mark/{{ b.id }}/no-show">✖ No Show</a>
-                    <a class="action-reset" href="/mark/{{ b.id }}/booked">Reset</a>
-                {% else %}
-                    -
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-        <div class="empty">No bookings match the current filters for this date.</div>
-    {% endif %}
-</div>
-
-</div>
-
+    </section>
+    <section class="glass-card">
+        <div class="section-heading"><h2>Search and Filter</h2><p>Find bookings by resident, date, court or attendance status.</p></div>
+        <form class="filter-form" method="GET" action="/guard">
+            <div class="input-group"><label for="search">Search resident</label><input id="search" type="text" name="search" placeholder="Enter username" value="{{ search }}"></div>
+            <div class="input-group"><label for="date">Date</label><input id="date" type="date" name="date" value="{{ selected_date }}"></div>
+            <div class="input-group"><label for="court">Court</label><select id="court" name="court"><option value="">All Courts</option><option value="Court 1" {% if court_filter == "Court 1" %}selected{% endif %}>Court 1</option><option value="Court 2" {% if court_filter == "Court 2" %}selected{% endif %}>Court 2</option></select></div>
+            <div class="input-group"><label for="status">Status</label><select id="status" name="status"><option value="">All Statuses</option><option value="booked" {% if status_filter == "booked" %}selected{% endif %}>Booked</option><option value="attended" {% if status_filter == "attended" %}selected{% endif %}>Arrived</option><option value="no-show" {% if status_filter == "no-show" %}selected{% endif %}>No Show</option><option value="cancelled" {% if status_filter == "cancelled" %}selected{% endif %}>Cancelled</option></select></div>
+            <button type="submit" class="filter-button">Apply Filters</button><a href="/guard" class="clear-button">Clear</a>
+        </form>
+    </section>
+    <section class="glass-card">
+        <div class="section-heading"><h2>Bookings for {{ selected_date }}</h2><p>Mark residents as arrived, no-show or return the booking to pending.</p></div>
+        {% if bookings %}
+        <div class="table-wrapper"><table><thead><tr><th>Resident</th><th>Flat</th><th>Mobile</th><th>Start</th><th>End</th><th>Court</th><th>Status</th><th>Attendance</th></tr></thead><tbody>
+        {% for b in bookings %}<tr>
+            <td>{{ user_lookup.get(b.user_id, {}).get("username", "Unknown") }}</td><td>{{ user_lookup.get(b.user_id, {}).get("flat", "-") }}</td><td>{{ user_lookup.get(b.user_id, {}).get("mobile", "-") }}</td><td>{{ b.start }}</td><td>{{ b.end }}</td><td>{{ b.court }}</td>
+            <td>{% if b.status == "booked" %}<span class="status-booked">Booked</span>{% elif b.status == "attended" %}<span class="status-attended">Arrived</span>{% elif b.status == "no-show" %}<span class="status-no-show">No Show</span>{% elif b.status == "cancelled" %}<span class="status-cancelled">Cancelled</span>{% else %}{{ b.status }}{% endif %}</td>
+            <td>{% if b.status != "cancelled" %}<div class="attendance-actions"><a class="action-attended" href="/mark/{{ b.id }}/attended">✔ Arrived</a><a class="action-noshow" href="/mark/{{ b.id }}/no-show">✖ No Show</a><a class="action-reset" href="/mark/{{ b.id }}/booked">Reset</a></div>{% else %}-{% endif %}</td>
+        </tr>{% endfor %}
+        </tbody></table></div>
+        {% else %}<div class="empty">No bookings match the current filters for this date.</div>{% endif %}
+    </section>
+</main>
 </body>
 </html>
