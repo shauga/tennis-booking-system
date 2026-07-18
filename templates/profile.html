@@ -1,17 +1,268 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile | Compound Tennis Court Booking</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+
+            background:
+                linear-gradient(
+                    rgba(0, 0, 0, 0.50),
+                    rgba(0, 0, 0, 0.70)
+                ),
+                url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1800&q=85");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .profile-card {
+            width: 100%;
+            max-width: 470px;
+            padding: 46px 40px;
+
+            background: rgba(15, 18, 15, 0.70);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 24px;
+
+            box-shadow: 0 24px 65px rgba(0, 0, 0, 0.50);
+
+            color: white;
+            animation: cardEntrance 0.7s ease;
+        }
+
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-icon {
+            width: 86px;
+            height: 86px;
+            margin: 0 auto 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+            background: linear-gradient(135deg, #58af2d, #8bd94f);
+
+            font-size: 42px;
+
+            box-shadow: 0 12px 30px rgba(101, 194, 53, 0.30);
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-bottom: 9px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 15px;
+        }
+
+        .profile-details {
+            display: grid;
+            gap: 15px;
+        }
+
+        .detail-card {
+            padding: 17px 18px;
+
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 13px;
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 6px;
+
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .dashboard-button {
+            width: 100%;
+            min-height: 54px;
+            margin-top: 28px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: linear-gradient(135deg, #58af2d, #8bd94f);
+            color: white;
+
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .dashboard-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(101, 194, 53, 0.34);
+        }
+
+        .dashboard-button:active {
+            transform: translateY(0);
+        }
+
+        .home-link {
+            display: block;
+            margin-top: 20px;
+
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .home-link:hover {
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+            }
+
+            .profile-card {
+                padding: 36px 22px;
+                border-radius: 20px;
+            }
+
+            .profile-icon {
+                width: 76px;
+                height: 76px;
+                font-size: 36px;
+            }
+
+            h1 {
+                font-size: 29px;
+            }
+
+            .dashboard-button {
+                min-height: 56px;
+            }
+        }
+    </style>
 </head>
 
-<body style="font-family:Segoe UI; text-align:center; padding:50px; background:#56ab2f; color:white;">
+<body>
 
-<h1>👤 Profile</h1>
+    <main class="profile-card">
 
-<p><strong>Username:</strong> {{ user.username }}</p>
-<p><strong>Role:</strong> {{ user.role }}</p>
+        <header class="profile-header">
+            <div class="profile-icon">👤</div>
 
-<a href="/home">Back to Dashboard</a>
+            <h1>My Profile</h1>
+
+            <p class="subtitle">
+                Your compound booking account details
+            </p>
+        </header>
+
+        <section class="profile-details">
+
+            <div class="detail-card">
+                <span class="detail-label">Username</span>
+                <span class="detail-value">{{ user.username }}</span>
+            </div>
+
+            <div class="detail-card">
+                <span class="detail-label">Role</span>
+                <span class="detail-value">
+                    {% if user.role == "player" %}
+                        Resident
+                    {% else %}
+                        {{ user.role | title }}
+                    {% endif %}
+                </span>
+            </div>
+
+            {% if user.mobile_number %}
+                <div class="detail-card">
+                    <span class="detail-label">Mobile number</span>
+                    <span class="detail-value">{{ user.mobile_number }}</span>
+                </div>
+            {% endif %}
+
+            {% if user.building %}
+                <div class="detail-card">
+                    <span class="detail-label">Building</span>
+                    <span class="detail-value">{{ user.building }}</span>
+                </div>
+            {% endif %}
+
+            {% if user.flat_number %}
+                <div class="detail-card">
+                    <span class="detail-label">Flat number</span>
+                    <span class="detail-value">{{ user.flat_number }}</span>
+                </div>
+            {% endif %}
+
+        </section>
+
+        <a href="/home" class="dashboard-button">
+            ← Back to Dashboard
+        </a>
+
+        <a href="/" class="home-link">
+            Return to homepage
+        </a>
+
+    </main>
 
 </body>
 </html>
