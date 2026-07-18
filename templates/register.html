@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login | Compound Tennis Court Booking</title>
+    <title>Register | Compound Tennis Court Booking</title>
 
     <style>
         * {
@@ -35,8 +35,8 @@
 
         .card {
             width: 100%;
-            max-width: 430px;
-            padding: 48px 42px;
+            max-width: 520px;
+            padding: 46px 42px;
 
             background: rgba(15, 18, 15, 0.68);
             backdrop-filter: blur(18px);
@@ -47,8 +47,8 @@
 
             box-shadow: 0 24px 65px rgba(0, 0, 0, 0.48);
 
-            text-align: center;
             color: white;
+            text-align: center;
 
             animation: cardEntrance 0.7s ease;
         }
@@ -66,8 +66,8 @@
         }
 
         .logo {
-            font-size: 48px;
-            margin-bottom: 12px;
+            font-size: 46px;
+            margin-bottom: 10px;
         }
 
         h1 {
@@ -76,30 +76,46 @@
         }
 
         .subtitle {
-            color: rgba(255, 255, 255, 0.78);
+            margin-bottom: 28px;
+            color: rgba(255, 255, 255, 0.76);
             font-size: 15px;
             line-height: 1.5;
-            margin-bottom: 30px;
+        }
+
+        .error {
+            margin-bottom: 18px;
+            padding: 12px 14px;
+
+            border: 1px solid rgba(255, 130, 130, 0.38);
+            border-radius: 10px;
+
+            background: rgba(160, 25, 25, 0.35);
+            color: #ffe0e0;
+
+            font-size: 14px;
+            font-weight: 600;
         }
 
         .input-group {
             position: relative;
-            margin-bottom: 18px;
+            margin-bottom: 17px;
             text-align: left;
         }
 
         .input-group label {
             display: block;
             margin-bottom: 8px;
+
+            color: rgba(255, 255, 255, 0.88);
             font-size: 14px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.88);
         }
 
-        .input-group input {
+        input,
+        select {
             width: 100%;
-            min-height: 54px;
-            padding: 14px 46px 14px 16px;
+            min-height: 52px;
+            padding: 14px 16px;
 
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
@@ -116,16 +132,21 @@
                 transform 0.2s ease;
         }
 
-        .input-group input:focus {
+        input:focus,
+        select:focus {
             border-color: #83d653;
             box-shadow: 0 0 0 4px rgba(131, 214, 83, 0.18);
             transform: translateY(-1px);
         }
 
+        .password-input {
+            padding-right: 48px;
+        }
+
         .toggle {
             position: absolute;
-            right: 15px;
-            bottom: 16px;
+            right: 14px;
+            bottom: 15px;
 
             border: none;
             background: transparent;
@@ -135,44 +156,34 @@
             line-height: 1;
         }
 
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .strength {
+            height: 7px;
+            margin-top: -7px;
+            margin-bottom: 18px;
 
-            margin: 4px 0 22px;
-            gap: 15px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
         }
 
-        .remember {
-            display: flex;
-            align-items: center;
-            gap: 9px;
+        .bar {
+            width: 0%;
+            height: 100%;
+            border-radius: 999px;
 
-            color: rgba(255, 255, 255, 0.86);
-            font-size: 14px;
-            cursor: pointer;
+            transition:
+                width 0.3s ease,
+                background-color 0.3s ease;
         }
 
-        .remember input {
-            width: 17px;
-            height: 17px;
-            accent-color: #70c83e;
+        .resident-section {
+            padding-top: 4px;
         }
 
-        .forgot-link {
-            color: #b9ed9b;
-            font-size: 14px;
-            text-decoration: none;
-        }
-
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
-
-        .login-button {
+        .register-button {
             width: 100%;
             min-height: 54px;
+            margin-top: 5px;
             padding: 14px;
 
             border: none;
@@ -191,12 +202,12 @@
                 box-shadow 0.2s ease;
         }
 
-        .login-button:hover {
+        .register-button:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 28px rgba(101, 194, 53, 0.34);
         }
 
-        .login-button:active {
+        .register-button:active {
             transform: translateY(0);
         }
 
@@ -219,12 +230,12 @@
             background: rgba(255, 255, 255, 0.18);
         }
 
-        .create-text {
+        .login-text {
             color: rgba(255, 255, 255, 0.76);
             font-size: 14px;
         }
 
-        .create-link {
+        .login-link {
             display: inline-block;
             margin-left: 4px;
 
@@ -233,13 +244,13 @@
             text-decoration: none;
         }
 
-        .create-link:hover {
+        .login-link:hover {
             text-decoration: underline;
         }
 
         .home-link {
             display: inline-block;
-            margin-top: 26px;
+            margin-top: 25px;
 
             color: rgba(255, 255, 255, 0.65);
             font-size: 13px;
@@ -252,18 +263,20 @@
 
         @media (max-width: 600px) {
             body {
+                align-items: flex-start;
                 padding: 16px;
                 background-position: center;
             }
 
             .card {
                 max-width: 100%;
-                padding: 36px 22px;
+                margin: 18px 0;
+                padding: 34px 22px;
                 border-radius: 20px;
             }
 
             .logo {
-                font-size: 42px;
+                font-size: 40px;
             }
 
             h1 {
@@ -274,12 +287,9 @@
                 font-size: 14px;
             }
 
-            .form-options {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .login-button {
+            input,
+            select,
+            .register-button {
                 min-height: 56px;
             }
         }
@@ -292,13 +302,17 @@
 
         <div class="logo">🎾</div>
 
-        <h1>Welcome Back</h1>
+        <h1>Create Account</h1>
 
         <p class="subtitle">
-            Sign in to check availability and reserve your compound tennis court.
+            Register for secure access to your compound tennis court booking system.
         </p>
 
-        <form method="POST">
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" onsubmit="return validateForm()">
 
             <div class="input-group">
                 <label for="username">Username</label>
@@ -307,7 +321,7 @@
                     type="text"
                     id="username"
                     name="username"
-                    placeholder="Enter your username"
+                    placeholder="Choose a username"
                     autocomplete="username"
                     required
                 >
@@ -320,9 +334,11 @@
                     type="password"
                     id="password"
                     name="password"
-                    placeholder="Enter your password"
-                    autocomplete="current-password"
+                    class="password-input"
+                    placeholder="Create a password"
+                    autocomplete="new-password"
                     required
+                    onkeyup="strengthCheck()"
                 >
 
                 <button
@@ -336,31 +352,89 @@
                 </button>
             </div>
 
-            <div class="form-options">
+            <div class="strength">
+                <div class="bar" id="bar"></div>
+            </div>
 
-                <label class="remember">
-                    <input type="checkbox" name="remember">
-                    Remember me
-                </label>
+            <div class="input-group">
+                <label for="confirm">Confirm password</label>
 
-                <a href="/reset" class="forgot-link">
-                    Forgot password?
-                </a>
+                <input
+                    type="password"
+                    id="confirm"
+                    placeholder="Re-enter your password"
+                    autocomplete="new-password"
+                    required
+                >
+            </div>
+
+            <div class="input-group">
+                <label for="role">Account role</label>
+
+                <select
+                    name="role"
+                    id="role"
+                    required
+                    onchange="toggleResidentFields()"
+                >
+                    <option value="">Select role</option>
+                    <option value="player">Resident</option>
+                    <option value="guard">Guard</option>
+                    <option value="landlord">Landlord</option>
+                </select>
+            </div>
+
+            <div id="residentFields" class="resident-section">
+
+                <div class="input-group">
+                    <label for="building">Building</label>
+
+                    <select name="building" id="building">
+                        <option value="">Select building</option>
+                        <option value="GS1">GS1</option>
+                        <option value="GS2">GS2</option>
+                        <option value="GS3">GS3</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="flat_number">Flat number</label>
+
+                    <input
+                        type="text"
+                        name="flat_number"
+                        id="flat_number"
+                        placeholder="Flat number (optional)"
+                    >
+                </div>
 
             </div>
 
-            <button type="submit" class="login-button">
-                Login
+            <div class="input-group">
+                <label for="mobile_number">Mobile number</label>
+
+                <input
+                    type="tel"
+                    id="mobile_number"
+                    name="mobile_number"
+                    placeholder="Enter your mobile number"
+                    autocomplete="tel"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="register-button">
+                Create Account
             </button>
 
         </form>
 
-        <div class="divider">New resident?</div>
+        <div class="divider">Already registered?</div>
 
-        <p class="create-text">
-            Don't have an account?
-            <a href="/register" class="create-link">
-                Create one
+        <p class="login-text">
+            Already have an account?
+            <a href="/login" class="login-link">
+                Sign in
             </a>
         </p>
 
@@ -379,11 +453,67 @@
 
             passwordInput.type = passwordIsHidden ? "text" : "password";
             toggleButton.textContent = passwordIsHidden ? "🙈" : "👁️";
+
             toggleButton.setAttribute(
                 "aria-label",
                 passwordIsHidden ? "Hide password" : "Show password"
             );
         }
+
+        function strengthCheck() {
+            const password = document.getElementById("password").value;
+            const bar = document.getElementById("bar");
+
+            let strength = 0;
+
+            if (password.length >= 6) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            bar.style.width = `${strength * 25}%`;
+
+            if (strength <= 1) {
+                bar.style.background = "#ff5c5c";
+            } else if (strength === 2) {
+                bar.style.background = "#ff9f43";
+            } else if (strength === 3) {
+                bar.style.background = "#e7d84b";
+            } else {
+                bar.style.background = "#78d64b";
+            }
+        }
+
+        function toggleResidentFields() {
+            const role = document.getElementById("role").value;
+            const residentFields = document.getElementById("residentFields");
+            const building = document.getElementById("building");
+            const flatNumber = document.getElementById("flat_number");
+
+            if (role === "player") {
+                residentFields.style.display = "block";
+                building.required = true;
+            } else {
+                residentFields.style.display = "none";
+                building.required = false;
+                building.value = "";
+                flatNumber.value = "";
+            }
+        }
+
+        function validateForm() {
+            const password = document.getElementById("password").value;
+            const confirmation = document.getElementById("confirm").value;
+
+            if (password !== confirmation) {
+                alert("Passwords do not match.");
+                return false;
+            }
+
+            return true;
+        }
+
+        toggleResidentFields();
     </script>
 
 </body>
