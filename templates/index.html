@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Resident Dashboard | Compound Tennis Booking</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <style>
+        :root {
+            --accent: #79d143;
+            --accent-dark: #4ea326;
+            --accent-soft: rgba(121, 209, 67, 0.18);
+
+            --glass: rgba(15, 19, 16, 0.78);
+            --glass-light: rgba(255, 255, 255, 0.09);
+            --border: rgba(255, 255, 255, 0.15);
+
+            --text: #ffffff;
+            --muted: rgba(255, 255, 255, 0.7);
+
+            --danger: #ff6464;
+            --warning: #ffbd52;
+            --blue: #4fa3ff;
+            --orange: #ff992f;
+            --grey: #9b9b9b;
+
+            --radius-large: 24px;
+            --radius-medium: 15px;
+            --radius-small: 11px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+
+            background:
+                linear-gradient(
+                    rgba(0, 0, 0, 0.63),
+                    rgba(0, 0, 0, 0.82)
+                ),
+                url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=2000&q=85");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            min-height: 78px;
+            padding: 16px 34px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+
+            background: rgba(9, 13, 10, 0.86);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                var(--accent-dark),
+                var(--accent)
+            );
+
+            font-size: 23px;
+            box-shadow: 0 8px 24px rgba(95, 190, 45, 0.25);
+        }
+
+        .brand-text h1 {
+            font-size: 21px;
+            line-height: 1.2;
+        }
+
+        .brand-text p {
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            padding: 10px 14px;
+
+            border: 1px solid transparent;
+            border-radius: 10px;
+
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 650;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--glass-light);
+            border-color: var(--border);
+            transform: translateY(-2px);
+        }
+
+        .logout-link {
+            background: rgba(255, 85, 85, 0.12);
+            border-color: rgba(255, 100, 100, 0.2);
+        }
+
+        /* PAGE */
+
+        .page-container {
+            width: min(1500px, 100%);
+            margin: 0 auto;
+            padding: 34px 28px 55px;
+        }
+
+        .welcome-section {
+            margin-bottom: 26px;
+        }
+
+        .welcome-section h2 {
+            font-size: clamp(28px, 4vw, 42px);
+            margin-bottom: 8px;
+        }
+
+        .welcome-section p {
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+
+            border: 1px solid var(--border);
+            border-radius: var(--radius-large);
+
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.3);
+
+            animation: riseIn 0.55s ease both;
+        }
+
+        @keyframes riseIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-heading {
+            margin-bottom: 20px;
+        }
+
+        .section-heading h2 {
+            font-size: 25px;
+            margin-bottom: 7px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ALERTS */
+
+        .flash,
+        .warning,
+        .danger {
+            margin-bottom: 20px;
+            padding: 15px 17px;
+
+            border-radius: var(--radius-small);
+            font-weight: 650;
+            line-height: 1.5;
+
+            backdrop-filter: blur(10px);
+        }
+
+        .flash,
+        .danger {
+            background: rgba(175, 35, 35, 0.55);
+            border: 1px solid rgba(255, 110, 110, 0.34);
+            color: #ffe2e2;
+        }
+
+        .warning {
+            background: rgba(180, 115, 20, 0.48);
+            border: 1px solid rgba(255, 195, 85, 0.35);
+            color: #fff0c4;
+        }
+
+        /* SUMMARY */
+
+        .summary-card {
+            margin-bottom: 25px;
+            padding: 28px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .stat-box {
+            min-height: 155px;
+            padding: 24px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: var(--radius-medium);
+
+            text-align: center;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(121, 209, 67, 0.4);
+        }
+
+        .stat-icon {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .stat-box h3 {
+            color: var(--accent);
+            font-size: 36px;
+            line-height: 1;
+        }
+
+        .stat-box p {
+            margin-top: 11px;
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 15px;
+            font-weight: 650;
+        }
+
+        /* MAIN GRID */
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.65fr);
+            gap: 25px;
+            align-items: start;
+        }
+
+        .booking-card,
+        .calendar-card,
+        .table-card {
+            padding: 27px;
+        }
+
+        /* FORM */
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 52px;
+            padding: 13px 15px;
+
+            border: 1px solid rgba(255, 255, 255, 0.17);
+            border-radius: 11px;
+            outline: none;
+
+            background: rgba(255, 255, 255, 0.94);
+            color: #202020;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+            transform: translateY(-1px);
+        }
+
+        .primary-button {
+            width: 100%;
+            min-height: 53px;
+            padding: 13px 18px;
+
+            border: none;
+            border-radius: 11px;
+
+            background: linear-gradient(
+                135deg,
+                var(--accent-dark),
+                var(--accent)
+            );
+
+            color: white;
+            font-weight: 750;
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(95, 190, 45, 0.3);
+        }
+
+        .slots-section {
+            margin-top: 27px;
+            padding-top: 23px;
+            border-top: 1px solid var(--border);
+        }
+
+        .slots-section h3 {
+            margin-bottom: 7px;
+        }
+
+        .small-text {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .slot {
+            padding: 14px 11px;
+
+            border-radius: 11px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.5;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .available {
+            background: linear-gradient(
+                135deg,
+                var(--accent-dark),
+                #68c83b
+            );
+
+            color: white;
+            cursor: pointer;
+        }
+
+        .available:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 22px rgba(90, 185, 40, 0.3);
+        }
+
+        .unavailable {
+            background: rgba(210, 55, 55, 0.76);
+            color: white;
+            opacity: 0.78;
+        }
+
+        /* CALENDAR */
+
+        .legend {
+            margin-bottom: 18px;
+            padding: 13px;
+
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        .legend span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend b {
+            width: 13px;
+            height: 13px;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .red {
+            background: #d83e3e;
+        }
+
+        .blue {
+            background: #3185d7;
+        }
+
+        .orange {
+            background: #f48b23;
+        }
+
+        .grey {
+            background: #868686;
+        }
+
+        .green {
+            background: #3e9a39;
+        }
+
+        #calendar {
+            padding: 18px;
+
+            background: rgba(255, 255, 255, 0.96);
+            color: #202020;
+
+            border-radius: var(--radius-medium);
+            overflow: hidden;
+        }
+
+        .fc .fc-toolbar-title {
+            font-size: 1.55rem;
+        }
+
+        .fc .fc-button-primary {
+            background: #294356;
+            border-color: #294356;
+        }
+
+        .fc .fc-button-primary:hover {
+            background: #1c3140;
+            border-color: #1c3140;
+        }
+
+        .fc .fc-col-header-cell-cushion,
+        .fc .fc-daygrid-day-number {
+            color: #202020;
+            text-decoration: none;
+        }
+
+        .fc .fc-col-header-cell {
+            background: #347f37;
+        }
+
+        .fc .fc-col-header-cell-cushion {
+            color: white;
+            padding: 8px 4px;
+        }
+
+        /* TABLES */
+
+        .table-card {
+            margin-top: 25px;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 13px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+
+            background: rgba(255, 255, 255, 0.96);
+            color: #202020;
+        }
+
+        th,
+        td {
+            padding: 14px 13px;
+            border-bottom: 1px solid #dddddd;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+
+            background: #317d35;
+            color: white;
+
+            font-size: 13px;
+        }
+
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background: #edf8e8;
+        }
+
+        .status-booked,
+        .status-attended,
+        .status-no-show,
+        .status-cancelled {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .status-booked {
+            background: #ffe0e0;
+            color: #bf2727;
+        }
+
+        .status-attended {
+            background: #dcecff;
+            color: #176ab7;
+        }
+
+        .status-no-show {
+            background: #ffead4;
+            color: #c46200;
+        }
+
+        .status-cancelled {
+            background: #e6e6e6;
+            color: #606060;
+        }
+
+        .action-link,
+        .cancel-link,
+        .delete-link {
+            display: inline-block;
+            margin: 3px;
+            padding: 6px 8px;
+
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 750;
+        }
+
+        .action-link {
+            background: #e1f4d8;
+            color: #327a1f;
+        }
+
+        .cancel-link {
+            background: #fff0d6;
+            color: #b76b00;
+        }
+
+        .delete-link {
+            background: #ffe1e1;
+            color: #b62e2e;
+        }
+
+        .empty {
+            padding: 18px;
+
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            border-radius: 11px;
+
+            color: var(--muted);
+            text-align: center;
+            font-weight: 650;
+        }
+
+        /* TABLET */
+
+        @media (max-width: 1050px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-card,
+            .calendar-card {
+                width: 100%;
+            }
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 760px) {
+            body {
+                background-attachment: scroll;
+            }
+
+            .navbar {
+                position: static;
+                padding: 15px 16px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .navbar-brand {
+                width: 100%;
+            }
+
+            .brand-text h1 {
+                font-size: 18px;
+            }
+
+            .navbar-links {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+            }
+
+            .nav-link {
+                margin: 0;
+                padding: 10px 8px;
+                background: rgba(255, 255, 255, 0.07);
+                border-color: var(--border);
+                text-align: center;
+            }
+
+            .page-container {
+                padding: 24px 14px 40px;
+            }
+
+            .welcome-section h2 {
+                font-size: 29px;
+            }
+
+            .summary-card,
+            .booking-card,
+            .calendar-card,
+            .table-card {
+                padding: 20px 16px;
+                border-radius: 19px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 13px;
+            }
+
+            .stat-box {
+                min-height: 125px;
+            }
+
+            .stat-box h3 {
+                font-size: 31px;
+            }
+
+            .main-grid {
+                gap: 18px;
+            }
+
+            .slots-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .legend {
+                gap: 10px;
+                font-size: 12px;
+            }
+
+            #calendar {
+                padding: 10px;
+            }
+
+            .fc .fc-toolbar {
+                gap: 10px;
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .fc .fc-toolbar-chunk {
+                display: flex;
+                justify-content: center;
+            }
+
+            .fc .fc-toolbar-title {
+                font-size: 1.28rem;
+            }
+
+            input,
+            select,
+            .primary-button {
+                min-height: 55px;
+                font-size: 16px;
+            }
+
+            .table-card {
+                margin-top: 18px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .navbar-links {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-icon {
+                width: 41px;
+                height: 41px;
+            }
+
+            .section-heading h2 {
+                font-size: 22px;
+            }
+
+            .summary-card,
+            .booking-card,
+            .calendar-card,
+            .table-card {
+                padding: 18px 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="navbar-brand">
+            <div class="brand-icon">🎾</div>
+
+            <div class="brand-text">
+                <h1>Resident Dashboard</h1>
+                <p>Compound Tennis Court Booking</p>
+            </div>
+        </div>
+
+        <div class="navbar-links">
+            <a href="/profile" class="nav-link">Profile</a>
+
+            {% if session.role == "guard" %}
+                <a href="/guard" class="nav-link">Guard Panel</a>
+            {% endif %}
+
+            {% if session.role == "landlord" %}
+                <a href="/admin" class="nav-link">Admin Panel</a>
+            {% endif %}
+
+            <a href="/logout" class="nav-link logout-link">Logout</a>
+        </div>
+
+    </nav>
+
+    <main class="page-container">
+
+        <section class="welcome-section">
+            <h2>Welcome back 👋</h2>
+
+            <p>
+                Check availability, reserve a court and manage your upcoming bookings.
+            </p>
+        </section>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if no_shows >= 3 %}
+            <div class="danger">
+                ⚠ You have reached three no-shows. Your booking access is currently blocked.
+            </div>
+        {% elif no_shows == 2 %}
+            <div class="warning">
+                ⚠ You have two no-shows. One more no-show will block future bookings.
+            </div>
+        {% endif %}
+
+        <section class="glass-card summary-card">
+
+            <div class="section-heading">
+                <h2>My Booking Summary</h2>
+
+                <p>
+                    Your current booking limits and attendance record.
+                </p>
+            </div>
+
+            <div class="dashboard-grid">
+
+                <article class="stat-box">
+                    <div class="stat-icon">📅</div>
+                    <h3>{{ today_used }} / 2</h3>
+                    <p>Bookings Today</p>
+                </article>
+
+                <article class="stat-box">
+                    <div class="stat-icon">🗓️</div>
+                    <h3>{{ week_used }} / 5</h3>
+                    <p>Bookings This Week</p>
+                </article>
+
+                <article class="stat-box">
+                    <div class="stat-icon">⚠️</div>
+                    <h3>{{ no_shows }} / 3</h3>
+                    <p>No Shows</p>
+                </article>
+
+            </div>
+
+        </section>
+
+        <section class="main-grid">
+
+            <article class="glass-card booking-card">
+
+                <div class="section-heading">
+                    <h2>Book a Court</h2>
+
+                    <p>
+                        Select a date, time and available court.
+                    </p>
+                </div>
+
+                <form method="POST" action="/book">
+
+                    <div class="input-group">
+                        <label for="dateInput">Date</label>
+
+                        <input
+                            id="dateInput"
+                            type="date"
+                            name="date"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="startInput">Start time</label>
+
+                        <input
+                            id="startInput"
+                            type="time"
+                            name="start"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="endInput">End time</label>
+
+                        <input
+                            id="endInput"
+                            type="time"
+                            name="end"
+                            required
+                        >
+                    </div>
+
+                    <div class="input-group">
+                        <label for="courtInput">Court</label>
+
+                        <select id="courtInput" name="court">
+                            <option>Court 1</option>
+                            <option>Court 2</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="primary-button">
+                        Book Court
+                    </button>
+
+                </form>
+
+                <div class="slots-section">
+                    <h3>Available Slots</h3>
+
+                    <p class="small-text">
+                        Select a date on the calendar. Tap a green slot to fill the booking form automatically.
+                    </p>
+
+                    <div id="slotsArea"></div>
+                </div>
+
+            </article>
+
+            <article class="glass-card calendar-card">
+
+                <div class="section-heading">
+                    <h2>Availability Calendar</h2>
+
+                    <p>
+                        Select any date to see available booking slots.
+                    </p>
+                </div>
+
+                <div class="legend">
+                    <span><b class="red"></b> Booked</span>
+                    <span><b class="blue"></b> Attended</span>
+                    <span><b class="orange"></b> No Show</span>
+                    <span><b class="grey"></b> Cancelled</span>
+                    <span><b class="green"></b> Available</span>
+                </div>
+
+                <div id="calendar"></div>
+
+            </article>
+
+        </section>
+
+        <section class="glass-card table-card">
+
+            <div class="section-heading">
+                <h2>Upcoming Bookings</h2>
+
+                <p>
+                    View, edit or cancel your future reservations.
+                </p>
+            </div>
+
+            {% if upcoming %}
+
+                <div class="table-wrapper">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Court</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for b in upcoming %}
+                                <tr>
+                                    <td>{{ b.date }}</td>
+                                    <td>{{ b.start }}</td>
+                                    <td>{{ b.end }}</td>
+                                    <td>{{ b.court }}</td>
+
+                                    <td>
+                                        {% if b.status == "booked" %}
+                                            <span class="status-booked">Booked</span>
+                                        {% elif b.status == "attended" %}
+                                            <span class="status-attended">Attended</span>
+                                        {% elif b.status == "no-show" %}
+                                            <span class="status-no-show">No Show</span>
+                                        {% elif b.status == "cancelled" %}
+                                            <span class="status-cancelled">Cancelled</span>
+                                        {% else %}
+                                            {{ b.status }}
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if b.status != "cancelled" %}
+                                            <a
+                                                class="action-link"
+                                                href="/edit/{{ b.id }}"
+                                            >
+                                                Edit
+                                            </a>
+
+                                            <a
+                                                class="cancel-link"
+                                                href="/cancel/{{ b.id }}"
+                                            >
+                                                Cancel
+                                            </a>
+
+                                            <a
+                                                class="delete-link"
+                                                href="/delete/{{ b.id }}"
+                                            >
+                                                Delete
+                                            </a>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty">
+                    You have no upcoming bookings.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+        <section class="glass-card table-card">
+
+            <div class="section-heading">
+                <h2>Booking History</h2>
+
+                <p>
+                    Review your completed, cancelled and missed bookings.
+                </p>
+            </div>
+
+            {% if history %}
+
+                <div class="table-wrapper">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Court</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for b in history %}
+                                <tr>
+                                    <td>{{ b.date }}</td>
+                                    <td>{{ b.start }}</td>
+                                    <td>{{ b.end }}</td>
+                                    <td>{{ b.court }}</td>
+
+                                    <td>
+                                        {% if b.status == "booked" %}
+                                            <span class="status-booked">Booked</span>
+                                        {% elif b.status == "attended" %}
+                                            <span class="status-attended">Attended</span>
+                                        {% elif b.status == "no-show" %}
+                                            <span class="status-no-show">No Show</span>
+                                        {% elif b.status == "cancelled" %}
+                                            <span class="status-cancelled">Cancelled</span>
+                                        {% else %}
+                                            {{ b.status }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty">
+                    No past bookings yet.
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+    <script>
+        async function loadAvailability(date) {
+            const slotsArea = document.getElementById("slotsArea");
+
+            slotsArea.innerHTML =
+                '<p class="small-text" style="margin-top:14px;">Loading available slots...</p>';
+
+            try {
+                const response = await fetch(`/availability/${date}`);
+
+                if (!response.ok) {
+                    throw new Error("Could not load availability.");
+                }
+
+                const data = await response.json();
+
+                slotsArea.innerHTML = "";
+
+                const title = document.createElement("p");
+                title.className = "small-text";
+                title.style.marginTop = "14px";
+                title.innerHTML = `<strong>Slots for ${date}</strong>`;
+
+                slotsArea.appendChild(title);
+
+                const grid = document.createElement("div");
+                grid.className = "slots-grid";
+
+                if (!data.slots || data.slots.length === 0) {
+                    slotsArea.innerHTML +=
+                        '<div class="empty" style="margin-top:12px;">No slots found for this date.</div>';
+
+                    return;
+                }
+
+                data.slots.forEach((slot) => {
+                    const slotElement = document.createElement("div");
+
+                    slotElement.className = slot.available
+                        ? "slot available"
+                        : "slot unavailable";
+
+                    slotElement.innerHTML = `
+                        ${slot.court}<br>
+                        ${slot.start} – ${slot.end}<br>
+                        ${slot.available ? "Available" : "Booked"}
+                    `;
+
+                    if (slot.available) {
+                        slotElement.setAttribute(
+                            "role",
+                            "button"
+                        );
+
+                        slotElement.setAttribute(
+                            "tabindex",
+                            "0"
+                        );
+
+                        const fillBookingForm = function () {
+                            document.getElementById("dateInput").value = date;
+                            document.getElementById("startInput").value = slot.start;
+                            document.getElementById("endInput").value = slot.end;
+                            document.getElementById("courtInput").value = slot.court;
+
+                            document
+                                .querySelector(".booking-card")
+                                .scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "start"
+                                });
+                        };
+
+                        slotElement.addEventListener(
+                            "click",
+                            fillBookingForm
+                        );
+
+                        slotElement.addEventListener(
+                            "keydown",
+                            function (event) {
+                                if (
+                                    event.key === "Enter" ||
+                                    event.key === " "
+                                ) {
+                                    fillBookingForm();
+                                }
+                            }
+                        );
+                    }
+
+                    grid.appendChild(slotElement);
+                });
+
+                slotsArea.appendChild(grid);
+
+            } catch (error) {
+                slotsArea.innerHTML = `
+                    <div class="flash" style="margin-top:14px;">
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const calendarElement =
+                document.getElementById("calendar");
+
+            const isMobile =
+                window.innerWidth < 760;
+
+            const calendar =
+                new FullCalendar.Calendar(
+                    calendarElement,
+                    {
+                        initialView: isMobile
+                            ? "listWeek"
+                            : "dayGridMonth",
+
+                        height: "auto",
+
+                        headerToolbar: isMobile
+                            ? {
+                                left: "prev,next",
+                                center: "title",
+                                right: "today"
+                            }
+                            : {
+                                left: "prev,next today",
+                                center: "title",
+                                right: "dayGridMonth,listWeek"
+                            },
+
+                        buttonText: {
+                            today: "Today",
+                            month: "Month",
+                            list: "List"
+                        },
+
+                        events: {{ events | tojson }},
+
+                        dateClick: function (info) {
+                            loadAvailability(info.dateStr);
+                        },
+
+                        eventDidMount: function (info) {
+                            info.el.title = info.event.title;
+                        },
+
+                        windowResize: function (view) {
+                            const mobileNow =
+                                window.innerWidth < 760;
+
+                            if (
+                                mobileNow &&
+                                view.view.type !== "listWeek"
+                            ) {
+                                view.changeView("listWeek");
+                            }
+
+                            if (
+                                !mobileNow &&
+                                view.view.type === "listWeek"
+                            ) {
+                                view.changeView("dayGridMonth");
+                            }
+                        }
+                    }
+                );
+
+            calendar.render();
+        });
+    </script>
+
+</body>
+</html>
