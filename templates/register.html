@@ -1,228 +1,390 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Register</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Compound Tennis Court Booking</title>
 
-<style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', sans-serif;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
 
-body {
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #56ab2f, #a8e063);
-    padding: 20px;
-}
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
 
-.card {
-    width: 100%;
-    max-width: 380px;
-    padding: 40px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(15px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
-    text-align: center;
-}
+            background:
+                linear-gradient(
+                    rgba(0, 0, 0, 0.48),
+                    rgba(0, 0, 0, 0.68)
+                ),
+                url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1800&q=85");
 
-h2 {
-    color: white;
-    margin-bottom: 20px;
-}
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
 
-.input-group {
-    position: relative;
-    margin-bottom: 15px;
-}
+        .card {
+            width: 100%;
+            max-width: 430px;
+            padding: 48px 42px;
 
-input, select {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    border: none;
-    background: rgba(255,255,255,0.9);
-    outline: none;
-}
+            background: rgba(15, 18, 15, 0.68);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
 
-.toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-}
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 24px;
 
-.strength {
-    height: 6px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    background: #ccc;
-}
+            box-shadow: 0 24px 65px rgba(0, 0, 0, 0.48);
 
-.bar {
-    height: 100%;
-    width: 0%;
-    border-radius: 4px;
-    transition: 0.3s;
-}
+            text-align: center;
+            color: white;
 
-button {
-    width: 100%;
-    padding: 14px;
-    background: #2e7d32;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-}
+            animation: cardEntrance 0.7s ease;
+        }
 
-button:hover {
-    transform: translateY(-2px);
-    background: #1b5e20;
-}
+        @keyframes cardEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
 
-.error {
-    color: #ffdddd;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-a {
-    display: block;
-    margin-top: 15px;
-    color: white;
-    text-decoration: none;
-}
-</style>
+        .logo {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .input-group input {
+            width: 100%;
+            min-height: 54px;
+            padding: 14px 46px 14px 16px;
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            outline: none;
+
+            background: rgba(255, 255, 255, 0.94);
+            color: #1e1e1e;
+
+            font-size: 16px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #83d653;
+            box-shadow: 0 0 0 4px rgba(131, 214, 83, 0.18);
+            transform: translateY(-1px);
+        }
+
+        .toggle {
+            position: absolute;
+            right: 15px;
+            bottom: 16px;
+
+            border: none;
+            background: transparent;
+            cursor: pointer;
+
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin: 4px 0 22px;
+            gap: 15px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            color: rgba(255, 255, 255, 0.86);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .remember input {
+            width: 17px;
+            height: 17px;
+            accent-color: #70c83e;
+        }
+
+        .forgot-link {
+            color: #b9ed9b;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            min-height: 54px;
+            padding: 14px;
+
+            border: none;
+            border-radius: 12px;
+
+            background: linear-gradient(135deg, #58af2d, #8bd94f);
+            color: white;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .login-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(101, 194, 53, 0.34);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            margin: 26px 0 20px;
+
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .create-text {
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 14px;
+        }
+
+        .create-link {
+            display: inline-block;
+            margin-left: 4px;
+
+            color: #b9ed9b;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .create-link:hover {
+            text-decoration: underline;
+        }
+
+        .home-link {
+            display: inline-block;
+            margin-top: 26px;
+
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .home-link:hover {
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+                background-position: center;
+            }
+
+            .card {
+                max-width: 100%;
+                padding: 36px 22px;
+                border-radius: 20px;
+            }
+
+            .logo {
+                font-size: 42px;
+            }
+
+            h1 {
+                font-size: 29px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .form-options {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .login-button {
+                min-height: 56px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="card">
-<h2>Create Account</h2>
+    <main class="card">
 
-{% if error %}
-<div class="error">{{ error }}</div>
-{% endif %}
+        <div class="logo">🎾</div>
 
-<form method="POST" onsubmit="return validateForm()">
+        <h1>Welcome Back</h1>
 
-    <div class="input-group">
-        <input name="username" placeholder="Username" required>
-    </div>
+        <p class="subtitle">
+            Sign in to check availability and reserve your compound tennis court.
+        </p>
 
-    <div class="input-group">
-        <input type="password" id="password" name="password" placeholder="Password" required onkeyup="strengthCheck()">
-        <span class="toggle" onclick="togglePass()">👁️</span>
-    </div>
+        <form method="POST">
 
-    <div class="strength">
-        <div class="bar" id="bar"></div>
-    </div>
+            <div class="input-group">
+                <label for="username">Username</label>
 
-    <div class="input-group">
-        <input type="password" id="confirm" placeholder="Confirm Password" required>
-    </div>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                    required
+                >
+            </div>
 
-    <div class="input-group">
-        <select name="role" id="role" required onchange="toggleResidentFields()">
-            <option value="">Select Role</option>
-            <option value="player">Resident</option>
-            <option value="guard">Guard</option>
-            <option value="landlord">Landlord</option>
-        </select>
-    </div>
+            <div class="input-group">
+                <label for="password">Password</label>
 
-    <div id="residentFields">
-        <div class="input-group">
-            <select name="building" id="building">
-                <option value="">Select Building</option>
-                <option value="GS1">GS1</option>
-                <option value="GS2">GS2</option>
-                <option value="GS3">GS3</option>
-            </select>
-        </div>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
 
-        <div class="input-group">
-            <input name="flat_number" id="flat_number" placeholder="Flat Number (Optional)">
-        </div>
-    </div>
+                <button
+                    type="button"
+                    class="toggle"
+                    id="passwordToggle"
+                    onclick="togglePass()"
+                    aria-label="Show password"
+                >
+                    👁️
+                </button>
+            </div>
 
-    <div class="input-group">
-        <input name="mobile_number" placeholder="Mobile Number" required>
-    </div>
+            <div class="form-options">
 
-    <button type="submit">Create Account</button>
+                <label class="remember">
+                    <input type="checkbox" name="remember">
+                    Remember me
+                </label>
 
-</form>
+                <a href="/reset" class="forgot-link">
+                    Forgot password?
+                </a>
 
-<a href="/login">Already have an account?</a>
+            </div>
 
-</div>
+            <button type="submit" class="login-button">
+                Login
+            </button>
 
-<script>
-function togglePass(){
-    const p = document.getElementById("password");
-    p.type = p.type === "password" ? "text" : "password";
-}
+        </form>
 
-function strengthCheck(){
-    const val = document.getElementById("password").value;
-    const bar = document.getElementById("bar");
+        <div class="divider">New resident?</div>
 
-    let s = 0;
-    if(val.length > 5) s++;
-    if(/[A-Z]/.test(val)) s++;
-    if(/[0-9]/.test(val)) s++;
-    if(/[^A-Za-z0-9]/.test(val)) s++;
+        <p class="create-text">
+            Don't have an account?
+            <a href="/register" class="create-link">
+                Create one
+            </a>
+        </p>
 
-    bar.style.width = (s * 25) + "%";
+        <a href="/" class="home-link">
+            ← Return to homepage
+        </a>
 
-    if(s <= 1) bar.style.background = "red";
-    else if(s == 2) bar.style.background = "orange";
-    else if(s == 3) bar.style.background = "yellow";
-    else bar.style.background = "green";
-}
+    </main>
 
-function toggleResidentFields(){
-    const role = document.getElementById("role").value;
-    const residentFields = document.getElementById("residentFields");
-    const building = document.getElementById("building");
+    <script>
+        function togglePass() {
+            const passwordInput = document.getElementById("password");
+            const toggleButton = document.getElementById("passwordToggle");
 
-    if(role === "player"){
-        residentFields.style.display = "block";
-        building.required = true;
-    } else {
-        residentFields.style.display = "none";
-        building.required = false;
-        building.value = "";
-        document.getElementById("flat_number").value = "";
-    }
-}
+            const passwordIsHidden = passwordInput.type === "password";
 
-function validateForm(){
-    const p = document.getElementById("password").value;
-    const c = document.getElementById("confirm").value;
-
-    if(p !== c){
-        alert("Passwords do not match!");
-        return false;
-    }
-
-    return true;
-}
-
-toggleResidentFields();
-</script>
+            passwordInput.type = passwordIsHidden ? "text" : "password";
+            toggleButton.textContent = passwordIsHidden ? "🙈" : "👁️";
+            toggleButton.setAttribute(
+                "aria-label",
+                passwordIsHidden ? "Hide password" : "Show password"
+            );
+        }
+    </script>
 
 </body>
 </html>
