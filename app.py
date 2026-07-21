@@ -138,21 +138,32 @@ def home():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        
+
         username = request.form["username"].strip()
         password = request.form["password"]
         role = request.form.get("role", "player")
         building = request.form.get("building", "").strip()
         flat_number = request.form.get("flat_number", "").strip()
         mobile_number = request.form["mobile_number"].strip()
-        
 
         if role not in ["player", "guard", "landlord"]:
             role = "player"
 
-        if User.query.filter_by(username=username).first():
-            return render_template("register.html", error="Username already exists")
+        if (
+            not mobile_number.isdigit()
+            or len(mobile_number) != 8
+            or mobile_number[0] not in ["3", "6"]
+        ):
+            return render_template(
+                "register.html",
+                error="Mobile number must be exactly 8 digits and start with 3 or 6."
+            )
 
+        if User.query.filter_by(username=username).first():
+            return render_template(
+                "register.html",
+                error="Username already exists"
+            )
 
         user = User(
             username=username,
