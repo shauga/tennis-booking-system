@@ -759,13 +759,22 @@
             }
 
             #calendar {
-                padding: 10px;
+                width: 100%;
+                max-width: 100%;
+                padding: 6px;
+                overflow: visible;
+            }
+
+            .fc {
+                width: 100%;
+                max-width: 100%;
             }
 
             .fc .fc-toolbar {
-                gap: 10px;
-                align-items: stretch;
-                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 12px;
+                align-items: center;
+                flex-direction: row;
             }
 
             .fc .fc-toolbar-chunk {
@@ -774,7 +783,36 @@
             }
 
             .fc .fc-toolbar-title {
-                font-size: 1.28rem;
+                font-size: 1.05rem;
+                white-space: nowrap;
+            }
+
+            .fc .fc-button {
+                padding: 6px 9px;
+                font-size: 12px;
+            }
+
+            .fc .fc-col-header-cell-cushion {
+                padding: 6px 2px;
+                font-size: 11px;
+            }
+
+            .fc .fc-daygrid-day-number {
+                padding: 4px;
+                font-size: 12px;
+            }
+
+            .fc .fc-daygrid-day-frame {
+                min-height: 55px;
+            }
+
+            .fc .fc-daygrid-event {
+                margin: 1px;
+                font-size: 9px;
+            }
+
+            .calendar-card {
+                overflow: hidden;
             }
 
             input,
@@ -932,23 +970,91 @@
                     <div class="input-group">
                         <label for="startInput">Start time</label>
 
-                        <input
+                        <select
                             id="startInput"
-                            type="time"
                             name="start"
                             required
                         >
+                            <option value="">Select start time</option>
+                            <option value="06:00">06:00</option>
+                            <option value="06:30">06:30</option>
+                            <option value="07:00">07:00</option>
+                            <option value="07:30">07:30</option>
+                            <option value="08:00">08:00</option>
+                            <option value="08:30">08:30</option>
+                            <option value="09:00">09:00</option>
+                            <option value="09:30">09:30</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11:00">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12:00">12:00</option>
+                            <option value="12:30">12:30</option>
+                            <option value="13:00">13:00</option>
+                            <option value="13:30">13:30</option>
+                            <option value="14:00">14:00</option>
+                            <option value="14:30">14:30</option>
+                            <option value="15:00">15:00</option>
+                            <option value="15:30">15:30</option>
+                            <option value="16:00">16:00</option>
+                            <option value="16:30">16:30</option>
+                            <option value="17:00">17:00</option>
+                            <option value="17:30">17:30</option>
+                            <option value="18:00">18:00</option>
+                            <option value="18:30">18:30</option>
+                            <option value="19:00">19:00</option>
+                            <option value="19:30">19:30</option>
+                            <option value="20:00">20:00</option>
+                            <option value="20:30">20:30</option>
+                            <option value="21:00">21:00</option>
+                            <option value="21:30">21:30</option>
+                            <option value="22:00">22:00</option>
+                        </select>
                     </div>
 
                     <div class="input-group">
                         <label for="endInput">End time</label>
 
-                        <input
+                        <select
                             id="endInput"
-                            type="time"
                             name="end"
                             required
                         >
+                            <option value="">Select end time</option>
+                            <option value="06:00">06:00</option>
+                            <option value="06:30">06:30</option>
+                            <option value="07:00">07:00</option>
+                            <option value="07:30">07:30</option>
+                            <option value="08:00">08:00</option>
+                            <option value="08:30">08:30</option>
+                            <option value="09:00">09:00</option>
+                            <option value="09:30">09:30</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:30">10:30</option>
+                            <option value="11:00">11:00</option>
+                            <option value="11:30">11:30</option>
+                            <option value="12:00">12:00</option>
+                            <option value="12:30">12:30</option>
+                            <option value="13:00">13:00</option>
+                            <option value="13:30">13:30</option>
+                            <option value="14:00">14:00</option>
+                            <option value="14:30">14:30</option>
+                            <option value="15:00">15:00</option>
+                            <option value="15:30">15:30</option>
+                            <option value="16:00">16:00</option>
+                            <option value="16:30">16:30</option>
+                            <option value="17:00">17:00</option>
+                            <option value="17:30">17:30</option>
+                            <option value="18:00">18:00</option>
+                            <option value="18:30">18:30</option>
+                            <option value="19:00">19:00</option>
+                            <option value="19:30">19:30</option>
+                            <option value="20:00">20:00</option>
+                            <option value="20:30">20:30</option>
+                            <option value="21:00">21:00</option>
+                            <option value="21:30">21:30</option>
+                            <option value="22:00">22:00</option>
+                        </select>
                     </div>
 
                     <div class="input-group">
@@ -1062,6 +1168,7 @@
                                             <a
                                                 class="cancel-link"
                                                 href="/cancel/{{ b.id }}"
+                                                onclick="return confirm('Are you sure you want to cancel this booking?');"
                                             >
                                                 Cancel
                                             </a>
@@ -1069,6 +1176,7 @@
                                             <a
                                                 class="delete-link"
                                                 href="/delete/{{ b.id }}"
+                                                onclick="return confirm('Are you sure you want to permanently delete this booking?');"
                                             >
                                                 Delete
                                             </a>
@@ -1274,17 +1382,15 @@
                 new FullCalendar.Calendar(
                     calendarElement,
                     {
-                        initialView: isMobile
-                            ? "listWeek"
-                            : "dayGridMonth",
+                        initialView: "dayGridMonth",
 
                         height: "auto",
 
                         headerToolbar: isMobile
                             ? {
-                                left: "prev,next",
+                                left: "prev",
                                 center: "title",
-                                right: "today"
+                                right: "next"
                             }
                             : {
                                 left: "prev,next today",
@@ -1301,35 +1407,33 @@
                         events: {{ events | tojson }},
 
                         dateClick: function (info) {
+                            document.getElementById("dateInput").value =
+                                info.dateStr;
+
                             loadAvailability(info.dateStr);
+                        },
+
+                        eventClick: function (info) {
+                            const selectedDate =
+                                info.event.startStr.substring(0, 10);
+
+                            document.getElementById("dateInput").value =
+                                selectedDate;
+
+                            loadAvailability(selectedDate);
                         },
 
                         eventDidMount: function (info) {
                             info.el.title = info.event.title;
-                        },
-
-                        windowResize: function (view) {
-                            const mobileNow =
-                                window.innerWidth < 760;
-
-                            if (
-                                mobileNow &&
-                                view.view.type !== "listWeek"
-                            ) {
-                                view.changeView("listWeek");
-                            }
-
-                            if (
-                                !mobileNow &&
-                                view.view.type === "listWeek"
-                            ) {
-                                view.changeView("dayGridMonth");
-                            }
                         }
                     }
                 );
 
             calendar.render();
+
+            window.addEventListener("resize", function () {
+                calendar.updateSize();
+            });
         });
     </script>
 
