@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landlord Dashboard | Compound Tennis Booking</title>
 
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎾</text></svg>">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -188,14 +190,29 @@
         }
 
         .flash {
-            margin-bottom: 20px;
-            padding: 15px 17px;
-            background: rgba(32, 116, 47, 0.6);
-            border: 1px solid rgba(125, 225, 130, 0.32);
+            position: fixed;
+            top: 98px;
+            right: 22px;
+            z-index: 3000;
+            width: min(380px, calc(100% - 32px));
+            padding: 15px 18px;
+            background: rgba(31, 125, 52, 0.97);
+            border: 1px solid rgba(150, 235, 160, 0.42);
             border-radius: var(--radius-md);
-            color: #ebffec;
+            color: white;
             font-weight: 700;
             line-height: 1.5;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+            animation: toastIn 0.35s ease, toastOut 0.4s ease 3.6s forwards;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            to { opacity: 0; transform: translateX(30px); pointer-events: none; }
         }
 
         .stats-grid {
@@ -554,6 +571,13 @@
             .chart-canvas {
                 height: 275px;
             }
+
+            .flash {
+                top: 18px;
+                right: 16px;
+                left: 16px;
+                width: auto;
+            }
         }
 
         @media (max-width: 430px) {
@@ -778,7 +802,7 @@
                                     </td>
 
                                     <td>
-                                        <form class="role-form" method="POST" action="/change-role/{{ u.id }}">
+                                        <form class="role-form" method="POST" action="/change-role/{{ u.id }}" onsubmit="return confirm('Change this user\'s role?');">
                                             <select name="role">
                                                 <option value="player" {% if u.role == "player" %}selected{% endif %}>Resident</option>
                                                 <option value="guard" {% if u.role == "guard" %}selected{% endif %}>Guard</option>
@@ -791,7 +815,7 @@
 
                                     <td>
                                         {% if u.id != session.user_id %}
-                                            <a class="delete-link" href="/delete-user/{{ u.id }}">Delete</a>
+                                            <a class="delete-link" href="/delete-user/{{ u.id }}" onclick="return confirm('Delete this user and all of their bookings?');">Delete</a>
                                         {% else %}
                                             <span class="current-user">Current User</span>
                                         {% endif %}
@@ -802,7 +826,7 @@
                     </table>
                 </div>
             {% else %}
-                <div class="empty">No users found.</div>
+                <div class="empty"><div style="font-size:34px; margin-bottom:10px;">👥</div><strong>No users found</strong><p style="margin-top:7px;">There are currently no user accounts to display.</p></div>
             {% endif %}
         </section>
 
@@ -861,7 +885,7 @@
                                     <td>
                                         <a class="edit-link" href="/edit/{{ b.id }}">Edit</a>
                                         &nbsp;|&nbsp;
-                                        <a class="delete-link" href="/delete/{{ b.id }}">Delete</a>
+                                        <a class="delete-link" href="/delete/{{ b.id }}" onclick="return confirm('Permanently delete this booking?');">Delete</a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -869,7 +893,7 @@
                     </table>
                 </div>
             {% else %}
-                <div class="empty">No bookings match the current filters.</div>
+                <div class="empty"><div style="font-size:34px; margin-bottom:10px;">📅</div><strong>No bookings found</strong><p style="margin-top:7px;">Try clearing or changing the current filters.</p></div>
             {% endif %}
         </section>
     </main>
@@ -945,6 +969,12 @@
             {{ date_values|tojson }},
             "Bookings by Date"
         );
+
+        window.setTimeout(function () {
+            document.querySelectorAll(".flash").forEach(function (message) {
+                message.remove();
+            });
+        }, 4200);
     </script>
 </body>
 </html>

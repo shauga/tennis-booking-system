@@ -378,7 +378,7 @@ def edit_booking(id):
             flash("End time must be after start time.")
             return redirect(url_for("home"))
         
-        duration = end_time = start_time
+        duration = end_time - start_time
 
         if duration > timedelta(hours=2):
             flash("Bookings may not be longer than 2 hours.")
@@ -754,6 +754,9 @@ def reset():
 
     return render_template("reset.html", user=user)
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html"), 404
 
 with app.app_context():
     db.create_all()
