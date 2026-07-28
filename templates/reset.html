@@ -1,22 +1,179 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Reset Password</title>
+<title>Change Password</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#56ab2f,#a8e063);
+    padding:20px;
+}
+
+.card{
+    width:100%;
+    max-width:420px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(15px);
+    border-radius:18px;
+    padding:40px;
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+    text-align:center;
+}
+
+h2{
+    color:white;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:white;
+    opacity:.9;
+    margin-bottom:30px;
+    font-size:15px;
+}
+
+.input-group{
+    position:relative;
+    margin-bottom:18px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:rgba(255,255,255,.9);
+    outline:none;
+    font-size:15px;
+}
+
+.toggle{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    user-select:none;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#2e7d32;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.25s;
+}
+
+button:hover{
+    background:#1b5e20;
+    transform:translateY(-2px);
+}
+
+.error{
+    margin-bottom:18px;
+    color:#ffe5e5;
+    font-weight:bold;
+}
+
+a{
+    display:block;
+    margin-top:18px;
+    color:white;
+    text-decoration:none;
+}
+</style>
+
 </head>
 
-<body style="font-family:Segoe UI; text-align:center; padding:50px; background:#56ab2f; color:white;">
+<body>
 
-<h2>Reset Password</h2>
+<div class="card">
 
-<form method="POST">
-    <input name="username" placeholder="Username" required><br><br>
-    <input type="password" name="password" placeholder="New Password" required><br><br>
-    <button>Reset</button>
-</form>
+    <h2>🔒 Change Password</h2>
 
-{% if error %}
-<p>{{ error }}</p>
-{% endif %}
+    <p class="subtitle">
+        Keep your account secure by choosing a strong password.
+    </p>
+
+    {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+
+        <div class="input-group">
+            <input
+                type="password"
+                id="current_password"
+                name="current_password"
+                placeholder="Current Password"
+                required>
+            <span class="toggle"
+                  onclick="togglePassword('current_password')">👁️</span>
+        </div>
+
+        <div class="input-group">
+            <input
+                type="password"
+                id="new_password"
+                name="new_password"
+                placeholder="New Password"
+                required>
+            <span class="toggle"
+                  onclick="togglePassword('new_password')">👁️</span>
+        </div>
+
+        <div class="input-group">
+            <input
+                type="password"
+                id="confirm_password"
+                name="confirm_password"
+                placeholder="Confirm New Password"
+                required>
+            <span class="toggle"
+                  onclick="togglePassword('confirm_password')">👁️</span>
+        </div>
+
+        <button type="submit">
+            Change Password
+        </button>
+
+    </form>
+
+    <a href="/profile">← Back to Profile</a>
+
+</div>
+
+<script>
+function togglePassword(id){
+    const input=document.getElementById(id);
+
+    if(input.type==="password"){
+        input.type="text";
+    }else{
+        input.type="password";
+    }
+}
+</script>
 
 </body>
 </html>

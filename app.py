@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
+from zoneinfo import ZoneInfo
 from collections import Counter
 from io import StringIO
 import csv
@@ -88,7 +89,7 @@ def home():
         Booking.start
     ).all()
 
-    today = datetime.today().date()
+    today = datetime.now(ZoneInfo("Asia/Bahrain")).date()
     today_string = today.strftime("%Y-%m-%d")
 
     today_used = Booking.query.filter(
@@ -694,22 +695,52 @@ def profile():
 
 @app.route("/reset", methods=["GET", "POST"])
 def reset():
-    if request.method == "POST":
-        username = request.form["username"].strip()
-        password = request.form["password"]
-
-        user = User.query.filter_by(username=username).first()
-
-        if not user:
-            return render_template("reset.html", error="User not found")
-
-        user.password = generate_password_hash(password)
-        db.session.commit()
-
-        flash("Password reset successfully.")
+    if not session.get("user_id"):
+        flash("You must be logged in to change your password.")
         return redirect(url_for("login"))
 
-    return render_template("reset.html")
+    user = User.query.get_or_404(session["user_id"])
+
+    if request.method == "POST":
+        current_password = request.form["current_password"]
+        new_password = request.form["new_password"]
+        confirm_password = request.form["confirm_password"]
+
+        if not check_password_hash(user.password, current_password):
+            return render_template(
+                "reset.html",
+                user=user,
+                error="Current password is incorrect."
+            )
+
+        if new_password != confirm_password:
+            return render_template(
+                "reset.html",
+                user=user,
+                error="New passwords do not match."
+            )
+
+        if len(new_password) < 8:
+            return render_template(
+                "reset.html",
+                user=user,
+                error="New password must be at least 8 characters long."
+            )
+
+        if check_password_hash(user.password, new_password):
+            return render_template(
+                "reset.html",
+                user=user,
+                error="New password must be different from your current password."
+            )
+
+        user.password = generate_password_hash(new_password)
+        db.session.commit()
+
+        flash("Password changed successfully.")
+        return redirect(url_for("profile"))
+
+    return render_template("reset.html", user=user)
 
 
 with app.app_context():
