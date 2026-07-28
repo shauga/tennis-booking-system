@@ -236,17 +236,36 @@ def book():
     end = request.form["end"]
     court = request.form["court"]
 
-    start_time = datetime.strptime(start, "%H:%M")
-    end_time = datetime.strptime(end, "%H:%M")
+    try:
+        start_time = datetime.strptime(start, "%H:%M")
+        end_time = datetime.strptime(end, "%H:%M")
+        booking_date = datetime.strptime(
+            date_input,
+            "%Y-%m-%d"
+        ).date()
+
+    except ValueError:
+        flash("Please enter a valid date and time.")
+        return redirect(url_for("home"))
 
     if start_time >= end_time:
         flash("End time must be after start time.")
         return redirect(url_for("home"))
 
-    booking_date = datetime.strptime(date_input, "%Y-%m-%d").date()
+    duration = end_time - start_time
+
+    if duration > timedelta(hours=2):
+        flash("Bookings may not be longer than 2 hours.")
+        return redirect(url_for("home"))
 
     if booking_date < datetime.today().date():
         flash("You cannot book a date in the past.")
+        return redirect(url_for("home"))
+
+    allowed_courts = ["Court 1", "Court 2"]
+
+    if court not in allowed_courts:
+        flash("Please select a valid court.")
         return redirect(url_for("home"))
 
     daily_bookings = Booking.query.filter_by(
@@ -260,7 +279,10 @@ def book():
         flash("You may only make 2 bookings per day.")
         return redirect(url_for("home"))
 
-    week_start = booking_date - timedelta(days=booking_date.weekday())
+    week_start = booking_date - timedelta(
+        days=booking_date.weekday()
+    )
+
     week_end = week_start + timedelta(days=6)
 
     weekly_bookings = Booking.query.filter(
@@ -274,20 +296,34 @@ def book():
         flash("You may only make 5 bookings per week.")
         return redirect(url_for("home"))
 
-    existing = Booking.query.filter_by(
+    existing_bookings = Booking.query.filter_by(
         date=date_input,
         court=court
     ).all()
 
-    for b in existing:
-        if b.status == "cancelled":
+    for booking in existing_bookings:
+        if booking.status == "cancelled":
             continue
 
-        b_start = datetime.strptime(b.start, "%H:%M")
-        b_end = datetime.strptime(b.end, "%H:%M")
+        existing_start = datetime.strptime(
+            booking.start,
+            "%H:%M"
+        )
 
-        if is_conflict(start_time, end_time, b_start, b_end):
-            flash("That court is already booked during that time.")
+        existing_end = datetime.strptime(
+            booking.end,
+            "%H:%M"
+        )
+
+        if is_conflict(
+            start_time,
+            end_time,
+            existing_start,
+            existing_end
+        ):
+            flash(
+                "That court is already booked during that time."
+            )
             return redirect(url_for("home"))
 
     new_booking = Booking(
@@ -302,65 +338,8 @@ def book():
     db.session.add(new_booking)
     db.session.commit()
 
-
     flash("Booking created successfully.")
     return redirect(url_for("home"))
-
-
-@app.route("/availability/<date>")
-def availability(date):
-    courts = ["Court 1", "Court 2"]
-
-    time_slots = [
-        ("04:00", "05:00"),
-        ("05:00", "06:00"),
-        ("06:00", "07:00"),
-        ("07:00", "08:00"),
-        ("08:00", "09:00"),
-        ("09:00", "10:00"),
-        ("10:00", "11:00"),
-        ("11:00", "12:00"),
-        ("12:00", "13:00"),
-        ("13:00", "14:00"),
-        ("14:00", "15:00"),
-        ("15:00", "16:00"),
-        ("16:00", "17:00"),
-        ("17:00", "18:00"),
-        ("18:00", "19:00"),
-        ("19:00", "20:00"),
-        ("20:00", "21:00"),
-        ("21:00", "22:00")
-    ]
-
-    bookings = Booking.query.filter_by(date=date).all()
-    available = []
-
-    for court in courts:
-        for start, end in time_slots:
-            start_time = datetime.strptime(start, "%H:%M")
-            end_time = datetime.strptime(end, "%H:%M")
-
-            conflict = False
-
-            for b in bookings:
-                if b.court != court or b.status == "cancelled":
-                    continue
-
-                b_start = datetime.strptime(b.start, "%H:%M")
-                b_end = datetime.strptime(b.end, "%H:%M")
-
-                if is_conflict(start_time, end_time, b_start, b_end):
-                    conflict = True
-                    break
-
-            available.append({
-                "court": court,
-                "start": start,
-                "end": end,
-                "available": not conflict
-            })
-
-    return {"slots": available}
 
 
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
@@ -384,7 +363,13 @@ def edit_booking(id):
 
         if start_time >= end_time:
             flash("End time must be after start time.")
-            return redirect(url_for("edit_booking", id=id))
+            return redirect(url_for("home"))
+        
+        duration = end_time = start_time
+
+        if duration > timedelta(hours=2):
+            flash("Bookings may not be longer than 2 hours.")
+            return redirect(url_for("home"))
 
         existing = Booking.query.filter_by(date=date_input, court=court).all()
 
