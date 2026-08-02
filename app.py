@@ -752,6 +752,58 @@ def profile():
     user = User.query.get_or_404(session["user_id"])
     return render_template("profile.html", user=user)
 
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+
+    if request.method == "POST":
+
+        mobile = request.form["mobile_number"]
+
+        try:
+            phone = format_bahrain_phone(mobile)
+
+        except ValueError as e:
+            flash(str(e))
+            return redirect(url_for("forgot_password"))
+
+        user = User.query.filter_by(
+            mobile_number=mobile
+        ).first()
+
+        if not user:
+            flash("No account exists with that mobile number.")
+            return redirect(url_for("forgot_password"))
+
+        try:
+
+            client = get_twilio_client()
+
+            client.verify.v2 \
+                .services(TWILIO_VERIFY_SERVICE_SID) \
+                .verifications \
+                .create(
+                    to=phone,
+                    channel="sms"
+                )
+
+        except Exception:
+
+            flash("Unable to send verification code.")
+            return redirect(url_for("forgot_password"))
+
+        session["reset_mobile"] = mobile
+
+        return redirect(
+            url_for("verify_code")
+        )
+
+    return render_template(
+        "forgot_password.html"
+    )
+
+@app.route("/verify-code")
+def verify_code():
+    return "Next step :)"
 
 @app.route("/reset", methods=["GET", "POST"])
 def reset():
