@@ -5,9 +5,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from zoneinfo import ZoneInfo
 from collections import Counter
 from io import StringIO
-from flask_mail import Mail, Message
 from flask_migrate import Migrate
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 import csv
 import os
 
@@ -35,44 +35,10 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-# ------------------ EMAIL CONFIGURATION ------------------
-
-app.config["MAIL_SERVER"] = os.getenv(
-    "MAIL_SERVER",
-    "smtp.gmail.com"
-)
-
-app.config["MAIL_PORT"] = int(
-    os.getenv("MAIL_PORT", "587")
-)
-
-app.config["MAIL_USE_TLS"] = (
-    os.getenv("MAIL_USE_TLS", "true").lower() == "true"
-)
-
-app.config["MAIL_USE_SSL"] = (
-    os.getenv("MAIL_USE_SSL", "false").lower() == "true"
-)
-
-app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
-app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
-
-app.config["MAIL_DEFAULT_SENDER"] = os.getenv(
-    "MAIL_DEFAULT_SENDER",
-    app.config["MAIL_USERNAME"]
-)
-
-
 # ------------------ EXTENSIONS ------------------
 
 db = SQLAlchemy(app)
-mail = Mail(app)
 migrate = Migrate(app, db)
-
-token_serializer = URLSafeTimedSerializer(
-    app.secret_key
-)
-
 
 
 # ------------------ MODELS ------------------
@@ -81,24 +47,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
 
-    # Kept nullable initially so the migration works with existing accounts.
-    # New registrations will require an email address in the next step.
-    email = db.Column(db.String(120), unique=True, nullable=True)
-
     password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(20), nullable=False, default="player")
     building = db.Column(db.String(10), nullable=True)
     flat_number = db.Column(db.String(20), nullable=True)
     mobile_number = db.Column(db.String(20), nullable=False)
 
-    # Existing accounts are temporarily treated as verified so they are not
-    # locked out when this column is first added.
-    email_verified = db.Column(
-        db.Boolean,
-        nullable=False,
-        default=True,
-        server_default=db.true()
-    )
 
 class Booking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -114,38 +68,6 @@ class Booking(db.Model):
 
 def is_conflict(new_start, new_end, existing_start, existing_end):
     return new_start < existing_end and new_end > existing_start
-
-
-def generate_email_token(email, salt):
-    return token_serializer.dumps(
-        email,
-        salt=salt
-    )
-
-
-def read_email_token(token, salt, max_age):
-    return token_serializer.loads(
-        token,
-        salt=salt,
-        max_age=max_age
-    )
-
-
-def send_email(subject, recipient, body, html=None):
-    if not app.config["MAIL_USERNAME"] or not app.config["MAIL_PASSWORD"]:
-        raise RuntimeError(
-            "Email is not configured. Set MAIL_USERNAME and MAIL_PASSWORD."
-        )
-
-    message = Message(
-        subject=subject,
-        recipients=[recipient],
-        body=body,
-        html=html
-    )
-
-    mail.send(message)
-
 
 
 # ------------------ ROUTES ------------------
@@ -842,34 +764,9 @@ def reset():
 
     return render_template("reset.html", user=user)
 
-@app.route("/test-email")
-def test_email():
-    try:
-        msg = Message(
-            subject="Compound Tennis Booking Test",
-            recipients=[app.config["MAIL_USERNAME"]]
-        )
-
-        msg.body = """
-Hello!
-
-Congratulations 🎉
-
-Your Flask-Mail setup is working correctly.
-
-This is a test email from your Compound Tennis Booking System.
-"""
-
-        mail.send(msg)
-
-        return "✅ Email sent successfully!"
-
-    except Exception as e:
-        return f"❌ Error: {e}"
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html"), 404
-
 
 
 with app.app_context():
