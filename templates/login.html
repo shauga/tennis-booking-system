@@ -1,358 +1,108 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Compound Tennis Court Booking</title>
-
-    <style>
-        *{
-            box-sizing:border-box;
-            margin:0;
-            padding:0;
-            font-family:"Segoe UI",Arial,sans-serif;
-        }
-
-        body{
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:24px;
-            background:
-                linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.68)),
-                url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1800&q=85");
-            background-size:cover;
-            background-position:center;
-            background-repeat:no-repeat;
-        }
-
-        .card{
-            width:100%;
-            max-width:430px;
-            padding:48px 42px;
-            background:rgba(15,18,15,.68);
-            backdrop-filter:blur(18px);
-            -webkit-backdrop-filter:blur(18px);
-            border:1px solid rgba(255,255,255,.16);
-            border-radius:24px;
-            box-shadow:0 24px 65px rgba(0,0,0,.48);
-            text-align:center;
-            color:white;
-            animation:cardEntrance .7s ease;
-        }
-
-        @keyframes cardEntrance{
-            from{
-                opacity:0;
-                transform:translateY(25px);
-            }
-            to{
-                opacity:1;
-                transform:translateY(0);
-            }
-        }
-
-        .logo{
-            font-size:48px;
-            margin-bottom:12px;
-        }
-
-        h1{
-            font-size:34px;
-            margin-bottom:10px;
-        }
-
-        .subtitle{
-            color:rgba(255,255,255,.78);
-            font-size:15px;
-            line-height:1.5;
-            margin-bottom:30px;
-        }
-
-        .input-group{
-            position:relative;
-            margin-bottom:18px;
-            text-align:left;
-        }
-
-        .input-group label{
-            display:block;
-            margin-bottom:8px;
-            font-size:14px;
-            font-weight:600;
-            color:rgba(255,255,255,.88);
-        }
-
-        .input-group input{
-            width:100%;
-            min-height:54px;
-            padding:14px 46px 14px 16px;
-            border:1px solid rgba(255,255,255,.2);
-            border-radius:12px;
-            outline:none;
-            background:rgba(255,255,255,.94);
-            color:#1e1e1e;
-            font-size:16px;
-            transition:border-color .2s ease,
-                      box-shadow .2s ease,
-                      transform .2s ease;
-        }
-
-        .input-group input:focus{
-            border-color:#83d653;
-            box-shadow:0 0 0 4px rgba(131,214,83,.18);
-            transform:translateY(-1px);
-        }
-
-        .toggle{
-            position:absolute;
-            right:15px;
-            bottom:16px;
-            border:none;
-            background:transparent;
-            cursor:pointer;
-            font-size:18px;
-        }
-
-        .form-options{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            margin:6px 0 22px;
-        }
-
-        .remember{
-            display:flex;
-            align-items:center;
-            gap:9px;
-            color:rgba(255,255,255,.86);
-            font-size:14px;
-            cursor:pointer;
-        }
-
-        .remember input{
-            width:17px;
-            height:17px;
-            accent-color:#70c83e;
-        }
-
-        .forgot-link{
-            color:#b9ed9b;
-            text-decoration:none;
-            font-size:14px;
-            font-weight:600;
-            transition:.2s;
-        }
-
-        .forgot-link:hover{
-            color:white;
-            text-decoration:underline;
-        }
-
-        .login-button{
-            width:100%;
-            min-height:54px;
-            border:none;
-            border-radius:12px;
-            background:linear-gradient(135deg,#58af2d,#8bd94f);
-            color:white;
-            font-size:16px;
-            font-weight:700;
-            cursor:pointer;
-            transition:.2s;
-        }
-
-        .login-button:hover{
-            transform:translateY(-3px);
-            box-shadow:0 12px 28px rgba(101,194,53,.34);
-        }
-
-        .password-note{
-            margin-top:15px;
-            color:rgba(255,255,255,.66);
-            font-size:13px;
-            line-height:1.5;
-        }
-
-        .divider{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            margin:26px 0 20px;
-            color:rgba(255,255,255,.5);
-            font-size:13px;
-        }
-
-        .divider::before,
-        .divider::after{
-            content:"";
-            flex:1;
-            height:1px;
-            background:rgba(255,255,255,.18);
-        }
-
-        .create-text{
-            color:rgba(255,255,255,.76);
-            font-size:14px;
-        }
-
-        .create-link{
-            color:#b9ed9b;
-            text-decoration:none;
-            font-weight:700;
-        }
-
-        .create-link:hover{
-            text-decoration:underline;
-        }
-
-        .home-link{
-            display:inline-block;
-            margin-top:26px;
-            color:rgba(255,255,255,.65);
-            font-size:13px;
-            text-decoration:none;
-        }
-
-        .home-link:hover{
-            color:white;
-        }
-
-        @media(max-width:600px){
-
-            body{
-                padding:16px;
-            }
-
-            .card{
-                padding:36px 22px;
-            }
-
-            h1{
-                font-size:29px;
-            }
-
-            .form-options{
-                flex-direction:column;
-                align-items:flex-start;
-                gap:10px;
-            }
-
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Compound Tennis Court Booking</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",Arial,sans-serif}
+body{
+min-height:100vh;display:flex;justify-content:center;align-items:center;padding:24px;
+background:linear-gradient(rgba(0,0,0,.48),rgba(0,0,0,.68)),
+url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1800&q=85");
+background-size:cover;background-position:center}
+.card{
+width:100%;max-width:430px;padding:48px 42px;background:rgba(15,18,15,.68);
+backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.16);
+border-radius:24px;box-shadow:0 24px 65px rgba(0,0,0,.48);color:#fff}
+.logo{text-align:center;font-size:48px;margin-bottom:12px}
+h1{text-align:center;font-size:34px;margin-bottom:10px}
+.subtitle{text-align:center;color:rgba(255,255,255,.78);margin-bottom:30px;line-height:1.5}
+.flash{padding:12px;border-radius:10px;background:rgba(131,214,83,.18);margin-bottom:18px}
+.input-group{margin-bottom:18px;position:relative}
+label{display:block;margin-bottom:8px;font-weight:600}
+input[type=text],input[type=password]{
+width:100%;padding:14px 46px 14px 16px;border-radius:12px;border:none;font-size:16px}
+.toggle{position:absolute;right:14px;bottom:14px;border:none;background:none;cursor:pointer}
+.form-options{display:flex;align-items:center;margin-bottom:8px}
+.remember{display:flex;align-items:center;gap:8px}
+.forgot-wrap{text-align:right;margin-bottom:20px}
+.forgot-link{color:#b9ed9b;text-decoration:none;font-weight:600}
+.forgot-link:hover{text-decoration:underline}
+.login-button{width:100%;padding:15px;border:none;border-radius:12px;background:linear-gradient(135deg,#58af2d,#8bd94f);color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+.password-note{text-align:center;margin-top:15px;color:rgba(255,255,255,.7);font-size:13px}
+.divider{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.55);margin:26px 0 18px}
+.divider:before,.divider:after{content:"";flex:1;height:1px;background:rgba(255,255,255,.2)}
+.create-text,.home-link{text-align:center;color:rgba(255,255,255,.75)}
+.create-link,.home-link,.forgot-link{color:#b9ed9b}
+.home-link{display:block;margin-top:22px;text-decoration:none}
+</style>
 </head>
-
 <body>
-
 <main class="card">
-
 <div class="logo">🎾</div>
-
 <h1>Welcome Back to the court 👋</h1>
+<p class="subtitle">Sign in to check availability and reserve your compound tennis court.</p>
 
-<p class="subtitle">
-Sign in to check availability and reserve your compound tennis court.
-</p>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="flash">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+{% if error %}
+<div class="flash">{{ error }}</div>
+{% endif %}
 
 <form method="POST">
-
 <div class="input-group">
 <label>Username</label>
-<input
-type="text"
-name="username"
-placeholder="Enter your username"
-required>
+<input type="text" name="username" placeholder="Enter your username" required>
 </div>
 
 <div class="input-group">
 <label>Password</label>
-
-<input
-type="password"
-id="password"
-name="password"
-placeholder="Enter your password"
-required>
-
-<button
-type="button"
-class="toggle"
-id="passwordToggle"
-onclick="togglePass()">👁️</button>
-
+<input type="password" id="password" name="password" placeholder="Enter your password" required>
+<button type="button" class="toggle" id="passwordToggle" onclick="togglePass()">👁️</button>
 </div>
 
 <div class="form-options">
-
 <label class="remember">
 <input type="checkbox" name="remember">
 Remember me
 </label>
-
-<a
-href="{{ url_for('forgot_password') }}"
-class="forgot-link">
-Forgot Password?
-</a>
-
 </div>
 
-<button
-type="submit"
-class="login-button">
-Login
-</button>
+<div class="forgot-wrap">
+<a href="{{ url_for('forgot_password') }}" class="forgot-link">Forgot Password?</a>
+</div>
+
+<button type="submit" class="login-button">Login</button>
 
 <p class="password-note">
-Forgot your password? Reset it securely via SMS.
+Forgot your password? Reset it securely using an SMS verification code.
 </p>
-
 </form>
 
-<div class="divider">
-New resident?
-</div>
+<div class="divider">New resident?</div>
 
 <p class="create-text">
 Don't have an account?
-<a
-href="{{ url_for('register') }}"
-class="create-link">
-Create one
-</a>
+<a href="{{ url_for('register') }}" class="create-link">Create one</a>
 </p>
 
-<a
-href="{{ url_for('landing') }}"
-class="home-link">
-← Return to homepage
-</a>
-
+<a href="{{ url_for('landing') }}" class="home-link">← Return to homepage</a>
 </main>
 
 <script>
-
 function togglePass(){
-
-    const p=document.getElementById("password");
-    const b=document.getElementById("passwordToggle");
-
-    if(p.type==="password"){
-        p.type="text";
-        b.innerHTML="🙈";
-    }
-    else{
-        p.type="password";
-        b.innerHTML="👁️";
-    }
-
+const p=document.getElementById("password");
+const b=document.getElementById("passwordToggle");
+if(p.type==="password"){p.type="text";b.innerHTML="🙈";}
+else{p.type="password";b.innerHTML="👁️";}
 }
-
 </script>
-
 </body>
 </html>
