@@ -70,7 +70,11 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False, default="player")
     building = db.Column(db.String(10), nullable=True)
     flat_number = db.Column(db.String(20), nullable=True)
-    mobile_number = db.Column(db.String(20), nullable=False)
+    mobile_number = db.Column(
+        db.String(20),
+        unique=True,
+        nullable=False
+    )
 
 
 class Booking(db.Model):
@@ -202,13 +206,10 @@ def register():
 
         username = request.form["username"].strip()
         password = request.form["password"]
-        role = request.form.get("role", "player")
+        role = "player"
         building = request.form.get("building", "").strip()
         flat_number = request.form.get("flat_number", "").strip()
         mobile_number = request.form["mobile_number"].strip()
-
-        if role not in ["player", "guard", "landlord"]:
-            role = "player"
 
         if (
             not mobile_number.isdigit()
@@ -224,6 +225,14 @@ def register():
             return render_template(
                 "register.html",
                 error="Username already exists"
+            )
+
+        if User.query.filter_by(
+            mobile_number=mobile_number
+        ).first():
+            return render_template(
+                "register.html",
+                error="An account already uses this mobile number."
             )
 
         user = User(
@@ -755,6 +764,9 @@ def profile():
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
+        session.pop("reset_mobile", None)
+        session.pop("password_reset_verified", None)
+
         submitted_mobile = request.form.get(
             "mobile_number",
             ""
@@ -834,7 +846,6 @@ def forgot_password():
                 "forgot_password.html"
             )
 
-        session.pop("password_reset_verified", None)
         session["reset_mobile"] = local_mobile
 
         return redirect(url_for("verify_code"))
@@ -1042,67 +1053,6 @@ def reset():
         return redirect(url_for("profile"))
 
     return render_template("reset.html", user=user)
-
-@app.route("/test-sms")
-def test_sms():
-    try:
-        test_key = os.getenv("TWILIO_TEST_KEY")
-        supplied_key = request.args.get("key", "")
-
-        if not test_key or supplied_key != test_key:
-            return "Not found", 404
-
-        test_number = os.getenv("TWILIO_TEST_PHONE")
-
-        if not test_number:
-            return "TWILIO_TEST_PHONE is not configured.", 500
-
-        if not TWILIO_VERIFY_SERVICE_SID:
-            return (
-                "TWILIO_VERIFY_SERVICE_SID is not configured.",
-                500
-            )
-
-        phone_number = format_bahrain_phone(test_number)
-        client = get_twilio_client()
-
-        verification = (
-            client.verify.v2
-            .services(TWILIO_VERIFY_SERVICE_SID)
-            .verifications
-            .create(
-                to=phone_number,
-                channel="sms"
-            )
-        )
-
-        return (
-            "Verification SMS requested successfully. "
-            f"Status: {verification.status}"
-        )
-
-    except ValueError as error:
-        return f"Phone number error: {error}", 400
-
-    except TwilioRestException as error:
-        app.logger.exception("Twilio test SMS failed")
-
-        return (
-            f"Twilio error {error.code}: {error.msg}",
-            500
-        )
-
-    except RuntimeError as error:
-        app.logger.exception("Twilio configuration error")
-        return f"Configuration error: {error}", 500
-
-    except Exception as error:
-        app.logger.exception("Unexpected SMS test error")
-
-        return (
-            f"Unexpected error: {type(error).__name__}: {error}",
-            500
-        )
 
 
 @app.errorhandler(404)
