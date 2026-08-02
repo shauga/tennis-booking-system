@@ -754,56 +754,180 @@ def profile():
 
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
-
     if request.method == "POST":
-
-        mobile = request.form["mobile_number"]
+        submitted_mobile = request.form.get(
+            "mobile_number",
+            ""
+        ).strip()
 
         try:
-            phone = format_bahrain_phone(mobile)
+            phone_number = format_bahrain_phone(
+                submitted_mobile
+            )
 
-        except ValueError as e:
-            flash(str(e))
-            return redirect(url_for("forgot_password"))
+        except ValueError as error:
+            flash(str(error), "error")
+            return render_template(
+                "forgot_password.html"
+            )
+
+        local_mobile = phone_number[4:]
 
         user = User.query.filter_by(
-            mobile_number=mobile
+            mobile_number=local_mobile
         ).first()
 
         if not user:
-            flash("No account exists with that mobile number.")
-            return redirect(url_for("forgot_password"))
+            flash(
+                "No account exists with that mobile number.",
+                "error"
+            )
+            return render_template(
+                "forgot_password.html"
+            )
+
+        if not TWILIO_VERIFY_SERVICE_SID:
+            app.logger.error(
+                "TWILIO_VERIFY_SERVICE_SID is missing."
+            )
+            flash(
+                "SMS verification is temporarily unavailable.",
+                "error"
+            )
+            return render_template(
+                "forgot_password.html"
+            )
 
         try:
+            client = get_twilio_client()
+
+            client.verify.v2.services(
+                TWILIO_VERIFY_SERVICE_SID
+            ).verifications.create(
+                to=phone_number,
+                channel="sms"
+            )
+
+        except TwilioRestException:
+            app.logger.exception(
+                "Unable to send password-reset SMS."
+            )
+
+            flash(
+                "Unable to send the verification code. Please try again shortly.",
+                "error"
+            )
+            return render_template(
+                "forgot_password.html"
+            )
+
+        except RuntimeError:
+            app.logger.exception(
+                "Twilio configuration error."
+            )
+
+            flash(
+                "SMS verification is temporarily unavailable.",
+                "error"
+            )
+            return render_template(
+                "forgot_password.html"
+            )
+
+        session.pop("password_reset_verified", None)
+        session["reset_mobile"] = local_mobile
+
+        return redirect(url_for("verify_code"))
+
+    return render_template("forgot_password.html")
+
+@app.route("/verify-code", methods=["GET", "POST"])
+def verify_code():
+    mobile_number = session.get("reset_mobile")
+
+    if not mobile_number:
+        flash(
+            "Start a new password-reset request.",
+            "warning"
+        )
+        return redirect(url_for("forgot_password"))
+
+    if request.method == "POST":
+        otp = request.form.get("otp", "").strip()
+
+        if not otp.isdigit() or len(otp) != 6:
+            flash(
+                "Enter the complete 6-digit verification code.",
+                "error"
+            )
+            return render_template("verify_code.html")
+
+        try:
+            phone_number = format_bahrain_phone(
+                mobile_number
+            )
 
             client = get_twilio_client()
 
-            client.verify.v2 \
-                .services(TWILIO_VERIFY_SERVICE_SID) \
-                .verifications \
+            verification_check = (
+                client.verify.v2
+                .services(TWILIO_VERIFY_SERVICE_SID)
+                .verification_checks
                 .create(
-                    to=phone,
-                    channel="sms"
+                    to=phone_number,
+                    code=otp
                 )
+            )
 
-        except Exception:
-
-            flash("Unable to send verification code.")
+        except ValueError as error:
+            flash(str(error), "error")
             return redirect(url_for("forgot_password"))
 
-        session["reset_mobile"] = mobile
+        except TwilioRestException as error:
+            app.logger.exception(
+                "Twilio verification check failed"
+            )
 
-        return redirect(
-            url_for("verify_code")
+            flash(
+                "The verification code is invalid or has expired.",
+                "error"
+            )
+            return render_template("verify_code.html")
+
+        except RuntimeError as error:
+            app.logger.exception(
+                "Twilio configuration error"
+            )
+
+            flash(
+                "Verification is temporarily unavailable.",
+                "error"
+            )
+            return render_template("verify_code.html")
+
+        if verification_check.status != "approved":
+            flash(
+                "The verification code is incorrect or has expired.",
+                "error"
+            )
+            return render_template("verify_code.html")
+
+        session["password_reset_verified"] = True
+
+        return redirect(url_for("new_password"))
+
+    return render_template("verify_code.html")
+
+@app.route("/new-password")
+def new_password():
+    if not session.get("password_reset_verified"):
+        flash(
+            "Verify your SMS code first.",
+            "warning"
         )
+        return redirect(url_for("forgot_password"))
 
-    return render_template(
-        "forgot_password.html"
-    )
-
-@app.route("/verify-code")
-def verify_code():
-    return "Next step :)"
+    return "Code approved — password reset page comes next."
 
 @app.route("/reset", methods=["GET", "POST"])
 def reset():
