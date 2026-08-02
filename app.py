@@ -40,6 +40,25 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# ------------------ TWILIO CONFIGURATION ------------------
+
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_VERIFY_SERVICE_SID = os.getenv(
+    "TWILIO_VERIFY_SERVICE_SID"
+)
+
+def get_twilio_client():
+    if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN:
+        raise RuntimeError(
+            "Twilio credentials are not configured."
+        )
+
+    return Client(
+        TWILIO_ACCOUNT_SID,
+        TWILIO_AUTH_TOKEN
+    )
+
 
 # ------------------ MODELS ------------------
 
@@ -69,6 +88,25 @@ class Booking(db.Model):
 def is_conflict(new_start, new_end, existing_start, existing_end):
     return new_start < existing_end and new_end > existing_start
 
+
+def format_bahrain_phone(mobile_number):
+    mobile_number = mobile_number.strip()
+
+    if mobile_number.startswith("+973"):
+        local_number = mobile_number[4:]
+    else:
+        local_number = mobile_number
+
+    if (
+        not local_number.isdigit()
+        or len(local_number) != 8
+        or local_number[0] not in ["3", "6"]
+    ):
+        raise ValueError(
+            "Mobile number must be 8 digits and start with 3 or 6."
+        )
+
+    return f"+973{local_number}"
 
 # ------------------ ROUTES ------------------
 
@@ -763,6 +801,68 @@ def reset():
         return redirect(url_for("profile"))
 
     return render_template("reset.html", user=user)
+
+@app.route("/test-sms")
+def test_sms():
+    try:
+        test_key = os.getenv("TWILIO_TEST_KEY")
+        supplied_key = request.args.get("key", "")
+
+        if not test_key or supplied_key != test_key:
+            return "Not found", 404
+
+        test_number = os.getenv("TWILIO_TEST_PHONE")
+
+        if not test_number:
+            return "TWILIO_TEST_PHONE is not configured.", 500
+
+        if not TWILIO_VERIFY_SERVICE_SID:
+            return (
+                "TWILIO_VERIFY_SERVICE_SID is not configured.",
+                500
+            )
+
+        phone_number = format_bahrain_phone(test_number)
+        client = get_twilio_client()
+
+        verification = (
+            client.verify.v2
+            .services(TWILIO_VERIFY_SERVICE_SID)
+            .verifications
+            .create(
+                to=phone_number,
+                channel="sms"
+            )
+        )
+
+        return (
+            "Verification SMS requested successfully. "
+            f"Status: {verification.status}"
+        )
+
+    except ValueError as error:
+        return f"Phone number error: {error}", 400
+
+    except TwilioRestException as error:
+        app.logger.exception("Twilio test SMS failed")
+
+        return (
+            f"Twilio error {error.code}: {error.msg}",
+            500
+        )
+
+    except RuntimeError as error:
+        app.logger.exception("Twilio configuration error")
+        return f"Configuration error: {error}", 500
+
+    except Exception as error:
+        app.logger.exception("Unexpected SMS test error")
+
+        return (
+            f"Unexpected error: {type(error).__name__}: {error}",
+            500
+        )
+
 
 @app.errorhandler(404)
 def page_not_found(error):
