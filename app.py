@@ -918,16 +918,81 @@ def verify_code():
 
     return render_template("verify_code.html")
 
-@app.route("/new-password")
+@app.route("/new-password", methods=["GET", "POST"])
 def new_password():
-    if not session.get("password_reset_verified"):
+    mobile_number = session.get("reset_mobile")
+    verified = session.get("password_reset_verified")
+
+    if not mobile_number or not verified:
         flash(
             "Verify your SMS code first.",
             "warning"
         )
         return redirect(url_for("forgot_password"))
 
-    return "Code approved — password reset page comes next."
+    user = User.query.filter_by(
+        mobile_number=mobile_number
+    ).first()
+
+    if not user:
+        session.pop("reset_mobile", None)
+        session.pop("password_reset_verified", None)
+
+        flash(
+            "Account not found. Start a new password-reset request.",
+            "error"
+        )
+        return redirect(url_for("forgot_password"))
+
+    if request.method == "POST":
+        new_password_value = request.form.get(
+            "new_password",
+            ""
+        )
+
+        confirm_password = request.form.get(
+            "confirm_password",
+            ""
+        )
+
+        if len(new_password_value) < 8:
+            return render_template(
+                "new_password.html",
+                error="Password must be at least 8 characters long."
+            )
+
+        if new_password_value != confirm_password:
+            return render_template(
+                "new_password.html",
+                error="The passwords do not match."
+            )
+
+        if check_password_hash(
+            user.password,
+            new_password_value
+        ):
+            return render_template(
+                "new_password.html",
+                error="Your new password must be different from your old password."
+            )
+
+        user.password = generate_password_hash(
+            new_password_value
+        )
+
+        db.session.commit()
+
+        session.pop("reset_mobile", None)
+        session.pop("password_reset_verified", None)
+
+        flash(
+            "Password updated successfully. You can now log in.",
+            "success"
+        )
+
+        return redirect(url_for("login"))
+
+    return render_template("new_password.html")
 
 @app.route("/reset", methods=["GET", "POST"])
 def reset():
