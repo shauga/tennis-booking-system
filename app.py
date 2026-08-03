@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, session, Response, abort
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -423,7 +423,7 @@ def edit_booking(id):
     booking = Booking.query.get_or_404(id)
 
     if booking.user_id != session["user_id"] and session.get("role") != "landlord":
-        return "Unauthorized", 403
+        abort(403)
 
     if request.method == "POST":
         date_input = request.form["date"]
@@ -477,7 +477,7 @@ def delete_booking(id):
     booking = Booking.query.get_or_404(id)
 
     if booking.user_id != session["user_id"] and session.get("role") != "landlord":
-        return "Unauthorized", 403
+        abort(403)
 
     db.session.delete(booking)
     db.session.commit()
@@ -494,7 +494,7 @@ def cancel_booking(id):
     booking = Booking.query.get_or_404(id)
 
     if booking.user_id != session["user_id"] and session.get("role") != "landlord":
-        return "Unauthorized", 403
+        abort(403)
 
     booking.status = "cancelled"
     db.session.commit()
@@ -506,7 +506,7 @@ def cancel_booking(id):
 @app.route("/guard")
 def guard():
     if session.get("role") != "guard":
-        return "Unauthorized", 403
+        abort(403)
 
     search = request.args.get("search", "").strip()
     court_filter = request.args.get("court", "")
@@ -565,7 +565,7 @@ def guard():
 @app.route("/mark/<int:id>/<status>", methods=["POST"])
 def mark_attendance(id, status):
     if session.get("role") != "guard":
-        return "Unauthorized", 403
+        abort(403)
 
     if status not in ["attended", "no-show", "booked"]:
         return "Invalid status", 400
@@ -581,7 +581,7 @@ def mark_attendance(id, status):
 @app.route("/admin")
 def admin():
     if session.get("role") != "landlord":
-        return "Unauthorized", 403
+        abort(403)
 
     users = User.query.all()
 
@@ -666,7 +666,7 @@ def admin():
 @app.route("/export-bookings")
 def export_bookings():
     if session.get("role") != "landlord":
-        return "Unauthorized", 403
+        abort(403)
 
     bookings = Booking.query.order_by(Booking.date, Booking.start).all()
 
@@ -721,7 +721,7 @@ def export_bookings():
 @app.route("/change-role/<int:user_id>", methods=["POST"])
 def change_role(user_id):
     if session.get("role") != "landlord":
-        return "Unauthorized", 403
+        abort(403)
 
     user = User.query.get_or_404(user_id)
     new_role = request.form["role"]
@@ -740,7 +740,7 @@ def change_role(user_id):
 @app.route("/delete-user/<int:user_id>", methods=["POST"])
 def delete_user(user_id):
     if session.get("role") != "landlord":
-        return "Unauthorized", 403
+        abort(403)
 
     user = User.query.get_or_404(user_id)
 
