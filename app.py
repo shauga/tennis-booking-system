@@ -203,7 +203,8 @@ def home():
         history=history,
         today_used=today_used,
         week_used=week_used,
-        no_shows=no_shows
+        no_shows=no_shows,
+        today_date=today.strftime("%Y-%m-%d")
     )
 
 
@@ -336,7 +337,9 @@ def book():
         flash("Bookings may not be longer than 2 hours.")
         return redirect(url_for("home"))
 
-    if booking_date < datetime.today().date():
+    today = datetime.now(ZoneInfo("Asia/Bahrain")).date()
+
+    if booking_date < today:
         flash("You cannot book a date in the past.")
         return redirect(url_for("home"))
 
@@ -438,6 +441,18 @@ def edit_booking(id):
 
         start_time = datetime.strptime(start, "%H:%M")
         end_time = datetime.strptime(end, "%H:%M")
+        booking_date = datetime.strptime(
+            date_input,
+            "%Y-%m-%d"
+        ).date()
+
+        today = datetime.now(
+            ZoneInfo("Asia/Bahrain")
+        ).date()
+
+        if booking_date < today:
+            flash("You cannot move a booking to a past date.")
+            return redirect(url_for("edit_booking", id=id))
 
         if start_time >= end_time:
             flash("End time must be after start time.")
