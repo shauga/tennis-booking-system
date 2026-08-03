@@ -192,7 +192,7 @@
         }
 
         #residentFields {
-            display: none;
+            display: block;
             animation: revealFields 0.3s ease;
         }
 
@@ -409,28 +409,12 @@
                 >
             </div>
 
-            <div class="input-group">
-                <label for="role">Account role</label>
-
-                <select
-                    name="role"
-                    id="role"
-                    required
-                    onchange="toggleResidentFields()"
-                >
-                    <option value="">Select role</option>
-                    <option value="player">Resident</option>
-                    <option value="guard">Guard</option>
-                    <option value="landlord">Landlord</option>
-                </select>
-            </div>
-
             <div id="residentFields">
 
                 <div class="input-group">
                     <label for="building">Building</label>
 
-                    <select name="building" id="building">
+                    <select name="building" id="building" required>
                         <option value="">Select building</option>
                         <option value="GS1">GS1</option>
                         <option value="GS2">GS2</option>
@@ -446,6 +430,7 @@
                         id="flat_number"
                         name="flat_number"
                         placeholder="Flat number"
+                        required
                     >
                 </div>
 
@@ -537,23 +522,6 @@
             }
         }
 
-        function toggleResidentFields() {
-            const role = document.getElementById("role").value;
-            const residentFields = document.getElementById("residentFields");
-            const building = document.getElementById("building");
-            const flatNumber = document.getElementById("flat_number");
-
-            if (role === "player") {
-                residentFields.style.display = "block";
-                building.required = true;
-            } else {
-                residentFields.style.display = "none";
-                building.required = false;
-                building.value = "";
-                flatNumber.value = "";
-            }
-        }
-
         function validateForm() {
             const password = document.getElementById("password").value;
             const confirmation = document.getElementById("confirm").value;
@@ -565,8 +533,6 @@
 
             return true;
         }
-
-        toggleResidentFields();
     </script>
 
 </body>

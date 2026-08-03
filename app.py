@@ -213,13 +213,11 @@ def register():
 
         username = request.form["username"].strip()
         password = request.form["password"]
-        role = request.form.get("role", "player")
+        role = "player"
         building = request.form.get("building", "").strip()
         flat_number = request.form.get("flat_number", "").strip()
         mobile_number = request.form["mobile_number"].strip()
 
-        if role not in ["player", "guard", "landlord"]:
-            role = "player"
 
         if (
             not mobile_number.isdigit()
