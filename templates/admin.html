@@ -803,6 +803,10 @@
 
                                     <td>
                                         <form class="role-form" method="POST" action="/change-role/{{ u.id }}" onsubmit="return confirm('Change this user\'s role?');">
+                                            <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}">
                                             <select name="role">
                                                 <option value="player" {% if u.role == "player" %}selected{% endif %}>Resident</option>
                                                 <option value="guard" {% if u.role == "guard" %}selected{% endif %}>Guard</option>

@@ -339,6 +339,10 @@
         {% endwith %}
 
         <form id="verifyForm" method="POST" action="" novalidate>
+            <input
+            type="hidden"
+            name="csrf_token"
+            value="{{ csrf_token() }}">
             <!-- Combined six-digit value submitted to Flask -->
             <input type="hidden" id="otp" name="otp" value="">
 

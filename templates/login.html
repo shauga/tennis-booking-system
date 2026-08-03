@@ -57,6 +57,11 @@ width:100%;padding:14px 46px 14px 16px;border-radius:12px;border:none;font-size:
 {% endif %}
 
 <form method="POST">
+      <input
+        type="hidden"
+        name="csrf_token"
+        value="{{ csrf_token() }}">
+
 <div class="input-group">
 <label>Username</label>
 <input type="text" name="username" placeholder="Enter your username" required>

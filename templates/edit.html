@@ -75,6 +75,10 @@ button:hover {
 <h1>✏️ Edit Booking</h1>
 
 <form method="POST">
+    <input
+    type="hidden"
+    name="csrf_token"
+    value="{{ csrf_token() }}">
     <label>Date</label>
     <input type="date" name="date" value="{{ booking.date }}" required>
 

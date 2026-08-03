@@ -955,6 +955,10 @@
                 </div>
 
                 <form method="POST" action="/book">
+                    <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}">
 
                     <div class="input-group">
                         <label for="dateInput">Date</label>
