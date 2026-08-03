@@ -6,6 +6,9 @@ from zoneinfo import ZoneInfo
 from collections import Counter
 from io import StringIO
 from flask_migrate import Migrate
+from flask_wtf.csrf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
 import csv
@@ -39,6 +42,14 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+csrf = CSRFProtect(app)
+
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    default_limits=[]
+)
 
 # ------------------ TWILIO CONFIGURATION ------------------
 
@@ -245,6 +256,7 @@ def register():
 
 
 @app.route("/login", methods=["GET", "POST"])
+@limiter.limit("10 per minute", methods=["POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"].strip()
@@ -753,6 +765,7 @@ def profile():
     return render_template("profile.html", user=user)
 
 @app.route("/forgot-password", methods=["GET", "POST"])
+@limiter.limit("3 per 15 minutes", methods=["POST"])
 def forgot_password():
     if request.method == "POST":
         submitted_mobile = request.form.get(
@@ -842,6 +855,7 @@ def forgot_password():
     return render_template("forgot_password.html")
 
 @app.route("/verify-code", methods=["GET", "POST"])
+@limiter.limit("5 per 10 minutes", methods=["POST"])
 def verify_code():
     mobile_number = session.get("reset_mobile")
 
