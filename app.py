@@ -213,13 +213,10 @@ def register():
 
         username = request.form["username"].strip()
         password = request.form["password"]
-        role = request.form.get("role", "player")
+        role = "player"
         building = request.form.get("building", "").strip()
         flat_number = request.form.get("flat_number", "").strip()
         mobile_number = request.form["mobile_number"].strip()
-
-        if role not in ["player", "guard", "landlord"]:
-            role = "player"
 
         if (
             not mobile_number.isdigit()
@@ -235,6 +232,14 @@ def register():
             return render_template(
                 "register.html",
                 error="Username already exists"
+            )
+
+        if User.query.filter_by(
+            mobile_number=mobile_number
+        ).first():
+            return render_template(
+                "register.html",
+                error="An account already uses this mobile number."
             )
 
         user = User(
