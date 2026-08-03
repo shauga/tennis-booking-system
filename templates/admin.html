@@ -429,6 +429,10 @@
             font-size: 12px;
         }
 
+        .inline-action-form {
+            display: inline;
+        }
+
         .edit-link,
         .delete-link {
             font-weight: 800;
@@ -440,7 +444,13 @@
         }
 
         .delete-link {
+            min-height: auto;
+            padding: 0;
+            border: none;
+            background: transparent;
             color: #c93434;
+            cursor: pointer;
+            font: inherit;
         }
 
         .current-user {
@@ -819,7 +829,15 @@
 
                                     <td>
                                         {% if u.id != session.user_id %}
-                                            <a class="delete-link" href="/delete-user/{{ u.id }}" onclick="return confirm('Delete this user and all of their bookings?');">Delete</a>
+                                            <form
+                                                class="inline-action-form"
+                                                method="POST"
+                                                action="{{ url_for('delete_user', user_id=u.id) }}"
+                                                onsubmit="return confirm('Delete this user and all of their bookings?');"
+                                            >
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="delete-link">Delete</button>
+                                            </form>
                                         {% else %}
                                             <span class="current-user">Current User</span>
                                         {% endif %}
@@ -889,7 +907,15 @@
                                     <td>
                                         <a class="edit-link" href="/edit/{{ b.id }}">Edit</a>
                                         &nbsp;|&nbsp;
-                                        <a class="delete-link" href="/delete/{{ b.id }}" onclick="return confirm('Permanently delete this booking?');">Delete</a>
+                                        <form
+                                            class="inline-action-form"
+                                            method="POST"
+                                            action="{{ url_for('delete_booking', id=b.id) }}"
+                                            onsubmit="return confirm('Permanently delete this booking?');"
+                                        >
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <button type="submit" class="delete-link">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                             {% endfor %}

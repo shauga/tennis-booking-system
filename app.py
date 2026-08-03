@@ -8,9 +8,6 @@ from io import StringIO
 from flask_migrate import Migrate
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-from flask_wtf.csrf import CSRFProtect
 import csv
 import os
 
@@ -42,13 +39,6 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-csrf = CSRFProtect(app)
-
-limiter = Limiter(
-    key_func=get_remote_address,
-    app=app,
-    default_limits=[]
-)
 
 # ------------------ TWILIO CONFIGURATION ------------------
 
@@ -80,11 +70,7 @@ class User(db.Model):
     role = db.Column(db.String(20), nullable=False, default="player")
     building = db.Column(db.String(10), nullable=True)
     flat_number = db.Column(db.String(20), nullable=True)
-    mobile_number = db.Column(
-        db.String(20),
-        unique=True,
-        nullable=False
-    )
+    mobile_number = db.Column(db.String(20), nullable=False)
 
 
 class Booking(db.Model):
@@ -216,10 +202,13 @@ def register():
 
         username = request.form["username"].strip()
         password = request.form["password"]
-        role = "player"
+        role = request.form.get("role", "player")
         building = request.form.get("building", "").strip()
         flat_number = request.form.get("flat_number", "").strip()
         mobile_number = request.form["mobile_number"].strip()
+
+        if role not in ["player", "guard", "landlord"]:
+            role = "player"
 
         if (
             not mobile_number.isdigit()
@@ -235,14 +224,6 @@ def register():
             return render_template(
                 "register.html",
                 error="Username already exists"
-            )
-
-        if User.query.filter_by(
-            mobile_number=mobile_number
-        ).first():
-            return render_template(
-                "register.html",
-                error="An account already uses this mobile number."
             )
 
         user = User(
@@ -264,7 +245,6 @@ def register():
 
 
 @app.route("/login", methods=["GET", "POST"])
-@limiter.limit("10 per minute", methods=["POST"])
 def login():
     if request.method == "POST":
         username = request.form["username"].strip()
@@ -477,7 +457,7 @@ def edit_booking(id):
     return render_template("edit.html", booking=booking)
 
 
-@app.route("/delete/<int:id>")
+@app.route("/delete/<int:id>", methods=["POST"])
 def delete_booking(id):
     if not session.get("user_id"):
         return redirect(url_for("login"))
@@ -494,7 +474,7 @@ def delete_booking(id):
     return redirect(url_for("home"))
 
 
-@app.route("/cancel/<int:id>")
+@app.route("/cancel/<int:id>", methods=["POST"])
 def cancel_booking(id):
     if not session.get("user_id"):
         return redirect(url_for("login"))
@@ -570,7 +550,7 @@ def guard():
     )
 
 
-@app.route("/mark/<int:id>/<status>")
+@app.route("/mark/<int:id>/<status>", methods=["POST"])
 def mark_attendance(id, status):
     if session.get("role") != "guard":
         return "Unauthorized", 403
@@ -745,7 +725,7 @@ def change_role(user_id):
     return redirect(url_for("admin"))
 
 
-@app.route("/delete-user/<int:user_id>")
+@app.route("/delete-user/<int:user_id>", methods=["POST"])
 def delete_user(user_id):
     if session.get("role") != "landlord":
         return "Unauthorized", 403
@@ -773,12 +753,8 @@ def profile():
     return render_template("profile.html", user=user)
 
 @app.route("/forgot-password", methods=["GET", "POST"])
-@limiter.limit("3 per 15 minutes", methods=["POST"])
 def forgot_password():
     if request.method == "POST":
-        session.pop("reset_mobile", None)
-        session.pop("password_reset_verified", None)
-
         submitted_mobile = request.form.get(
             "mobile_number",
             ""
@@ -858,6 +834,7 @@ def forgot_password():
                 "forgot_password.html"
             )
 
+        session.pop("password_reset_verified", None)
         session["reset_mobile"] = local_mobile
 
         return redirect(url_for("verify_code"))
@@ -865,7 +842,6 @@ def forgot_password():
     return render_template("forgot_password.html")
 
 @app.route("/verify-code", methods=["GET", "POST"])
-@limiter.limit("5 per 10 minutes", methods=["POST"])
 def verify_code():
     mobile_number = session.get("reset_mobile")
 

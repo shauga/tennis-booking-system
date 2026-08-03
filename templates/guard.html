@@ -22,7 +22,7 @@
         .filter-button,.clear-button{min-height:51px;padding:13px 18px;display:inline-flex;align-items:center;justify-content:center;border:none;border-radius:11px;color:#fff;text-decoration:none;font-weight:750;cursor:pointer;transition:.2s ease}.filter-button{background:linear-gradient(135deg,var(--accent-dark),var(--accent))}.filter-button:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(95,190,45,.3)}.clear-button{background:rgba(255,255,255,.12);border:1px solid var(--border)}.clear-button:hover{background:rgba(255,255,255,.18);transform:translateY(-3px)}
         .table-wrapper{width:100%;overflow-x:auto;border-radius:13px}table{width:100%;min-width:1050px;border-collapse:collapse;background:rgba(255,255,255,.96);color:#202020}th,td{padding:14px 13px;border-bottom:1px solid #ddd;text-align:center;white-space:nowrap}th{background:#317d35;color:#fff;font-size:13px}tbody tr:hover{background:#edf8e8}
         .status-booked,.status-attended,.status-no-show,.status-cancelled{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:750}.status-booked{background:#ffead4;color:#c46200}.status-attended{background:#dff4d8;color:#2d7a26}.status-no-show{background:#ffe0e0;color:#bf2727}.status-cancelled{background:#e6e6e6;color:#606060}
-        .attendance-actions{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}.action-attended,.action-noshow,.action-reset{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:8px;color:#fff;text-decoration:none;font-size:12px;font-weight:750;transition:.2s ease}.action-attended{background:#2e8b39}.action-noshow{background:var(--danger)}.action-reset{background:var(--blue)}.action-attended:hover,.action-noshow:hover,.action-reset:hover{transform:translateY(-2px);filter:brightness(1.08)}
+        .attendance-actions{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}.attendance-actions form{display:inline}.action-attended,.action-noshow,.action-reset{display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;border-radius:8px;border:none;cursor:pointer;color:#fff;text-decoration:none;font-size:12px;font-weight:750;transition:.2s ease}.action-attended{background:#2e8b39}.action-noshow{background:var(--danger)}.action-reset{background:var(--blue)}.action-attended:hover,.action-noshow:hover,.action-reset:hover{transform:translateY(-2px);filter:brightness(1.08)}
         .empty{padding:20px;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:11px;color:var(--muted);text-align:center;font-weight:650}
         @media(max-width:1120px){.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-form{grid-template-columns:repeat(2,minmax(0,1fr))}.filter-button,.clear-button{width:100%}}
         @media(max-width:700px){body{background-attachment:scroll}.navbar{position:static;padding:15px 16px;align-items:flex-start;flex-direction:column}.navbar-links{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.nav-link{padding:10px 8px;background:rgba(255,255,255,.07);border-color:var(--border);text-align:center}.page-container{padding:24px 14px 40px}.glass-card{padding:20px 16px;border-radius:19px}.welcome-section h2{font-size:29px}.stats-grid,.filter-form{grid-template-columns:1fr}.stat-box{min-height:125px}.stat-box h3{font-size:31px}input,select,.filter-button,.clear-button{min-height:55px;font-size:16px}.table-wrapper{border-radius:10px;-webkit-overflow-scrolling:touch}table{min-width:900px}}
@@ -66,7 +66,20 @@
         {% for b in bookings %}<tr>
             <td>{{ user_lookup.get(b.user_id, {}).get("username", "Unknown") }}</td><td>{{ user_lookup.get(b.user_id, {}).get("flat", "-") }}</td><td>{{ user_lookup.get(b.user_id, {}).get("mobile", "-") }}</td><td>{{ b.start }}</td><td>{{ b.end }}</td><td>{{ b.court }}</td>
             <td>{% if b.status == "booked" %}<span class="status-booked">Booked</span>{% elif b.status == "attended" %}<span class="status-attended">Arrived</span>{% elif b.status == "no-show" %}<span class="status-no-show">No Show</span>{% elif b.status == "cancelled" %}<span class="status-cancelled">Cancelled</span>{% else %}{{ b.status }}{% endif %}</td>
-            <td>{% if b.status != "cancelled" %}<div class="attendance-actions"><a class="action-attended" href="/mark/{{ b.id }}/attended">✔ Arrived</a><a class="action-noshow" href="/mark/{{ b.id }}/no-show">✖ No Show</a><a class="action-reset" href="/mark/{{ b.id }}/booked">Reset</a></div>{% else %}-{% endif %}</td>
+            <td>{% if b.status != "cancelled" %}<div class="attendance-actions">
+                <form method="POST" action="{{ url_for('mark_attendance', id=b.id, status='attended') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="action-attended">✔ Arrived</button>
+                </form>
+                <form method="POST" action="{{ url_for('mark_attendance', id=b.id, status='no-show') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="action-noshow">✖ No Show</button>
+                </form>
+                <form method="POST" action="{{ url_for('mark_attendance', id=b.id, status='booked') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="action-reset">Reset</button>
+                </form>
+            </div>{% else %}-{% endif %}</td>
         </tr>{% endfor %}
         </tbody></table></div>
         {% else %}<div class="empty">No bookings match the current filters for this date.</div>{% endif %}
