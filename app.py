@@ -213,11 +213,13 @@ def register():
 
         username = request.form["username"].strip()
         password = request.form["password"]
-        role = "player"
+        role = request.form.get("role", "player")
         building = request.form.get("building", "").strip()
         flat_number = request.form.get("flat_number", "").strip()
         mobile_number = request.form["mobile_number"].strip()
 
+        if role not in ["player", "guard", "landlord"]:
+            role = "player"
 
         if (
             not mobile_number.isdigit()
@@ -929,6 +931,76 @@ def verify_code():
         return redirect(url_for("new_password"))
 
     return render_template("verify_code.html")
+
+
+@app.route("/resend-code", methods=["POST"])
+@limiter.limit("1 per minute")
+def resend_code():
+    mobile_number = session.get("reset_mobile")
+
+    if not mobile_number:
+        flash(
+            "Start a new password-reset request.",
+            "warning"
+        )
+        return redirect(url_for("forgot_password"))
+
+    if not TWILIO_VERIFY_SERVICE_SID:
+        app.logger.error(
+            "TWILIO_VERIFY_SERVICE_SID is missing."
+        )
+        flash(
+            "SMS verification is temporarily unavailable.",
+            "error"
+        )
+        return redirect(url_for("verify_code"))
+
+    try:
+        phone_number = format_bahrain_phone(
+            mobile_number
+        )
+
+        client = get_twilio_client()
+
+        client.verify.v2.services(
+            TWILIO_VERIFY_SERVICE_SID
+        ).verifications.create(
+            to=phone_number,
+            channel="sms"
+        )
+
+    except ValueError as error:
+        flash(str(error), "error")
+        return redirect(url_for("forgot_password"))
+
+    except TwilioRestException:
+        app.logger.exception(
+            "Unable to resend verification code."
+        )
+        flash(
+            "Unable to resend the code right now. Please try again later.",
+            "error"
+        )
+        return redirect(url_for("verify_code"))
+
+    except RuntimeError:
+        app.logger.exception(
+            "Twilio configuration error while resending code."
+        )
+        flash(
+            "SMS verification is temporarily unavailable.",
+            "error"
+        )
+        return redirect(url_for("verify_code"))
+
+    session.pop("password_reset_verified", None)
+
+    flash(
+        "A new verification code has been sent.",
+        "success"
+    )
+    return redirect(url_for("verify_code"))
+
 
 @app.route("/new-password", methods=["GET", "POST"])
 def new_password():
