@@ -323,6 +323,20 @@
             }
         }
     </style>
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/mobile.css') }}">
+    <link
+    rel="manifest"
+    href="{{ url_for('static', filename='manifest.json') }}"
+>
+
+<meta name="theme-color" content="#4ea326">
+
+<link
+    rel="apple-touch-icon"
+    href="{{ url_for('static', filename='icons/icon-192.png') }}"
+>
 </head>
 
 <body>
@@ -534,6 +548,15 @@
             return true;
         }
     </script>
+    <script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register(
+            "{{ url_for('static', filename='service-worker.js') }}"
+        );
+    });
+}
+</script>
 
 </body>
 </html>

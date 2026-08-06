@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "Compound Tennis Booking",
+  "short_name": "Tennis Booking",
+  "description": "Book and manage compound tennis court reservations.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0f1310",
+  "theme_color": "#4ea326",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

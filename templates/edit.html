@@ -28,7 +28,17 @@ input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--a
 <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/mobile.css') }}">
+<link
+    rel="manifest"
+    href="{{ url_for('static', filename='manifest.json') }}"
+>
 
+<meta name="theme-color" content="#4ea326">
+
+<link
+    rel="apple-touch-icon"
+    href="{{ url_for('static', filename='icons/icon-192.png') }}"
+>
 </head>
 <body>
 <main class="card">
@@ -68,5 +78,14 @@ input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--a
 <div class="divider">or</div>
 <a class="back-link" href="{{ url_for('home') }}">← Back to Dashboard</a>
 </main>
+<script>
+if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+        navigator.serviceWorker.register(
+            "{{ url_for('static', filename='service-worker.js') }}"
+        );
+    });
+}
+</script>
 </body>
 </html>
