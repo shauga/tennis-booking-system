@@ -178,7 +178,12 @@ def home():
             "title": f"{b.court} | {b.start}-{b.end} | {display_status}",
             "start": f"{b.date}T{b.start}",
             "end": f"{b.date}T{b.end}",
-            "color": color
+            "color": color,
+            "extendedProps": {
+                "court": b.court,
+                "booking_status": display_status,
+                "owner_id": b.user_id
+            }
         })
 
     user_bookings = Booking.query.filter_by(

@@ -881,6 +881,329 @@
                 padding: 18px 13px;
             }
         }
+
+        /* APP-LIKE UI UPGRADES */
+
+        .toast-container {
+            position: fixed;
+            top: 94px;
+            right: 22px;
+            z-index: 3000;
+            width: min(380px, calc(100vw - 28px));
+            display: grid;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255,255,255,.17);
+            border-radius: 14px;
+            color: white;
+            background: rgba(30, 36, 31, .94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 14px 34px rgba(0,0,0,.3);
+            animation: toastIn .3s ease both;
+            pointer-events: auto;
+        }
+
+        .toast.success {
+            background: rgba(32, 111, 48, .95);
+            border-color: rgba(154, 236, 119, .38);
+        }
+
+        .toast.error,
+        .toast.danger {
+            background: rgba(145, 38, 38, .95);
+        }
+
+        .toast.warning {
+            background: rgba(145, 93, 24, .95);
+        }
+
+        .toast-icon {
+            font-size: 19px;
+            line-height: 1.2;
+        }
+
+        .toast-copy {
+            flex: 1;
+            min-width: 0;
+            line-height: 1.45;
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        .toast-close {
+            min-height: auto;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: rgba(255,255,255,.74);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(-10px) translateX(18px); }
+            to { opacity: 1; transform: translateY(0) translateX(0); }
+        }
+
+        .live-status-card {
+            margin-bottom: 25px;
+            padding: 24px 27px;
+        }
+
+        .court-status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .court-status-item {
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,.13);
+            border-radius: 15px;
+            background: rgba(255,255,255,.075);
+        }
+
+        .court-status-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 9px;
+        }
+
+        .court-status-name {
+            font-weight: 800;
+            font-size: 17px;
+        }
+
+        .court-status-pill {
+            padding: 6px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .court-status-pill.available-now {
+            color: #dfffd0;
+            background: rgba(74, 165, 53, .28);
+            border: 1px solid rgba(121,209,67,.32);
+        }
+
+        .court-status-pill.in-use {
+            color: #ffe1e1;
+            background: rgba(190, 47, 47, .28);
+            border: 1px solid rgba(255,100,100,.28);
+        }
+
+        .court-status-detail {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .ongoing-banner {
+            display: none;
+            margin-bottom: 25px;
+            padding: 18px 21px;
+            border-radius: 17px;
+            border: 1px solid rgba(121,209,67,.38);
+            background: linear-gradient(135deg, rgba(43,120,47,.76), rgba(80,153,45,.58));
+            box-shadow: 0 16px 35px rgba(34,98,35,.22);
+        }
+
+        .ongoing-banner.show {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .ongoing-banner strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 17px;
+        }
+
+        .ongoing-banner p {
+            color: rgba(255,255,255,.78);
+            font-size: 13px;
+        }
+
+        .pulse-dot {
+            width: 12px;
+            height: 12px;
+            flex: 0 0 auto;
+            border-radius: 50%;
+            background: #b7ff8e;
+            box-shadow: 0 0 0 0 rgba(183,255,142,.6);
+            animation: pulse 1.6s infinite;
+        }
+
+        @keyframes pulse {
+            70% { box-shadow: 0 0 0 10px rgba(183,255,142,0); }
+            100% { box-shadow: 0 0 0 0 rgba(183,255,142,0); }
+        }
+
+        .booking-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0,0,0,.68);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .booking-modal-backdrop.show {
+            display: flex;
+        }
+
+        .booking-modal {
+            width: min(460px, 100%);
+            padding: 28px;
+            border-radius: 22px;
+            border: 1px solid rgba(255,255,255,.16);
+            background: rgba(17,24,18,.96);
+            color: white;
+            box-shadow: 0 28px 80px rgba(0,0,0,.46);
+        }
+
+        .booking-modal h3 {
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+
+        .booking-modal p {
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .booking-summary {
+            margin: 20px 0;
+            padding: 16px;
+            border-radius: 13px;
+            background: rgba(255,255,255,.075);
+            border: 1px solid rgba(255,255,255,.12);
+            line-height: 1.75;
+        }
+
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .secondary-button {
+            min-height: 50px;
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 11px;
+            background: rgba(255,255,255,.07);
+            color: white;
+            font-weight: 750;
+            cursor: pointer;
+        }
+
+        .mobile-bottom-nav {
+            display: none;
+        }
+
+        .fc-event-main {
+            overflow: hidden;
+        }
+
+        .calendar-event-card {
+            padding: 3px 5px;
+            overflow: hidden;
+        }
+
+        .calendar-event-card strong {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 11px;
+        }
+
+        .calendar-event-card span {
+            display: block;
+            margin-top: 1px;
+            opacity: .88;
+            font-size: 9px;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding-bottom: 82px !important;
+            }
+
+            .toast-container {
+                top: 12px;
+                right: 14px;
+                left: 14px;
+                width: auto;
+            }
+
+            .court-status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .live-status-card {
+                padding: 20px 16px;
+            }
+
+            .ongoing-banner.show {
+                align-items: flex-start;
+            }
+
+            .modal-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .mobile-bottom-nav {
+                position: fixed;
+                left: 12px;
+                right: 12px;
+                bottom: max(10px, env(safe-area-inset-bottom));
+                z-index: 2500;
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                padding: 7px;
+                border: 1px solid rgba(255,255,255,.15);
+                border-radius: 18px;
+                background: rgba(12,18,13,.92);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                box-shadow: 0 15px 38px rgba(0,0,0,.36);
+            }
+
+            .mobile-bottom-nav a {
+                min-width: 0;
+                padding: 8px 4px;
+                color: rgba(255,255,255,.72);
+                text-align: center;
+                text-decoration: none;
+                font-size: 10px;
+                font-weight: 750;
+            }
+
+            .mobile-bottom-nav a span {
+                display: block;
+                margin-bottom: 3px;
+                font-size: 20px;
+            }
+        }
+
     </style>
     <link
     rel="stylesheet"
@@ -930,7 +1253,7 @@
 
     <main class="page-container">
 
-        <section class="welcome-section">
+        <section class="welcome-section" id="homeSection">
             <h2>Welcome back 👋</h2>
 
             <p>
@@ -938,13 +1261,21 @@
             </p>
         </section>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+        <div class="toast-container" id="toastContainer" aria-live="polite">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="toast {{ category }}" data-toast>
+                            <div class="toast-icon">
+                                {% if category == "success" %}✓{% elif category == "warning" %}⚠{% else %}✕{% endif %}
+                            </div>
+                            <div class="toast-copy">{{ message }}</div>
+                            <button type="button" class="toast-close" aria-label="Dismiss notification">×</button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
 
         {% if no_shows >= 3 %}
             <div class="danger">
@@ -955,6 +1286,39 @@
                 ⚠ You have two no-shows. One more no-show will block future bookings.
             </div>
         {% endif %}
+
+        <section class="ongoing-banner" id="ongoingBanner" aria-live="polite">
+            <div>
+                <strong id="ongoingTitle">🎾 Your booking is ongoing</strong>
+                <p id="ongoingDetail"></p>
+            </div>
+            <div class="pulse-dot" aria-hidden="true"></div>
+        </section>
+
+        <section class="glass-card live-status-card">
+            <div class="section-heading">
+                <h2>Courts Right Now</h2>
+                <p>Live availability based on the current Bahrain time.</p>
+            </div>
+
+            <div class="court-status-grid">
+                <article class="court-status-item" data-court-card="Court 1">
+                    <div class="court-status-top">
+                        <span class="court-status-name">🎾 Court 1</span>
+                        <span class="court-status-pill available-now" data-court-pill>Available</span>
+                    </div>
+                    <p class="court-status-detail" data-court-detail>Checking availability…</p>
+                </article>
+
+                <article class="court-status-item" data-court-card="Court 2">
+                    <div class="court-status-top">
+                        <span class="court-status-name">🎾 Court 2</span>
+                        <span class="court-status-pill available-now" data-court-pill>Available</span>
+                    </div>
+                    <p class="court-status-detail" data-court-detail>Checking availability…</p>
+                </article>
+            </div>
+        </section>
 
         <section class="glass-card summary-card">
 
@@ -992,7 +1356,7 @@
 
         <section class="main-grid">
 
-            <article class="glass-card booking-card">
+            <article class="glass-card booking-card" id="bookSection">
 
                 <div class="section-heading">
                     <h2>Book a Court</h2>
@@ -1002,7 +1366,7 @@
                     </p>
                 </div>
 
-                <form method="POST" action="/book">
+                <form method="POST" action="/book" id="bookingForm">
                     <input
                     type="hidden"
                     name="csrf_token"
@@ -1137,7 +1501,7 @@
 
             </article>
 
-            <article class="glass-card calendar-card">
+            <article class="glass-card calendar-card" id="calendarSection">
 
                 <div class="section-heading">
                     <h2>Availability Calendar</h2>
@@ -1324,7 +1688,188 @@
 
     </main>
 
+    <div class="booking-modal-backdrop" id="bookingModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="bookingModalTitle">
+        <div class="booking-modal">
+            <h3 id="bookingModalTitle">Confirm booking</h3>
+            <p>Please check the reservation details before confirming.</p>
+
+            <div class="booking-summary" id="bookingModalSummary"></div>
+
+            <div class="modal-actions">
+                <button type="button" class="secondary-button" id="cancelBookingModal">Go back</button>
+                <button type="button" class="primary-button" id="confirmBookingModal">Confirm booking</button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <a href="#homeSection"><span>🏠</span>Home</a>
+        <a href="#bookSection"><span>🎾</span>Book</a>
+        <a href="#calendarSection"><span>📅</span>Calendar</a>
+        <a href="{{ url_for('profile') }}"><span>👤</span>Profile</a>
+    </nav>
+
     <script>
+        const CURRENT_USER_ID = {{ session.get("user_id") | tojson }};
+        const INITIAL_EVENTS = {{ events | tojson }};
+
+        function formatClock(date) {
+            return new Intl.DateTimeFormat("en-US", {
+                hour: "numeric",
+                minute: "2-digit"
+            }).format(date);
+        }
+
+        function refreshLiveCourtStatus(calendar) {
+            const now = new Date();
+
+            ["Court 1", "Court 2"].forEach((courtName) => {
+                const card = document.querySelector(`[data-court-card="${courtName}"]`);
+                if (!card) return;
+
+                const pill = card.querySelector("[data-court-pill]");
+                const detail = card.querySelector("[data-court-detail]");
+
+                const relevantEvents = calendar.getEvents()
+                    .filter((event) =>
+                        event.extendedProps.court === courtName &&
+                        event.end &&
+                        event.end > now
+                    )
+                    .sort((a, b) => a.start - b.start);
+
+                const currentEvent = relevantEvents.find((event) =>
+                    event.start <= now && now < event.end
+                );
+
+                if (currentEvent) {
+                    pill.textContent = "In use";
+                    pill.classList.remove("available-now");
+                    pill.classList.add("in-use");
+                    detail.textContent =
+                        `Ongoing until ${formatClock(currentEvent.end)}.`;
+                } else {
+                    pill.textContent = "Available";
+                    pill.classList.remove("in-use");
+                    pill.classList.add("available-now");
+
+                    const nextEvent = relevantEvents.find((event) => event.start > now);
+
+                    detail.textContent = nextEvent
+                        ? `Next booking at ${formatClock(nextEvent.start)}.`
+                        : "No more bookings currently scheduled.";
+                }
+            });
+
+            const ownOngoing = calendar.getEvents().find((event) =>
+                Number(event.extendedProps.owner_id) === Number(CURRENT_USER_ID) &&
+                event.start <= now &&
+                now < event.end
+            );
+
+            const banner = document.getElementById("ongoingBanner");
+
+            if (ownOngoing) {
+                document.getElementById("ongoingTitle").textContent =
+                    `🎾 ${ownOngoing.extendedProps.court} • Ongoing`;
+
+                document.getElementById("ongoingDetail").textContent =
+                    `Your booking ends at ${formatClock(ownOngoing.end)}.`;
+
+                banner.classList.add("show");
+            } else {
+                banner.classList.remove("show");
+            }
+        }
+
+        function updateCalendarForCurrentTime(calendar) {
+            const now = new Date();
+
+            calendar.getEvents().forEach((event) => {
+                if (!event.end) return;
+
+                if (event.end <= now) {
+                    event.remove();
+                    return;
+                }
+
+                const isOngoing = event.start <= now && now < event.end;
+
+                if (isOngoing) {
+                    event.setProp("backgroundColor", "#2e7d32");
+                    event.setProp("borderColor", "#2e7d32");
+                    event.setExtendedProp("booking_status", "ongoing");
+                }
+            });
+
+            refreshLiveCourtStatus(calendar);
+        }
+
+        function setupToasts() {
+            document.querySelectorAll("[data-toast]").forEach((toast) => {
+                const removeToast = () => {
+                    toast.style.opacity = "0";
+                    toast.style.transform = "translateX(18px)";
+                    setTimeout(() => toast.remove(), 220);
+                };
+
+                toast.querySelector(".toast-close")?.addEventListener(
+                    "click",
+                    removeToast
+                );
+
+                setTimeout(removeToast, 4200);
+            });
+        }
+
+        function setupBookingConfirmation() {
+            const form = document.getElementById("bookingForm");
+            const backdrop = document.getElementById("bookingModalBackdrop");
+            const summary = document.getElementById("bookingModalSummary");
+            const cancelButton = document.getElementById("cancelBookingModal");
+            const confirmButton = document.getElementById("confirmBookingModal");
+            let confirmed = false;
+
+            form.addEventListener("submit", (event) => {
+                if (confirmed) return;
+
+                event.preventDefault();
+
+                const date = document.getElementById("dateInput").value;
+                const start = document.getElementById("startInput").value;
+                const end = document.getElementById("endInput").value;
+                const court = document.getElementById("courtInput").value;
+
+                summary.innerHTML = `
+                    <strong>${court}</strong><br>
+                    📅 ${date}<br>
+                    🕒 ${start} – ${end}
+                `;
+
+                backdrop.classList.add("show");
+            });
+
+            cancelButton.addEventListener("click", () => {
+                backdrop.classList.remove("show");
+            });
+
+            confirmButton.addEventListener("click", () => {
+                confirmed = true;
+                confirmButton.disabled = true;
+                confirmButton.textContent = "Booking…";
+                form.requestSubmit();
+            });
+
+            backdrop.addEventListener("click", (event) => {
+                if (event.target === backdrop) {
+                    backdrop.classList.remove("show");
+                }
+            });
+        }
+
+        setupToasts();
+        setupBookingConfirmation();
+
         async function loadAvailability(date) {
             const slotsArea = document.getElementById("slotsArea");
 
@@ -1468,7 +2013,7 @@
                             list: "List"
                         },
 
-                        events: {{ events | tojson }},
+                        events: INITIAL_EVENTS,
 
                         dateClick: function (info) {
                             document.getElementById("dateInput").value =
@@ -1487,6 +2032,28 @@
                             loadAvailability(selectedDate);
                         },
 
+                        eventContent: function (arg) {
+                            const court =
+                                arg.event.extendedProps.court || "Court";
+
+                            const status =
+                                arg.event.extendedProps.booking_status || "";
+
+                            const start =
+                                arg.event.start
+                                    ? formatClock(arg.event.start)
+                                    : "";
+
+                            return {
+                                html: `
+                                    <div class="calendar-event-card">
+                                        <strong>🎾 ${court}</strong>
+                                        <span>${start}${status ? " • " + status : ""}</span>
+                                    </div>
+                                `
+                            };
+                        },
+
                         eventDidMount: function (info) {
                             info.el.title = info.event.title;
                         }
@@ -1494,6 +2061,12 @@
                 );
 
             calendar.render();
+
+            updateCalendarForCurrentTime(calendar);
+
+            setInterval(() => {
+                updateCalendarForCurrentTime(calendar);
+            }, 30000);
 
             let lastMobileState =
                 window.innerWidth < mobileBreakpoint;
