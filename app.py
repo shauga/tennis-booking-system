@@ -135,19 +135,47 @@ def home():
 
     events = []
 
+    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
+
     for b in bookings:
-        if b.status == "booked":
+        try:
+            booking_start = datetime.strptime(
+                f"{b.date} {b.start}",
+                "%Y-%m-%d %H:%M"
+            ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+
+            booking_end = datetime.strptime(
+                f"{b.date} {b.end}",
+                "%Y-%m-%d %H:%M"
+            ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+
+        except ValueError:
+            continue
+
+        # Once a booking has ended, remove it from the calendar.
+        if booking_end <= now_bahrain:
+            continue
+
+        # While the booking is happening, show it as ongoing.
+        if booking_start <= now_bahrain < booking_end:
+            display_status = "ongoing"
+            color = "#2e7d32"
+        elif b.status == "booked":
+            display_status = "booked"
             color = "#d32f2f"
         elif b.status == "attended":
+            display_status = "attended"
             color = "#1976d2"
         elif b.status == "no-show":
+            display_status = "no-show"
             color = "#f57c00"
         else:
+            display_status = b.status
             color = "#757575"
 
         events.append({
             "id": b.id,
-            "title": f"{b.court} | {b.start}-{b.end} | {b.status}",
+            "title": f"{b.court} | {b.start}-{b.end} | {display_status}",
             "start": f"{b.date}T{b.start}",
             "end": f"{b.date}T{b.end}",
             "color": color
@@ -419,7 +447,7 @@ def book():
     db.session.add(new_booking)
     db.session.commit()
 
-    flash("Booking created successfully.")
+    flash("Booking created successfully.", "success")
     return redirect(url_for("home"))
 
 
@@ -483,7 +511,7 @@ def edit_booking(id):
         booking.court = court
 
         db.session.commit()
-        flash("Booking updated.")
+        flash("Booking updated.", "success")
         return redirect(url_for("home"))
 
     return render_template("edit.html", booking=booking)

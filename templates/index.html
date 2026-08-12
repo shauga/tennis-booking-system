@@ -251,6 +251,12 @@
             color: #ffe2e2;
         }
 
+        .flash.success {
+            background: rgba(46, 125, 50, 0.58);
+            border: 1px solid rgba(121, 209, 67, 0.42);
+            color: #eaffdf;
+        }
+
         .warning {
             background: rgba(180, 115, 20, 0.48);
             border: 1px solid rgba(255, 195, 85, 0.35);
@@ -932,10 +938,10 @@
             </p>
         </section>
 
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                {% for message in messages %}
-                    <div class="flash">{{ message }}</div>
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
@@ -1147,6 +1153,7 @@
                     <span><b class="orange"></b> No Show</span>
                     <span><b class="grey"></b> Cancelled</span>
                     <span><b class="green"></b> Available</span>
+                    <span><b class="green"></b> Ongoing</span>
                 </div>
 
                 <div id="calendar"></div>
