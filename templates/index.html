@@ -1163,13 +1163,24 @@
             .mobile-day-list {
                 display: grid;
                 gap: 12px;
-                max-height: 520px;
+                max-height: 58vh;
                 overflow-y: auto;
-                padding-right: 3px;
+                padding: 2px 2px 8px;
+                scroll-snap-type: y proximity;
                 -webkit-overflow-scrolling: touch;
             }
 
+            .mobile-day-list::-webkit-scrollbar {
+                width: 5px;
+            }
+
+            .mobile-day-list::-webkit-scrollbar-thumb {
+                background: rgba(121, 209, 67, .45);
+                border-radius: 999px;
+            }
+
             .mobile-day-card {
+                scroll-snap-align: start;
                 border-radius: 16px;
                 overflow: hidden;
                 border: 1px solid rgba(255,255,255,.12);
@@ -1222,8 +1233,11 @@
             }
 
             .mobile-day-empty {
-                padding: 10px 4px;
-                color: rgba(255,255,255,.6);
+                min-height: 58px;
+                display: grid;
+                place-items: center;
+                padding: 12px 8px;
+                color: rgba(255,255,255,.64);
                 text-align: center;
                 font-size: 13px;
             }
@@ -1233,8 +1247,58 @@
                 padding: 0 !important;
             }
 
-            #calendar.mobile-list-active .fc {
+            /* On phones keep FullCalendar's navigation toolbar,
+               but hide the week grid itself. The custom day cards below
+               become the usable mobile calendar. */
+            #calendar.mobile-list-active .fc-view-harness,
+            #calendar.mobile-list-active .fc-scrollgrid {
                 display: none !important;
+            }
+
+            #calendar.mobile-list-active .fc {
+                display: block !important;
+            }
+
+            #calendar.mobile-list-active .fc-header-toolbar {
+                display: grid !important;
+                grid-template-columns: 42px minmax(0, 1fr) 42px !important;
+                align-items: center !important;
+                gap: 8px !important;
+                margin: 0 0 14px !important;
+                padding: 0 2px !important;
+            }
+
+            #calendar.mobile-list-active .fc-toolbar-title {
+                color: #ffffff !important;
+                font-size: 1.05rem !important;
+                font-weight: 800 !important;
+                text-align: center !important;
+                opacity: 1 !important;
+                text-shadow: 0 1px 3px rgba(0, 0, 0, .65);
+            }
+
+            #calendar.mobile-list-active .fc-toolbar-chunk {
+                min-width: 0 !important;
+            }
+
+            #calendar.mobile-list-active .fc-toolbar-chunk:nth-child(2) {
+                justify-self: center !important;
+            }
+
+            #calendar.mobile-list-active .fc-prev-button,
+            #calendar.mobile-list-active .fc-next-button {
+                width: 42px !important;
+                height: 48px !important;
+                padding: 0 !important;
+                display: grid !important;
+                place-items: center !important;
+                border-radius: 8px !important;
+            }
+
+            #calendar.mobile-list-active {
+                padding: 0 !important;
+                background: transparent !important;
+                overflow: visible !important;
             }
 
             .toast-container {
