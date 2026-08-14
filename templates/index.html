@@ -357,12 +357,12 @@
             min-height: 52px;
             padding: 13px 15px;
 
-            border: 1px solid rgba(255, 255, 255, 0.17);
+            border: 1px solid rgba(255, 255, 255, 0.16);
             border-radius: 11px;
             outline: none;
 
-            background: rgba(255, 255, 255, 0.94);
-            color: #202020;
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
 
             transition:
                 border-color 0.2s ease,
@@ -679,6 +679,129 @@
             font-weight: 650;
         }
 
+
+        input::placeholder {
+            color: rgba(255,255,255,.55);
+        }
+
+        select option {
+            color: #202020;
+            background: #ffffff;
+        }
+
+        input[type="date"],
+        input[type="time"] {
+            color-scheme: dark;
+        }
+
+        .mobile-bookings {
+            display: none;
+        }
+
+        .mobile-booking-card {
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 15px;
+            background: rgba(255,255,255,.07);
+            box-shadow: 0 10px 25px rgba(0,0,0,.18);
+        }
+
+        .mobile-booking-card + .mobile-booking-card {
+            margin-top: 12px;
+        }
+
+        .mobile-booking-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .mobile-booking-court {
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .mobile-booking-meta {
+            display: grid;
+            gap: 4px;
+            color: rgba(255,255,255,.76);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .mobile-booking-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .mobile-booking-actions a,
+        .mobile-booking-actions button {
+            width: 100%;
+            min-height: 42px;
+            margin: 0;
+            padding: 9px 10px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: capitalize;
+        }
+
+        .status-pill.booked {
+            background: rgba(216,62,62,.18);
+            color: #ffb8b8;
+            border: 1px solid rgba(216,62,62,.28);
+        }
+
+        .status-pill.attended {
+            background: rgba(49,133,215,.18);
+            color: #b8d7ff;
+            border: 1px solid rgba(49,133,215,.28);
+        }
+
+        .status-pill.no-show {
+            background: rgba(244,139,35,.18);
+            color: #ffd2a2;
+            border: 1px solid rgba(244,139,35,.28);
+        }
+
+        .status-pill.cancelled {
+            background: rgba(134,134,134,.18);
+            color: #d9d9d9;
+            border: 1px solid rgba(134,134,134,.28);
+        }
+
+        .today-calendar-button {
+            min-height: 42px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            border-radius: 10px;
+            background: rgba(255,255,255,.08);
+            color: white;
+            font-weight: 750;
+            cursor: pointer;
+        }
+
+        .mobile-bottom-nav a.active {
+            color: #b7ff8e;
+            background: rgba(121,209,67,.12);
+            border-radius: 12px;
+        }
+
         /* TABLET */
 
         @media (max-width: 1050px) {
@@ -857,6 +980,14 @@
 
             .table-card {
                 margin-top: 18px;
+            }
+
+            .desktop-bookings-table {
+                display: none !important;
+            }
+
+            .mobile-bookings {
+                display: block;
             }
         }
 
@@ -1858,9 +1989,9 @@
     </div>
 
     <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-        <a href="#homeSection"><span>🏠</span>Home</a>
-        <a href="#bookSection"><span>🎾</span>Book</a>
-        <a href="#calendarSection"><span>📅</span>Calendar</a>
+        <a href="#homeSection" data-nav-target="homeSection"><span>🏠</span>Home</a>
+        <a href="#bookSection" data-nav-target="bookSection"><span>🎾</span>Book</a>
+        <a href="#calendarSection" data-nav-target="calendarSection"><span>📅</span>Calendar</a>
         <a href="{{ url_for('profile') }}"><span>👤</span>Profile</a>
     </nav>
 
@@ -2024,6 +2155,51 @@
 
         setupToasts();
         setupBookingConfirmation();
+
+        const todayCalendarButton =
+            document.getElementById("todayCalendarButton");
+
+        if (todayCalendarButton) {
+            todayCalendarButton.addEventListener("click", () => {
+                calendar.today();
+                renderMobileDayList(calendar);
+            });
+        }
+
+        const navLinks =
+            Array.from(document.querySelectorAll("[data-nav-target]"));
+
+        function updateActiveMobileNav() {
+            if (window.innerWidth > 760) return;
+
+            let activeId = "homeSection";
+
+            navLinks.forEach((link) => {
+                const section =
+                    document.getElementById(link.dataset.navTarget);
+
+                if (
+                    section &&
+                    section.getBoundingClientRect().top <= 180
+                ) {
+                    activeId = link.dataset.navTarget;
+                }
+            });
+
+            navLinks.forEach((link) => {
+                link.classList.toggle(
+                    "active",
+                    link.dataset.navTarget === activeId
+                );
+            });
+        }
+
+        window.addEventListener("scroll", updateActiveMobileNav, {
+            passive: true
+        });
+
+        window.addEventListener("resize", updateActiveMobileNav);
+        updateActiveMobileNav();
 
         function statusColor(status) {
             if (status === "ongoing") return "#2e7d32";
