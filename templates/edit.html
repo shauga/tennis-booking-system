@@ -7,63 +7,59 @@
 <style>
 :root{--accent:#79d143;--accent-dark:#4ea326;--accent-soft:rgba(121,209,67,.18);--glass:rgba(15,19,16,.76);--border:rgba(255,255,255,.16);--text:#fff;--muted:rgba(255,255,255,.72)}
 *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",Arial,sans-serif}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
 body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;color:var(--text);background:linear-gradient(rgba(0,0,0,.52),rgba(0,0,0,.74)),url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1800&q=85");background-size:cover;background-position:center}
-.card{width:100%;max-width:520px;padding:44px 40px;background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:24px;box-shadow:0 24px 65px rgba(0,0,0,.46);animation:rise .65s ease}
+.card{width:100%;max-width:520px;min-width:0;padding:44px 40px;background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:24px;box-shadow:0 24px 65px rgba(0,0,0,.46);animation:rise .65s ease;overflow:hidden}
 @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 .icon{width:70px;height:70px;margin:0 auto 18px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--accent-dark),var(--accent));font-size:32px;box-shadow:0 12px 28px rgba(95,190,45,.28)}
 h1{text-align:center;font-size:34px;margin-bottom:10px}
 .subtitle{text-align:center;color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:30px}
+form,.input-group{width:100%;min-width:0}
 .input-group{margin-bottom:18px}
 label{display:block;margin-bottom:8px;color:rgba(255,255,255,.9);font-size:14px;font-weight:700}
-input,select{width:100%;min-height:54px;padding:14px 16px;border:1px solid rgba(255,255,255,.18);border-radius:12px;outline:none;background:rgba(255,255,255,.95);color:#202020;font-size:16px;transition:.2s}
+input,select{width:100%;max-width:100%;min-width:0;min-height:54px;padding:14px 16px;border:1px solid rgba(255,255,255,.18);border-radius:12px;outline:none;background:rgba(255,255,255,.95);color:#202020;font-size:16px;transition:.2s;display:block;box-sizing:border-box}
+input[type="date"],input[type="time"]{-webkit-appearance:none;appearance:none}
 input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);transform:translateY(-1px)}
-.save-button{width:100%;min-height:56px;margin-top:4px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--accent-dark),var(--accent));color:#fff;font-size:16px;font-weight:800;cursor:pointer;transition:.2s}
+.save-button{width:100%;max-width:100%;min-width:0;min-height:56px;margin-top:4px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--accent-dark),var(--accent));color:#fff;font-size:16px;font-weight:800;cursor:pointer;transition:.2s;box-sizing:border-box}
 .save-button:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(95,190,45,.34)}
 .divider{display:flex;align-items:center;gap:12px;margin:28px 0 20px;color:rgba(255,255,255,.45);font-size:13px}
 .divider:before,.divider:after{content:"";flex:1;height:1px;background:rgba(255,255,255,.16)}
 .back-link{display:block;text-align:center;color:#b9ed9b;text-decoration:none;font-size:14px;font-weight:750}
 .back-link:hover{color:#fff;text-decoration:underline}
-@media(max-width:600px){body{align-items:flex-start;padding:16px}.card{margin:18px 0;padding:34px 22px;border-radius:20px}.icon{width:62px;height:62px;font-size:28px}h1{font-size:29px}input,select,.save-button{min-height:56px}}
+@media(max-width:600px){
+body{align-items:flex-start;justify-content:center;padding:14px}
+.card{width:100%;max-width:100%;min-width:0;margin:16px 0;padding:30px 18px;border-radius:20px;overflow:hidden}
+.icon{width:60px;height:60px;font-size:27px}
+h1{font-size:28px}
+form,.input-group{width:100%;max-width:100%;min-width:0}
+input,select,.save-button{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;min-height:56px}
+input[type="date"],input[type="time"]{display:block;-webkit-appearance:none;appearance:none}
+}
 </style>
-<link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='css/mobile.css') }}">
-<link
-    rel="manifest"
-    href="{{ url_for('static', filename='manifest.json') }}"
->
-
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 <meta name="theme-color" content="#4ea326">
-
-<link
-    rel="apple-touch-icon"
-    href="{{ url_for('static', filename='icons/icon-192.png') }}"
->
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
 </head>
 <body>
 <main class="card">
 <div class="icon">✏️</div>
 <h1>Edit Booking</h1>
 <p class="subtitle">Update your reservation details below and save your changes.</p>
-
 <form method="POST">
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
 <div class="input-group">
 <label for="date">Date</label>
 <input id="date" type="date" name="date" value="{{ booking.date }}" min="{{ today_date }}" required>
 </div>
-
 <div class="input-group">
 <label for="start">Start Time</label>
 <input id="start" type="time" name="start" value="{{ booking.start }}" required>
 </div>
-
 <div class="input-group">
 <label for="end">End Time</label>
 <input id="end" type="time" name="end" value="{{ booking.end }}" required>
 </div>
-
 <div class="input-group">
 <label for="court">Court</label>
 <select id="court" name="court" required>
@@ -71,20 +67,16 @@ input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--a
 <option value="Court 2" {% if booking.court == "Court 2" %}selected{% endif %}>Court 2</option>
 </select>
 </div>
-
 <button type="submit" class="save-button">Save Changes</button>
 </form>
-
 <div class="divider">or</div>
 <a class="back-link" href="{{ url_for('home') }}">← Back to Dashboard</a>
 </main>
 <script>
 if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-        navigator.serviceWorker.register(
-            "{{ url_for('static', filename='service-worker.js') }}"
-        );
-    });
+window.addEventListener("load", () => {
+navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}");
+});
 }
 </script>
 </body>
