@@ -36,6 +36,15 @@
 
         html {
             scroll-behavior: smooth;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         body {
@@ -151,6 +160,10 @@
         }
 
         .glass-card {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            overflow: hidden;
             margin-bottom: 26px;
             padding: 28px;
             background: var(--glass);
@@ -275,6 +288,11 @@
             align-items: end;
         }
 
+        .input-group {
+            width: 100%;
+            min-width: 0;
+        }
+
         .input-group label {
             display: block;
             margin-bottom: 8px;
@@ -286,7 +304,11 @@
         input,
         select {
             width: 100%;
+            max-width: 100%;
+            min-width: 0;
             min-height: 51px;
+            box-sizing: border-box;
+            display: block;
             padding: 13px 15px;
             border: 1px solid rgba(255, 255, 255, 0.17);
             border-radius: 11px;
@@ -294,6 +316,12 @@
             background: rgba(255, 255, 255, 0.96);
             color: #202020;
             transition: 0.2s ease;
+        }
+
+        input[type="date"],
+        input[type="time"] {
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         input:focus,
@@ -520,6 +548,45 @@
         @media (max-width: 700px) {
             body {
                 background-attachment: scroll;
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            .page-container {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+            }
+
+            .glass-card,
+            .filter-form,
+            .input-group {
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            .glass-card {
+                overflow: hidden;
+            }
+
+            input,
+            select,
+            .filter-form button,
+            .filter-form .button {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                box-sizing: border-box !important;
+            }
+
+            input[type="date"],
+            input[type="time"] {
+                display: block;
+                -webkit-appearance: none;
+                appearance: none;
             }
 
             .navbar {
