@@ -464,6 +464,9 @@
             opacity: 0.78;
         }
 
+        /* VISUAL BOOKING FLOW */
+        .visual-booking-form{display:grid;gap:18px}.booking-step{padding:16px;border:1px solid rgba(255,255,255,.11);border-radius:15px;background:rgba(255,255,255,.055)}.booking-step-title{display:flex;align-items:center;gap:11px;margin-bottom:13px}.booking-step-title>span{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--accent-dark),var(--accent));font-weight:850}.booking-step-title div{display:grid;gap:2px}.booking-step-title strong{font-size:14px}.booking-step-title small{color:var(--muted);font-size:12px}.court-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.court-choice,.duration-choice,.visual-slot{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.075);color:white;border-radius:12px;cursor:pointer;transition:.18s ease}.court-choice{min-height:105px;padding:14px;display:grid;place-items:center;gap:3px}.court-choice b{font-size:25px}.court-choice small{color:var(--muted)}.court-choice.active,.duration-choice.active,.visual-slot.selected{border-color:rgba(121,209,67,.7);background:rgba(121,209,67,.18);box-shadow:0 0 0 3px rgba(121,209,67,.08)}.duration-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.duration-choice{min-height:44px;padding:8px;font-size:12px;font-weight:750}.visual-slots-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.visual-slot{min-height:46px;padding:9px 6px;font-weight:800}.visual-slot:disabled{cursor:not-allowed;opacity:.38;background:rgba(150,150,150,.08);text-decoration:line-through}.visual-empty{grid-column:1/-1;padding:14px;text-align:center;color:var(--muted);font-size:13px}.booking-selection-summary{padding:13px 14px;border-radius:12px;background:rgba(121,209,67,.09);border:1px solid rgba(121,209,67,.18);color:#dfffd0;font-size:13px;font-weight:700;text-align:center}.primary-button:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}@media(max-width:760px){.duration-grid{grid-template-columns:1fr 1fr}.visual-slots-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.court-choice{min-height:92px}}
+
         /* CALENDAR */
 
         .legend {
@@ -1651,138 +1654,43 @@
                     </p>
                 </div>
 
-                <form method="POST" action="/book" id="bookingForm">
-                    <input
-                    type="hidden"
-                    name="csrf_token"
-                    value="{{ csrf_token() }}">
+                <form method="POST" action="/book" id="bookingForm" class="visual-booking-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" id="startInput" name="start" required>
+                    <input type="hidden" id="endInput" name="end" required>
+                    <input type="hidden" id="courtInput" name="court" required>
 
-                    <div class="input-group">
-                        <label for="dateInput">Date</label>
-
-                        <input
-                            id="dateInput"
-                            type="date"
-                            name="date"
-                            min="{{ today_date }}"
-                            required
-                        >
+                    <div class="booking-step">
+                        <div class="booking-step-title"><span>1</span><div><strong>Choose a date</strong><small>Pick the day you want to play.</small></div></div>
+                        <input id="dateInput" type="date" name="date" min="{{ today_date }}" required>
                     </div>
 
-                    <div class="input-group">
-                        <label for="startInput">Start time</label>
-
-                        <select
-                            id="startInput"
-                            name="start"
-                            required
-                        >
-                            <option value="">Select start time</option>
-                            <option value="06:00">06:00</option>
-                            <option value="06:30">06:30</option>
-                            <option value="07:00">07:00</option>
-                            <option value="07:30">07:30</option>
-                            <option value="08:00">08:00</option>
-                            <option value="08:30">08:30</option>
-                            <option value="09:00">09:00</option>
-                            <option value="09:30">09:30</option>
-                            <option value="10:00">10:00</option>
-                            <option value="10:30">10:30</option>
-                            <option value="11:00">11:00</option>
-                            <option value="11:30">11:30</option>
-                            <option value="12:00">12:00</option>
-                            <option value="12:30">12:30</option>
-                            <option value="13:00">13:00</option>
-                            <option value="13:30">13:30</option>
-                            <option value="14:00">14:00</option>
-                            <option value="14:30">14:30</option>
-                            <option value="15:00">15:00</option>
-                            <option value="15:30">15:30</option>
-                            <option value="16:00">16:00</option>
-                            <option value="16:30">16:30</option>
-                            <option value="17:00">17:00</option>
-                            <option value="17:30">17:30</option>
-                            <option value="18:00">18:00</option>
-                            <option value="18:30">18:30</option>
-                            <option value="19:00">19:00</option>
-                            <option value="19:30">19:30</option>
-                            <option value="20:00">20:00</option>
-                            <option value="20:30">20:30</option>
-                            <option value="21:00">21:00</option>
-                            <option value="21:30">21:30</option>
-                            <option value="22:00">22:00</option>
-                        </select>
+                    <div class="booking-step">
+                        <div class="booking-step-title"><span>2</span><div><strong>Choose a court</strong><small>Select Court 1 or Court 2.</small></div></div>
+                        <div class="court-choice-grid">
+                            <button type="button" class="court-choice" data-court="Court 1"><b>🎾</b><strong>Court 1</strong><small>Tap to select</small></button>
+                            <button type="button" class="court-choice" data-court="Court 2"><b>🎾</b><strong>Court 2</strong><small>Tap to select</small></button>
+                        </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="endInput">End time</label>
-
-                        <select
-                            id="endInput"
-                            name="end"
-                            required
-                        >
-                            <option value="">Select end time</option>
-                            <option value="06:00">06:00</option>
-                            <option value="06:30">06:30</option>
-                            <option value="07:00">07:00</option>
-                            <option value="07:30">07:30</option>
-                            <option value="08:00">08:00</option>
-                            <option value="08:30">08:30</option>
-                            <option value="09:00">09:00</option>
-                            <option value="09:30">09:30</option>
-                            <option value="10:00">10:00</option>
-                            <option value="10:30">10:30</option>
-                            <option value="11:00">11:00</option>
-                            <option value="11:30">11:30</option>
-                            <option value="12:00">12:00</option>
-                            <option value="12:30">12:30</option>
-                            <option value="13:00">13:00</option>
-                            <option value="13:30">13:30</option>
-                            <option value="14:00">14:00</option>
-                            <option value="14:30">14:30</option>
-                            <option value="15:00">15:00</option>
-                            <option value="15:30">15:30</option>
-                            <option value="16:00">16:00</option>
-                            <option value="16:30">16:30</option>
-                            <option value="17:00">17:00</option>
-                            <option value="17:30">17:30</option>
-                            <option value="18:00">18:00</option>
-                            <option value="18:30">18:30</option>
-                            <option value="19:00">19:00</option>
-                            <option value="19:30">19:30</option>
-                            <option value="20:00">20:00</option>
-                            <option value="20:30">20:30</option>
-                            <option value="21:00">21:00</option>
-                            <option value="21:30">21:30</option>
-                            <option value="22:00">22:00</option>
-                        </select>
+                    <div class="booking-step">
+                        <div class="booking-step-title"><span>3</span><div><strong>Choose duration</strong><small>Maximum booking length is 2 hours.</small></div></div>
+                        <div class="duration-grid">
+                            <button type="button" class="duration-choice" data-minutes="30">30 min</button>
+                            <button type="button" class="duration-choice active" data-minutes="60">1 hour</button>
+                            <button type="button" class="duration-choice" data-minutes="90">1.5 hours</button>
+                            <button type="button" class="duration-choice" data-minutes="120">2 hours</button>
+                        </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="courtInput">Court</label>
-
-                        <select id="courtInput" name="court">
-                            <option>Court 1</option>
-                            <option>Court 2</option>
-                        </select>
+                    <div class="booking-step">
+                        <div class="booking-step-title"><span>4</span><div><strong>Choose a start time</strong><small>Unavailable times are disabled automatically.</small></div></div>
+                        <div id="visualSlots" class="visual-slots-grid"><div class="visual-empty">Choose a date and court first.</div></div>
                     </div>
 
-                    <button type="submit" class="primary-button">
-                        Book Court
-                    </button>
-
+                    <div id="bookingSelectionSummary" class="booking-selection-summary">No time selected yet.</div>
+                    <button type="submit" class="primary-button" id="visualBookButton" disabled>Book Court</button>
                 </form>
-
-                <div class="slots-section">
-                    <h3>Available Slots</h3>
-
-                    <p class="small-text">
-                        Select a date on the calendar. Tap a green slot to fill the booking form automatically.
-                    </p>
-
-                    <div id="slotsArea"></div>
-                </div>
 
             </article>
 
@@ -2310,109 +2218,74 @@
             }).join("");
         }
 
+        let visualAvailability = [];
+        let selectedCourt = "";
+        let selectedDuration = 60;
+
+        function minutesToClock(total) {
+            const h = Math.floor(total / 60);
+            const m = total % 60;
+            return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+        }
+
+        function clockToMinutes(clock) {
+            const [h,m] = clock.split(":").map(Number);
+            return h * 60 + m;
+        }
+
+        function renderVisualSlots() {
+            const grid = document.getElementById("visualSlots");
+            const date = document.getElementById("dateInput").value;
+            if (!date || !selectedCourt) { grid.innerHTML = '<div class="visual-empty">Choose a date and court first.</div>'; return; }
+            const courtSlots = visualAvailability.filter(s => s.court === selectedCourt);
+            const byStart = new Map(courtSlots.map(s => [s.start, s.available]));
+            grid.innerHTML = "";
+            courtSlots.forEach(slot => {
+                const startMin = clockToMinutes(slot.start);
+                let canBook = true;
+                for (let offset=0; offset<selectedDuration; offset+=30) {
+                    const key = minutesToClock(startMin + offset);
+                    if (!byStart.get(key)) { canBook = false; break; }
+                }
+                const endMin = startMin + selectedDuration;
+                if (endMin > 22*60) canBook = false;
+                const btn = document.createElement("button");
+                btn.type = "button"; btn.className = "visual-slot"; btn.textContent = slot.start; btn.disabled = !canBook;
+                if (canBook) btn.addEventListener("click", () => {
+                    document.querySelectorAll(".visual-slot").forEach(x=>x.classList.remove("selected")); btn.classList.add("selected");
+                    document.getElementById("startInput").value = slot.start;
+                    document.getElementById("endInput").value = minutesToClock(endMin);
+                    document.getElementById("courtInput").value = selectedCourt;
+                    document.getElementById("bookingSelectionSummary").textContent = `${selectedCourt} • ${date} • ${slot.start} – ${minutesToClock(endMin)}`;
+                    document.getElementById("visualBookButton").disabled = false;
+                });
+                grid.appendChild(btn);
+            });
+        }
+
         async function loadAvailability(date) {
-            const slotsArea = document.getElementById("slotsArea");
-
-            slotsArea.innerHTML =
-                '<p class="small-text" style="margin-top:14px;">Loading available slots...</p>';
-
+            const grid = document.getElementById("visualSlots");
+            if (!date) return;
+            grid.innerHTML = '<div class="visual-empty">Checking availability…</div>';
+            document.getElementById("visualBookButton").disabled = true;
+            document.getElementById("startInput").value = ""; document.getElementById("endInput").value = "";
             try {
                 const response = await fetch(`/availability/${date}`);
-
-                if (!response.ok) {
-                    throw new Error("Could not load availability.");
-                }
-
-                const data = await response.json();
-
-                slotsArea.innerHTML = "";
-
-                const title = document.createElement("p");
-                title.className = "small-text";
-                title.style.marginTop = "14px";
-                title.innerHTML = `<strong>Slots for ${date}</strong>`;
-
-                slotsArea.appendChild(title);
-
-                const grid = document.createElement("div");
-                grid.className = "slots-grid";
-
-                if (!data.slots || data.slots.length === 0) {
-                    slotsArea.innerHTML +=
-                        '<div class="empty" style="margin-top:12px;">No slots found for this date.</div>';
-
-                    return;
-                }
-
-                data.slots.forEach((slot) => {
-                    const slotElement = document.createElement("div");
-
-                    slotElement.className = slot.available
-                        ? "slot available"
-                        : "slot unavailable";
-
-                    slotElement.innerHTML = `
-                        ${slot.court}<br>
-                        ${slot.start} – ${slot.end}<br>
-                        ${slot.available ? "Available" : "Booked"}
-                    `;
-
-                    if (slot.available) {
-                        slotElement.setAttribute(
-                            "role",
-                            "button"
-                        );
-
-                        slotElement.setAttribute(
-                            "tabindex",
-                            "0"
-                        );
-
-                        const fillBookingForm = function () {
-                            document.getElementById("dateInput").value = date;
-                            document.getElementById("startInput").value = slot.start;
-                            document.getElementById("endInput").value = slot.end;
-                            document.getElementById("courtInput").value = slot.court;
-
-                            document
-                                .querySelector(".booking-card")
-                                .scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "start"
-                                });
-                        };
-
-                        slotElement.addEventListener(
-                            "click",
-                            fillBookingForm
-                        );
-
-                        slotElement.addEventListener(
-                            "keydown",
-                            function (event) {
-                                if (
-                                    event.key === "Enter" ||
-                                    event.key === " "
-                                ) {
-                                    fillBookingForm();
-                                }
-                            }
-                        );
-                    }
-
-                    grid.appendChild(slotElement);
-                });
-
-                slotsArea.appendChild(grid);
-
-            } catch (error) {
-                slotsArea.innerHTML = `
-                    <div class="flash" style="margin-top:14px;">
-                        ${error.message}
-                    </div>
-                `;
-            }
+                if (!response.ok) throw new Error("Could not load availability.");
+                const data = await response.json(); visualAvailability = data.slots || []; renderVisualSlots();
+            } catch (error) { grid.innerHTML = `<div class="visual-empty">${error.message}</div>`; }
         }
+
+        document.querySelectorAll(".court-choice").forEach(button => button.addEventListener("click", () => {
+            selectedCourt = button.dataset.court; document.getElementById("courtInput").value = selectedCourt;
+            document.querySelectorAll(".court-choice").forEach(x=>x.classList.toggle("active", x===button));
+            document.getElementById("visualBookButton").disabled = true; renderVisualSlots();
+        }));
+        document.querySelectorAll(".duration-choice").forEach(button => button.addEventListener("click", () => {
+            selectedDuration = Number(button.dataset.minutes); document.querySelectorAll(".duration-choice").forEach(x=>x.classList.toggle("active",x===button));
+            document.getElementById("visualBookButton").disabled = true; renderVisualSlots();
+        }));
+        document.getElementById("dateInput").addEventListener("change", e => loadAvailability(e.target.value));
 
         document.addEventListener("DOMContentLoaded", function () {
             const calendarElement =

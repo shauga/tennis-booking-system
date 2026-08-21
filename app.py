@@ -364,6 +364,10 @@ def book():
         flash("End time must be after start time.")
         return redirect(url_for("home"))
 
+    if start_time.minute not in (0, 30) or end_time.minute not in (0, 30):
+        flash("Bookings must use 30-minute time slots.")
+        return redirect(url_for("home"))
+
     duration = end_time - start_time
 
     if duration > timedelta(hours=2):
@@ -456,6 +460,57 @@ def book():
     return redirect(url_for("home"))
 
 
+@app.route("/availability/<date_input>")
+def availability(date_input):
+    if not session.get("user_id"):
+        abort(401)
+
+    try:
+        requested_date = datetime.strptime(date_input, "%Y-%m-%d").date()
+    except ValueError:
+        return {"error": "Invalid date."}, 400
+
+    today = datetime.now(ZoneInfo("Asia/Bahrain")).date()
+    if requested_date < today:
+        return {"slots": []}
+
+    bookings = Booking.query.filter_by(date=date_input).filter(
+        Booking.status != "cancelled"
+    ).all()
+
+    slots = []
+    slot_start = datetime.strptime("06:00", "%H:%M")
+    closing = datetime.strptime("22:00", "%H:%M")
+
+    while slot_start < closing:
+        slot_end = slot_start + timedelta(minutes=30)
+
+        for court in ["Court 1", "Court 2"]:
+            available = True
+
+            for booking in bookings:
+                if booking.court != court:
+                    continue
+
+                existing_start = datetime.strptime(booking.start, "%H:%M")
+                existing_end = datetime.strptime(booking.end, "%H:%M")
+
+                if is_conflict(slot_start, slot_end, existing_start, existing_end):
+                    available = False
+                    break
+
+            slots.append({
+                "court": court,
+                "start": slot_start.strftime("%H:%M"),
+                "end": slot_end.strftime("%H:%M"),
+                "available": available
+            })
+
+        slot_start = slot_end
+
+    return {"slots": slots}
+
+
 @app.route("/edit/<int:id>", methods=["GET", "POST"])
 def edit_booking(id):
     if not session.get("user_id"):
@@ -490,6 +545,10 @@ def edit_booking(id):
         if start_time >= end_time:
             flash("End time must be after start time.")
             return redirect(url_for("home"))
+
+        if start_time.minute not in (0, 30) or end_time.minute not in (0, 30):
+            flash("Bookings must use 30-minute time slots.")
+            return redirect(url_for("edit_booking", id=id))
         
         duration = end_time - start_time
 
