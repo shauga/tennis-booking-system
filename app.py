@@ -143,6 +143,39 @@ def home():
 
     bookings = Booking.query.order_by(Booking.date, Booking.start).all()
 
+    # Aggregate historical demand into 30-minute blocks for the UI heatmap.
+    heatmap_counts = {
+        f"{hour:02d}:{minute:02d}": 0
+        for hour in range(6, 22)
+        for minute in (0, 30)
+    }
+    heatmap_counts["22:00"] = 0
+
+    for booking in bookings:
+        if booking.status == "cancelled":
+            continue
+
+        try:
+            slot_cursor = datetime.strptime(booking.start, "%H:%M")
+            slot_end = datetime.strptime(booking.end, "%H:%M")
+
+            while slot_cursor < slot_end:
+                slot_key = slot_cursor.strftime("%H:%M")
+                if slot_key in heatmap_counts:
+                    heatmap_counts[slot_key] += 1
+                slot_cursor += timedelta(minutes=30)
+
+        except ValueError:
+            continue
+
+    heatmap_slots = [
+        {
+            "time": slot,
+            "count": count
+        }
+        for slot, count in heatmap_counts.items()
+    ]
+
     events = []
 
     for b in bookings:
@@ -247,7 +280,8 @@ def home():
         no_shows=no_shows,
         today_date=today.strftime("%Y-%m-%d"),
         current_user=current_user,
-        greeting=greeting
+        greeting=greeting,
+        heatmap_slots=heatmap_slots
     )
 
 
