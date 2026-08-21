@@ -1017,6 +1017,236 @@
         }
 
 
+
+        /* SECOND ROUND UI UPGRADES */
+
+        .quick-actions {
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .quick-action-card {
+            min-width: 0;
+            padding: 16px;
+            display: grid;
+            gap: 4px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 16px;
+            background: rgba(15,19,16,.72);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 12px 30px rgba(0,0,0,.18);
+            color: white;
+            text-decoration: none;
+            transition:
+                transform .18s ease,
+                border-color .18s ease,
+                background .18s ease;
+        }
+
+        .quick-action-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(121,209,67,.34);
+            background: rgba(28,39,29,.83);
+        }
+
+        .quick-action-card:active,
+        button:active,
+        .button:active,
+        .primary-button:active,
+        .court-choice:active,
+        .duration-choice:active,
+        .visual-slot:active {
+            transform: scale(.97) !important;
+        }
+
+        .quick-action-icon {
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+
+        .quick-action-card strong {
+            font-size: 14px;
+        }
+
+        .quick-action-card small {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .heatmap-card {
+            margin-bottom: 25px;
+            padding: 27px;
+        }
+
+        .heatmap-legend {
+            margin-bottom: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .heatmap-scale {
+            display: flex;
+            gap: 4px;
+        }
+
+        .heatmap-scale i,
+        .heatmap-cell {
+            border: 1px solid rgba(121,209,67,.13);
+        }
+
+        .heatmap-scale i {
+            width: 15px;
+            height: 15px;
+            border-radius: 4px;
+        }
+
+        [data-level="0"] { background: rgba(121,209,67,.06); }
+        [data-level="1"] { background: rgba(121,209,67,.16); }
+        [data-level="2"] { background: rgba(121,209,67,.30); }
+        [data-level="3"] { background: rgba(121,209,67,.48); }
+        [data-level="4"] { background: rgba(121,209,67,.72); }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(9, minmax(0, 1fr));
+            gap: 7px;
+        }
+
+        .heatmap-cell {
+            min-width: 0;
+            min-height: 54px;
+            padding: 8px 5px;
+            display: grid;
+            place-items: center;
+            gap: 2px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .heatmap-cell strong {
+            font-size: 11px;
+        }
+
+        .heatmap-cell small {
+            color: rgba(255,255,255,.65);
+            font-size: 9px;
+        }
+
+        .court-status-item.is-loading {
+            overflow: hidden;
+        }
+
+        .court-status-item.is-loading::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            background:
+                linear-gradient(
+                    100deg,
+                    rgba(255,255,255,.03) 20%,
+                    rgba(255,255,255,.12) 40%,
+                    rgba(255,255,255,.03) 60%
+                );
+            background-size: 200% 100%;
+            animation: skeletonSweep 1.2s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes skeletonSweep {
+            from { background-position: 180% 0; }
+            to { background-position: -40% 0; }
+        }
+
+        .enhanced-empty {
+            display: grid;
+            justify-items: center;
+            gap: 7px;
+            padding: 30px 18px;
+        }
+
+        .empty-icon {
+            width: 54px;
+            height: 54px;
+            margin-bottom: 4px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(121,209,67,.12);
+            border: 1px solid rgba(121,209,67,.20);
+            font-size: 25px;
+        }
+
+        .enhanced-empty strong {
+            color: white;
+            font-size: 16px;
+        }
+
+        .enhanced-empty p {
+            max-width: 360px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .empty-action {
+            margin-top: 4px;
+            padding: 9px 13px;
+            border-radius: 9px;
+            color: #dfffd0;
+            background: rgba(121,209,67,.12);
+            border: 1px solid rgba(121,209,67,.20);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        @media (max-width: 900px) {
+            .quick-actions {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .heatmap-grid {
+                grid-template-columns: repeat(6, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .quick-actions {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 9px;
+            }
+
+            .quick-action-card {
+                padding: 14px 12px;
+            }
+
+            .heatmap-card {
+                padding: 20px 16px;
+            }
+
+            .heatmap-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            .heatmap-cell {
+                min-height: 50px;
+            }
+
+            .heatmap-legend {
+                justify-content: flex-start;
+            }
+        }
+
         /* DASHBOARD POLISH */
 
         .greeting-row {
@@ -1824,6 +2054,32 @@
             </div>
         </section>
 
+        <section class="quick-actions" aria-label="Quick actions">
+            <a class="quick-action-card" href="#bookSection">
+                <span class="quick-action-icon">🎾</span>
+                <strong>Book Court</strong>
+                <small>Reserve a time</small>
+            </a>
+
+            <a class="quick-action-card" href="#upcomingSection">
+                <span class="quick-action-icon">🗓️</span>
+                <strong>My Bookings</strong>
+                <small>View reservations</small>
+            </a>
+
+            <a class="quick-action-card" href="#calendarSection">
+                <span class="quick-action-icon">📅</span>
+                <strong>Calendar</strong>
+                <small>Check availability</small>
+            </a>
+
+            <a class="quick-action-card" href="{{ url_for('profile') }}">
+                <span class="quick-action-icon">👤</span>
+                <strong>Profile</strong>
+                <small>Account details</small>
+            </a>
+        </section>
+
         <div class="toast-container" id="toastContainer" aria-live="polite">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -1897,7 +2153,7 @@
             </div>
 
             <div class="court-status-grid">
-                <article class="court-status-item" data-court-card="Court 1">
+                <article class="court-status-item is-loading" data-court-card="Court 1">
                     <div class="court-status-top">
                         <span class="court-status-name">🎾 Court 1</span>
                         <span class="court-status-pill available-now" data-court-pill>Available</span>
@@ -1905,7 +2161,7 @@
                     <p class="court-status-detail" data-court-detail>Checking availability…</p>
                 </article>
 
-                <article class="court-status-item" data-court-card="Court 2">
+                <article class="court-status-item is-loading" data-court-card="Court 2">
                     <div class="court-status-top">
                         <span class="court-status-name">🎾 Court 2</span>
                         <span class="court-status-pill available-now" data-court-pill>Available</span>
@@ -1947,6 +2203,27 @@
 
             </div>
 
+        </section>
+
+        <section class="glass-card heatmap-card" id="heatmapSection">
+            <div class="section-heading">
+                <h2>Popular Playing Times</h2>
+                <p>Darker blocks indicate periods that have historically been booked more often.</p>
+            </div>
+
+            <div class="heatmap-legend">
+                <span>Quieter</span>
+                <div class="heatmap-scale">
+                    <i data-level="0"></i>
+                    <i data-level="1"></i>
+                    <i data-level="2"></i>
+                    <i data-level="3"></i>
+                    <i data-level="4"></i>
+                </div>
+                <span>Busier</span>
+            </div>
+
+            <div class="heatmap-grid" id="heatmapGrid" aria-label="Booking popularity by time"></div>
         </section>
 
         <section class="main-grid">
@@ -2027,7 +2304,7 @@
 
         </section>
 
-        <section class="glass-card table-card">
+        <section class="glass-card table-card" id="upcomingSection">
 
             <div class="section-heading">
                 <h2>Upcoming Bookings</h2>
@@ -2116,8 +2393,11 @@
 
             {% else %}
 
-                <div class="empty">
-                    You have no upcoming bookings.
+                <div class="empty enhanced-empty">
+                    <div class="empty-icon">🎾</div>
+                    <strong>No upcoming bookings</strong>
+                    <p>Your next reservation will appear here.</p>
+                    <a href="#bookSection" class="empty-action">Book a Court</a>
                 </div>
 
             {% endif %}
@@ -2179,8 +2459,10 @@
 
             {% else %}
 
-                <div class="empty">
-                    No past bookings yet.
+                <div class="empty enhanced-empty">
+                    <div class="empty-icon">🗂️</div>
+                    <strong>No booking history yet</strong>
+                    <p>Completed and cancelled reservations will appear here.</p>
                 </div>
 
             {% endif %}
@@ -2213,6 +2495,46 @@
     <script>
         const CURRENT_USER_ID = {{ session.get("user_id") | tojson }};
         const INITIAL_EVENTS = {{ events | tojson }};
+        const HEATMAP_DATA = {{ heatmap_slots | tojson }};
+
+        function renderHeatmap() {
+            const grid = document.getElementById("heatmapGrid");
+            if (!grid) return;
+
+            const maxCount = Math.max(
+                1,
+                ...HEATMAP_DATA.map((item) => item.count)
+            );
+
+            grid.innerHTML = HEATMAP_DATA.map((item) => {
+                const ratio = item.count / maxCount;
+
+                let level = 0;
+                if (ratio > .75) level = 4;
+                else if (ratio > .50) level = 3;
+                else if (ratio > .25) level = 2;
+                else if (item.count > 0) level = 1;
+
+                const time = new Date(`2000-01-01T${item.time}:00`);
+
+                const displayTime = new Intl.DateTimeFormat("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit"
+                }).format(time);
+
+                return `
+                    <div class="heatmap-cell" data-level="${level}" title="${item.count} booked half-hour periods">
+                        <strong>${displayTime}</strong>
+                        <small>${item.count ? item.count + " uses" : "quiet"}</small>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function finishStatusLoading() {
+            document.querySelectorAll(".court-status-item.is-loading")
+                .forEach((card) => card.classList.remove("is-loading"));
+        }
 
         function formatClock(date) {
             return new Intl.DateTimeFormat("en-US", {
@@ -2364,6 +2686,7 @@
             }
 
             refreshNextBooking(calendar);
+            finishStatusLoading();
         }
 
         function updateCalendarForCurrentTime(calendar) {
@@ -2453,6 +2776,7 @@
 
         setupToasts();
         setupBookingConfirmation();
+        renderHeatmap();
 
         const todayCalendarButton =
             document.getElementById("todayCalendarButton");
