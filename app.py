@@ -131,11 +131,19 @@ def home():
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
+    current_user = User.query.get_or_404(session["user_id"])
+    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
+
+    if now_bahrain.hour < 12:
+        greeting = "Good morning"
+    elif now_bahrain.hour < 18:
+        greeting = "Good afternoon"
+    else:
+        greeting = "Good evening"
+
     bookings = Booking.query.order_by(Booking.date, Booking.start).all()
 
     events = []
-
-    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
 
     for b in bookings:
         try:
@@ -237,7 +245,9 @@ def home():
         today_used=today_used,
         week_used=week_used,
         no_shows=no_shows,
-        today_date=today.strftime("%Y-%m-%d")
+        today_date=today.strftime("%Y-%m-%d"),
+        current_user=current_user,
+        greeting=greeting
     )
 
 
