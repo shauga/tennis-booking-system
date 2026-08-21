@@ -524,6 +524,72 @@
             font-weight: 700;
         }
 
+
+        .admin-bottom-nav {
+            display: none;
+        }
+
+        section[id] {
+            scroll-margin-top: 96px;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding-bottom: 88px;
+            }
+
+            .admin-bottom-nav {
+                position: fixed;
+                left: 12px;
+                right: 12px;
+                bottom: max(10px, env(safe-area-inset-bottom));
+                z-index: 2500;
+
+                display: grid;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+
+                padding: 7px;
+
+                border: 1px solid rgba(255,255,255,.15);
+                border-radius: 18px;
+
+                background: rgba(12,18,13,.94);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+
+                box-shadow: 0 15px 38px rgba(0,0,0,.36);
+            }
+
+            .admin-bottom-nav a {
+                min-width: 0;
+                padding: 8px 4px;
+
+                color: rgba(255,255,255,.72);
+                text-align: center;
+                text-decoration: none;
+
+                font-size: 10px;
+                font-weight: 750;
+
+                border-radius: 12px;
+            }
+
+            .admin-bottom-nav a span {
+                display: block;
+                margin-bottom: 3px;
+                font-size: 20px;
+            }
+
+            .admin-bottom-nav a.active {
+                color: #b7ff8e;
+                background: rgba(122,208,68,.13);
+            }
+
+            section[id] {
+                scroll-margin-top: 18px;
+            }
+        }
+
         @media (max-width: 1150px) {
             .stats-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -713,7 +779,7 @@
     </nav>
 
     <main class="page-container">
-        <section class="hero">
+        <section class="hero" id="overview">
             <h2>Property overview</h2>
             <p>Track court activity, manage residents and staff, review booking trends, and maintain reservations from one responsive dashboard.</p>
         </section>
@@ -726,7 +792,7 @@
             {% endif %}
         {% endwith %}
 
-        <section class="glass-card">
+        <section class="glass-card" id="analytics">
             <div class="section-header">
                 <h2>Usage Analytics</h2>
                 <p>A quick overview of the most important booking activity.</p>
@@ -759,7 +825,7 @@
             </div>
         </section>
 
-        <section class="glass-card">
+        <section class="glass-card" id="filters">
             <div class="section-header">
                 <h2>Search and Filter Bookings</h2>
                 <p>Find reservations by resident, date, court or booking status.</p>
@@ -801,7 +867,7 @@
             </form>
         </section>
 
-        <section class="glass-card">
+        <section class="glass-card" id="charts">
             <div class="section-header">
                 <h2>Analytics Charts</h2>
                 <p>Visualise court usage, popular booking times, reservation status and booking activity over time.</p>
@@ -838,7 +904,7 @@
             </div>
         </section>
 
-        <section class="glass-card">
+        <section class="glass-card" id="users">
             <div class="section-header">
                 <h2>Manage Users</h2>
                 <p>Review resident details, assign account roles and remove accounts when required.</p>
@@ -933,7 +999,7 @@
             {% endif %}
         </section>
 
-        <section class="glass-card">
+        <section class="glass-card" id="bookings">
             <div class="section-header">
                 <h2>Manage Bookings</h2>
                 <p>Edit, delete and export booking records using the controls below.</p>
@@ -1008,6 +1074,28 @@
             {% endif %}
         </section>
     </main>
+
+    <nav class="admin-bottom-nav" aria-label="Admin mobile navigation">
+        <a href="#overview" data-admin-nav="overview">
+            <span>🏠</span>
+            Overview
+        </a>
+
+        <a href="#charts" data-admin-nav="charts">
+            <span>📊</span>
+            Charts
+        </a>
+
+        <a href="#users" data-admin-nav="users">
+            <span>👥</span>
+            Users
+        </a>
+
+        <a href="#bookings" data-admin-nav="bookings">
+            <span>📅</span>
+            Bookings
+        </a>
+    </nav>
 
     <script>
         function createChart(id, type, labels, data, label) {
@@ -1086,6 +1174,55 @@
                 message.remove();
             });
         }, 4200);
+        const adminNavLinks = Array.from(
+            document.querySelectorAll("[data-admin-nav]")
+        );
+
+        const adminSections = [
+            "overview",
+            "charts",
+            "users",
+            "bookings"
+        ];
+
+        function updateAdminBottomNav() {
+            if (window.innerWidth > 700) {
+                return;
+            }
+
+            let activeId = "overview";
+
+            adminSections.forEach(function (id) {
+                const section = document.getElementById(id);
+
+                if (
+                    section &&
+                    section.getBoundingClientRect().top <= 190
+                ) {
+                    activeId = id;
+                }
+            });
+
+            adminNavLinks.forEach(function (link) {
+                link.classList.toggle(
+                    "active",
+                    link.dataset.adminNav === activeId
+                );
+            });
+        }
+
+        window.addEventListener(
+            "scroll",
+            updateAdminBottomNav,
+            { passive: true }
+        );
+
+        window.addEventListener(
+            "resize",
+            updateAdminBottomNav
+        );
+
+        updateAdminBottomNav();
     </script>
     <script>
 if ("serviceWorker" in navigator) {
