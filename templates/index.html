@@ -1018,6 +1018,148 @@
 
 
 
+
+        /* INSTALL + CALENDAR POLISH */
+
+        .install-app-card {
+            margin-bottom: 25px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border: 1px solid rgba(121,209,67,.26);
+            border-radius: 17px;
+            background: linear-gradient(
+                135deg,
+                rgba(20,31,21,.92),
+                rgba(43,76,36,.84)
+            );
+            box-shadow: 0 14px 34px rgba(0,0,0,.22);
+        }
+
+        .install-app-card[hidden] {
+            display: none !important;
+        }
+
+        .install-app-copy {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .install-app-icon {
+            width: 44px;
+            height: 44px;
+            flex: 0 0 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: rgba(121,209,67,.14);
+            font-size: 22px;
+        }
+
+        .install-app-copy strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .install-app-copy p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .install-app-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .install-primary,
+        .install-dismiss,
+        .calendar-quick-controls button {
+            min-height: 42px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        .install-primary {
+            padding: 9px 14px;
+            border: 0;
+            color: white;
+            background: linear-gradient(135deg,var(--accent-dark),var(--accent));
+        }
+
+        .install-dismiss {
+            width: 42px;
+            padding: 0;
+            border: 1px solid rgba(255,255,255,.13);
+            color: rgba(255,255,255,.74);
+            background: rgba(255,255,255,.06);
+            font-size: 20px;
+        }
+
+        .calendar-heading-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .calendar-quick-controls button {
+            padding: 8px 13px;
+            border: 1px solid rgba(121,209,67,.22);
+            color: #dfffd0;
+            background: rgba(121,209,67,.10);
+        }
+
+        .mobile-day-card.today-card {
+            border-color: rgba(121,209,67,.60);
+            box-shadow: 0 0 0 2px rgba(121,209,67,.12);
+        }
+
+        .mobile-day-card.today-card .mobile-day-header::after {
+            content: "TODAY";
+            margin-left: 8px;
+            padding: 3px 6px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.18);
+            font-size: 9px;
+            letter-spacing: .08em;
+        }
+
+        @media (max-width: 760px) {
+            .install-app-card {
+                align-items: stretch;
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .install-app-actions {
+                width: 100%;
+            }
+
+            .install-primary {
+                flex: 1;
+            }
+
+            .calendar-heading-row {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .calendar-quick-controls {
+                display: grid;
+            }
+
+            .calendar-quick-controls button {
+                width: 100%;
+            }
+        }
+
         /* SECOND ROUND UI UPGRADES */
 
         .quick-actions {
@@ -2080,6 +2222,25 @@
             </a>
         </section>
 
+        <section class="install-app-card" id="installAppCard" hidden>
+            <div class="install-app-copy">
+                <div class="install-app-icon">📲</div>
+                <div>
+                    <strong>Install Tennis Booking</strong>
+                    <p id="installAppText">Add the app to your home screen for faster access.</p>
+                </div>
+            </div>
+
+            <div class="install-app-actions">
+                <button type="button" class="install-primary" id="installAppButton">
+                    Install
+                </button>
+                <button type="button" class="install-dismiss" id="dismissInstallApp" aria-label="Dismiss">
+                    ×
+                </button>
+            </div>
+        </section>
+
         <div class="toast-container" id="toastContainer" aria-live="polite">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -2280,12 +2441,15 @@
 
             <article class="glass-card calendar-card" id="calendarSection">
 
-                <div class="section-heading">
-                    <h2>Availability Calendar</h2>
+                <div class="section-heading calendar-heading-row">
+                    <div>
+                        <h2>Availability Calendar</h2>
+                        <p>Select any date to see available booking slots.</p>
+                    </div>
 
-                    <p>
-                        Select any date to see available booking slots.
-                    </p>
+                    <div class="calendar-quick-controls">
+                        <button type="button" id="calendarTodayShortcut">Today</button>
+                    </div>
                 </div>
 
                 <div class="legend">
@@ -2774,9 +2938,68 @@
             });
         }
 
+        let deferredInstallPrompt = null;
+
+        function isStandaloneApp() {
+            return window.matchMedia("(display-mode: standalone)").matches ||
+                window.navigator.standalone === true;
+        }
+
+        function setupInstallPrompt() {
+            const card = document.getElementById("installAppCard");
+            const installButton = document.getElementById("installAppButton");
+            const dismissButton = document.getElementById("dismissInstallApp");
+            const copy = document.getElementById("installAppText");
+
+            if (!card || isStandaloneApp()) return;
+
+            if (localStorage.getItem("installPromptDismissed") === "1") {
+                return;
+            }
+
+            const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+            if (isiOS) {
+                copy.textContent =
+                    "In Safari, tap Share and choose Add to Home Screen.";
+                installButton.textContent = "How to install";
+                card.hidden = false;
+
+                installButton.addEventListener("click", () => {
+                    copy.textContent =
+                        "Tap Safari's Share button, then Add to Home Screen.";
+                });
+            }
+
+            window.addEventListener("beforeinstallprompt", (event) => {
+                event.preventDefault();
+                deferredInstallPrompt = event;
+                card.hidden = false;
+            });
+
+            installButton.addEventListener("click", async () => {
+                if (!deferredInstallPrompt) return;
+
+                deferredInstallPrompt.prompt();
+                await deferredInstallPrompt.userChoice;
+                deferredInstallPrompt = null;
+                card.hidden = true;
+            });
+
+            dismissButton.addEventListener("click", () => {
+                card.hidden = true;
+                localStorage.setItem("installPromptDismissed", "1");
+            });
+
+            window.addEventListener("appinstalled", () => {
+                card.hidden = true;
+            });
+        }
+
         setupToasts();
         setupBookingConfirmation();
         renderHeatmap();
+        setupInstallPrompt();
 
         const todayCalendarButton =
             document.getElementById("todayCalendarButton");
@@ -2918,8 +3141,11 @@
                         </div>
                     `;
 
+                const todayKey = new Date().toISOString().slice(0, 10);
+                const todayClass = dayKey === todayKey ? " today-card" : "";
+
                 return `
-                    <section class="mobile-day-card">
+                    <section class="mobile-day-card${todayClass}">
                         <div class="mobile-day-header">
                             ${heading}
                         </div>
@@ -3094,6 +3320,20 @@
                 );
 
             calendar.render();
+
+            const todayShortcut =
+                document.getElementById("calendarTodayShortcut");
+
+            if (todayShortcut) {
+                todayShortcut.addEventListener("click", () => {
+                    calendar.today();
+                    renderMobileDayList(calendar);
+
+                    const todayValue = new Date().toISOString().slice(0, 10);
+                    document.getElementById("dateInput").value = todayValue;
+                    loadAvailability(todayValue);
+                });
+            }
 
             updateCalendarForCurrentTime(calendar);
             renderMobileDayList(calendar);

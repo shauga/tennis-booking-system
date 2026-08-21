@@ -228,6 +228,132 @@
             to { opacity: 0; transform: translateX(30px); pointer-events: none; }
         }
 
+
+        .admin-live-panel {
+            margin-bottom: 26px;
+            padding: 26px;
+            border: 1px solid rgba(122,208,68,.24);
+            border-radius: var(--radius-xl);
+            background:
+                linear-gradient(135deg, rgba(13,20,14,.92), rgba(34,57,30,.86));
+            box-shadow: var(--shadow);
+        }
+
+        .live-panel-heading {
+            margin-bottom: 16px;
+        }
+
+        .live-eyebrow {
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 850;
+            letter-spacing: .1em;
+        }
+
+        .live-panel-heading h2 {
+            margin: 4px 0;
+            font-size: 25px;
+        }
+
+        .live-panel-heading p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .live-court-grid {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            gap: 12px;
+        }
+
+        .live-court-card {
+            padding: 17px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 15px;
+            background: rgba(255,255,255,.07);
+        }
+
+        .live-court-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .live-court-card p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .live-pill {
+            padding: 6px 9px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 850;
+        }
+
+        .live-pill.free {
+            color: #dfffd0;
+            background: rgba(87,176,55,.22);
+        }
+
+        .live-pill.busy {
+            color: #ffdada;
+            background: rgba(205,64,64,.22);
+        }
+
+        .today-mini-stats {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(3,minmax(0,1fr));
+            gap: 10px;
+        }
+
+        .today-mini-stats article {
+            padding: 14px 10px;
+            border-radius: 13px;
+            text-align: center;
+            background: rgba(255,255,255,.065);
+            border: 1px solid rgba(255,255,255,.10);
+        }
+
+        .today-mini-stats strong {
+            display: block;
+            color: var(--accent);
+            font-size: 24px;
+        }
+
+        .today-mini-stats span {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        @media (max-width:700px) {
+            .admin-live-panel {
+                padding: 18px 14px;
+                border-radius: 19px;
+            }
+
+            .live-court-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .today-mini-stats {
+                grid-template-columns: repeat(3,minmax(0,1fr));
+            }
+
+            .today-mini-stats strong {
+                font-size: 21px;
+            }
+
+            .today-mini-stats span {
+                font-size: 9px;
+            }
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -779,9 +905,52 @@
     </nav>
 
     <main class="page-container">
-        <section class="hero" id="overview">
+        <section class="hero">
             <h2>Property overview</h2>
             <p>Track court activity, manage residents and staff, review booking trends, and maintain reservations from one responsive dashboard.</p>
+        </section>
+
+        <section class="admin-live-panel" id="overview">
+            <div class="live-panel-heading">
+                <div>
+                    <span class="live-eyebrow">LIVE TODAY</span>
+                    <h2>Courts right now</h2>
+                    <p>{{ admin_today }}</p>
+                </div>
+            </div>
+
+            <div class="live-court-grid">
+                {% for court in live_courts %}
+                    <article class="live-court-card">
+                        <div class="live-court-top">
+                            <strong>🎾 {{ court.name }}</strong>
+
+                            {% if court.current %}
+                                <span class="live-pill busy">In use</span>
+                            {% else %}
+                                <span class="live-pill free">Available</span>
+                            {% endif %}
+                        </div>
+
+                        {% if court.current %}
+                            <p>
+                                {{ court.current.start }} – {{ court.current.end }}
+                                · {{ user_lookup.get(court.current.user_id, {}).get("username", "Resident") }}
+                            </p>
+                        {% elif court.next %}
+                            <p>Next booking at {{ court.next.start }}</p>
+                        {% else %}
+                            <p>No more bookings scheduled today.</p>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+
+            <div class="today-mini-stats">
+                <article><strong>{{ today_total }}</strong><span>Bookings today</span></article>
+                <article><strong>{{ today_attended }}</strong><span>Attended</span></article>
+                <article><strong>{{ today_pending }}</strong><span>Pending</span></article>
+            </div>
         </section>
 
         {% with messages = get_flashed_messages() %}

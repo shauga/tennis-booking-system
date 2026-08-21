@@ -1,291 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Profile | Compound Tennis Court Booking</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-
-            background:
-                linear-gradient(
-                    rgba(0, 0, 0, 0.50),
-                    rgba(0, 0, 0, 0.70)
-                ),
-                url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1800&q=85");
-
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        .profile-card {
-            width: 100%;
-            max-width: 470px;
-            padding: 46px 40px;
-
-            background: rgba(15, 18, 15, 0.70);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            border-radius: 24px;
-
-            box-shadow: 0 24px 65px rgba(0, 0, 0, 0.50);
-
-            color: white;
-            animation: cardEntrance 0.7s ease;
-        }
-
-        @keyframes cardEntrance {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .profile-icon {
-            width: 86px;
-            height: 86px;
-            margin: 0 auto 16px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 50%;
-            background: linear-gradient(135deg, #58af2d, #8bd94f);
-
-            font-size: 42px;
-
-            box-shadow: 0 12px 30px rgba(101, 194, 53, 0.30);
-        }
-
-        h1 {
-            font-size: 34px;
-            margin-bottom: 9px;
-        }
-
-        .subtitle {
-            color: rgba(255, 255, 255, 0.72);
-            font-size: 15px;
-        }
-
-        .profile-details {
-            display: grid;
-            gap: 15px;
-        }
-
-        .detail-card {
-            padding: 17px 18px;
-
-            background: rgba(255, 255, 255, 0.09);
-            border: 1px solid rgba(255, 255, 255, 0.13);
-            border-radius: 13px;
-        }
-
-        .detail-label {
-            display: block;
-            margin-bottom: 6px;
-
-            color: rgba(255, 255, 255, 0.62);
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .detail-value {
-            color: white;
-            font-size: 17px;
-            font-weight: 600;
-            overflow-wrap: anywhere;
-        }
-
-        .dashboard-button {
-            width: 100%;
-            min-height: 54px;
-            margin-top: 28px;
-
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 12px;
-
-            background: linear-gradient(135deg, #58af2d, #8bd94f);
-            color: white;
-
-            font-size: 16px;
-            font-weight: 700;
-            text-decoration: none;
-
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        .dashboard-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(101, 194, 53, 0.34);
-        }
-
-        .dashboard-button:active {
-            transform: translateY(0);
-        }
-
-        .home-link {
-            display: block;
-            margin-top: 20px;
-
-            color: rgba(255, 255, 255, 0.62);
-            font-size: 13px;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .home-link:hover {
-            color: white;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 16px;
-            }
-
-            .profile-card {
-                padding: 36px 22px;
-                border-radius: 20px;
-            }
-
-            .profile-icon {
-                width: 76px;
-                height: 76px;
-                font-size: 36px;
-            }
-
-            h1 {
-                font-size: 29px;
-            }
-
-            .dashboard-button {
-                min-height: 56px;
-            }
-        }
-    </style>
-    <link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='css/mobile.css') }}">
-    <link
-    rel="manifest"
-    href="{{ url_for('static', filename='manifest.json') }}"
->
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile | Compound Tennis Booking</title>
+<style>
+:root{--accent:#79d143;--accent-dark:#4ea326;--glass:rgba(15,19,16,.82);--border:rgba(255,255,255,.15);--text:#fff;--muted:rgba(255,255,255,.7)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{min-height:100vh;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);background:linear-gradient(rgba(0,0,0,.62),rgba(0,0,0,.84)),url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1900&q=85");background-size:cover;background-position:center;background-attachment:fixed}
+.page{width:min(900px,100%);margin:auto;padding:34px 20px 55px}
+.back{display:inline-flex;margin-bottom:18px;padding:9px 12px;border-radius:10px;color:#dfffd0;background:rgba(121,209,67,.10);border:1px solid rgba(121,209,67,.18);text-decoration:none;font-size:12px;font-weight:800}
+.profile-card,.stats-card,.details-card{margin-bottom:18px;padding:25px;border:1px solid var(--border);border-radius:22px;background:var(--glass);backdrop-filter:blur(17px);box-shadow:0 20px 55px rgba(0,0,0,.29)}
+.profile-hero{display:flex;align-items:center;gap:17px}.avatar{width:76px;height:76px;flex:0 0 76px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--accent-dark),var(--accent));font-size:23px;font-weight:900;box-shadow:0 12px 30px rgba(78,163,38,.3)}.profile-copy h1{font-size:28px}.profile-copy p{margin-top:4px;color:var(--muted);font-size:13px}.role-pill{display:inline-block;margin-top:9px;padding:6px 9px;border-radius:999px;background:rgba(121,209,67,.13);color:#dfffd0;font-size:10px;font-weight:850;text-transform:capitalize}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{padding:15px;text-align:center;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.06)}.stat strong{display:block;color:var(--accent);font-size:25px}.stat span{display:block;margin-top:4px;color:var(--muted);font-size:10px}
+.section-title{margin-bottom:15px}.section-title h2{font-size:21px}.section-title p{margin-top:4px;color:var(--muted);font-size:12px}
+.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.detail{padding:14px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09)}.detail span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em}.detail strong{display:block;margin-top:5px;font-size:14px;overflow-wrap:anywhere}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.action{min-height:48px;display:grid;place-items:center;padding:10px;border-radius:10px;text-decoration:none;color:white;font-weight:800;font-size:13px}.primary{background:linear-gradient(135deg,var(--accent-dark),var(--accent))}.secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
+@media(max-width:650px){body{background-attachment:scroll}.page{padding:20px 13px 36px}.profile-card,.stats-card,.details-card{padding:18px 14px;border-radius:18px}.profile-hero{align-items:flex-start}.avatar{width:62px;height:62px;flex-basis:62px;font-size:19px}.profile-copy h1{font-size:23px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.details{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.action{min-height:52px}}
+</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 <meta name="theme-color" content="#4ea326">
-
-<link
-    rel="apple-touch-icon"
-    href="{{ url_for('static', filename='icons/icon-192.png') }}"
->
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
 </head>
-
 <body>
+<main class="page">
+    <a class="back" href="{{ url_for('home') }}">← Back to Dashboard</a>
 
-    <main class="profile-card">
-
-        <header class="profile-header">
-            <div class="profile-icon">👤</div>
-
-            <h1>My Profile</h1>
-
-            <p class="subtitle">
-                Your compound booking account details
-            </p>
-        </header>
-
-        <section class="profile-details">
-
-            <div class="detail-card">
-                <span class="detail-label">Username</span>
-                <span class="detail-value">{{ user.username }}</span>
-            </div>
-
-            <div class="detail-card">
-                <span class="detail-label">Role</span>
-                <span class="detail-value">
-                    {% if user.role == "player" %}
-                        Resident
-                    {% else %}
-                        {{ user.role | title }}
-                    {% endif %}
+    <section class="profile-card">
+        <div class="profile-hero">
+            <div class="avatar">{{ user.username[:2] | upper }}</div>
+            <div class="profile-copy">
+                <h1>{{ user.username }}</h1>
+                <p>Your resident account and booking activity.</p>
+                <span class="role-pill">
+                    {% if user.role == "player" %}Resident{% else %}{{ user.role }}{% endif %}
                 </span>
             </div>
+        </div>
+    </section>
 
-            {% if user.mobile_number %}
-                <div class="detail-card">
-                    <span class="detail-label">Mobile number</span>
-                    <span class="detail-value">{{ user.mobile_number }}</span>
-                </div>
+    <section class="stats-card">
+        <div class="section-title"><h2>Booking overview</h2><p>Your account activity at a glance.</p></div>
+        <div class="stats-grid">
+            <article class="stat"><strong>{{ total_booking_count }}</strong><span>Total bookings</span></article>
+            <article class="stat"><strong>{{ upcoming_count }}</strong><span>Upcoming</span></article>
+            <article class="stat"><strong>{{ attended_count }}</strong><span>Attended</span></article>
+            <article class="stat"><strong>{{ no_show_count }}</strong><span>No shows</span></article>
+        </div>
+    </section>
+
+    <section class="details-card">
+        <div class="section-title"><h2>Resident details</h2><p>Information linked to this account.</p></div>
+        <div class="details">
+            <div class="detail"><span>Username</span><strong>{{ user.username }}</strong></div>
+            <div class="detail"><span>Mobile</span><strong>{{ user.mobile_number }}</strong></div>
+            <div class="detail"><span>Building</span><strong>{{ user.building or "-" }}</strong></div>
+            <div class="detail"><span>Flat</span><strong>{{ user.flat_number or "-" }}</strong></div>
+        </div>
+
+        <div class="actions">
+            <a class="action primary" href="{{ url_for('reset') }}">🔒 Change Password</a>
+            {% if user.role == "guard" %}
+                <a class="action secondary" href="{{ url_for('guard') }}">🛡️ Guard Dashboard</a>
+            {% elif user.role == "landlord" %}
+                <a class="action secondary" href="{{ url_for('admin') }}">🏠 Admin Dashboard</a>
+            {% else %}
+                <a class="action secondary" href="{{ url_for('home') }}">🎾 Book a Court</a>
             {% endif %}
+        </div>
+    </section>
+</main>
 
-            {% if user.building %}
-                <div class="detail-card">
-                    <span class="detail-label">Building</span>
-                    <span class="detail-value">{{ user.building }}</span>
-                </div>
-            {% endif %}
-
-            {% if user.flat_number %}
-                <div class="detail-card">
-                    <span class="detail-label">Flat number</span>
-                    <span class="detail-value">{{ user.flat_number }}</span>
-                </div>
-            {% endif %}
-
-        </section>
-
-        <a href="/home" class="dashboard-button">
-            ← Back to Dashboard
-        </a>
-
-        <a href="/" class="home-link">
-            Return to homepage
-        </a>
-
-    </main>
-    <script>
+<script>
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register(
-            "{{ url_for('static', filename='service-worker.js') }}"
-        );
+        navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}");
     });
 }
 </script>
-
 </body>
 </html>

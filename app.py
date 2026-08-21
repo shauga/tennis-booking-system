@@ -669,8 +669,10 @@ def guard():
     status_filter = request.args.get("status", "")
     selected_date = request.args.get("date", "")
 
+    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
+
     if not selected_date:
-        selected_date = datetime.today().strftime("%Y-%m-%d")
+        selected_date = now_bahrain.strftime("%Y-%m-%d")
 
     query = Booking.query.filter_by(date=selected_date)
 
@@ -703,6 +705,44 @@ def guard():
     no_show = sum(1 for b in bookings if b.status == "no-show")
     booked = sum(1 for b in bookings if b.status == "booked")
 
+    current_courts = []
+    if selected_date == now_bahrain.strftime("%Y-%m-%d"):
+        for court_name in ["Court 1", "Court 2"]:
+            court_bookings = [
+                b for b in bookings
+                if b.court == court_name and b.status != "cancelled"
+            ]
+
+            current_booking = None
+            next_booking = None
+
+            for b in court_bookings:
+                try:
+                    start_dt = datetime.strptime(
+                        f"{b.date} {b.start}",
+                        "%Y-%m-%d %H:%M"
+                    ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+
+                    end_dt = datetime.strptime(
+                        f"{b.date} {b.end}",
+                        "%Y-%m-%d %H:%M"
+                    ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+                except ValueError:
+                    continue
+
+                if start_dt <= now_bahrain < end_dt:
+                    current_booking = b
+                    break
+
+                if start_dt > now_bahrain and next_booking is None:
+                    next_booking = b
+
+            current_courts.append({
+                "name": court_name,
+                "current": current_booking,
+                "next": next_booking
+            })
+
     return render_template(
         "guard.html",
         bookings=bookings,
@@ -714,7 +754,9 @@ def guard():
         selected_date=selected_date,
         search=search,
         court_filter=court_filter,
-        status_filter=status_filter
+        status_filter=status_filter,
+        current_courts=current_courts,
+        now_time=now_bahrain.strftime("%H:%M")
     )
 
 
@@ -740,6 +782,8 @@ def admin():
         abort(403)
 
     users = User.query.all()
+    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
+    today_string = now_bahrain.strftime("%Y-%m-%d")
 
     search = request.args.get("search", "").strip()
     court_filter = request.args.get("court", "")
@@ -795,6 +839,56 @@ def admin():
     status_counts = Counter([b.status for b in bookings])
     date_counts = Counter([b.date for b in bookings])
 
+    todays_all_bookings = Booking.query.filter_by(
+        date=today_string
+    ).filter(
+        Booking.status != "cancelled"
+    ).order_by(Booking.start).all()
+
+    today_total = len(todays_all_bookings)
+    today_attended = sum(
+        1 for b in todays_all_bookings if b.status == "attended"
+    )
+    today_pending = sum(
+        1 for b in todays_all_bookings if b.status == "booked"
+    )
+
+    live_courts = []
+    for court_name in ["Court 1", "Court 2"]:
+        court_bookings = [
+            b for b in todays_all_bookings
+            if b.court == court_name
+        ]
+
+        current_booking = None
+        next_booking = None
+
+        for b in court_bookings:
+            try:
+                start_dt = datetime.strptime(
+                    f"{b.date} {b.start}",
+                    "%Y-%m-%d %H:%M"
+                ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+                end_dt = datetime.strptime(
+                    f"{b.date} {b.end}",
+                    "%Y-%m-%d %H:%M"
+                ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+            except ValueError:
+                continue
+
+            if start_dt <= now_bahrain < end_dt:
+                current_booking = b
+                break
+
+            if start_dt > now_bahrain and next_booking is None:
+                next_booking = b
+
+        live_courts.append({
+            "name": court_name,
+            "current": current_booking,
+            "next": next_booking
+        })
+
     return render_template(
         "admin.html",
         users=users,
@@ -815,7 +909,12 @@ def admin():
         search=search,
         court_filter=court_filter,
         status_filter=status_filter,
-        date_filter=date_filter
+        date_filter=date_filter,
+        today_total=today_total,
+        today_attended=today_attended,
+        today_pending=today_pending,
+        live_courts=live_courts,
+        admin_today=today_string
     )
 
 
@@ -918,7 +1017,48 @@ def profile():
         return redirect(url_for("login"))
 
     user = User.query.get_or_404(session["user_id"])
-    return render_template("profile.html", user=user)
+    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
+
+    user_bookings = Booking.query.filter_by(
+        user_id=user.id
+    ).order_by(
+        Booking.date,
+        Booking.start
+    ).all()
+
+    active_bookings = [
+        b for b in user_bookings
+        if b.status != "cancelled"
+    ]
+
+    attended_count = sum(
+        1 for b in user_bookings if b.status == "attended"
+    )
+    no_show_count = sum(
+        1 for b in user_bookings if b.status == "no-show"
+    )
+
+    upcoming_count = 0
+    for b in active_bookings:
+        try:
+            start_dt = datetime.strptime(
+                f"{b.date} {b.start}",
+                "%Y-%m-%d %H:%M"
+            ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+
+            if start_dt > now_bahrain:
+                upcoming_count += 1
+        except ValueError:
+            continue
+
+    return render_template(
+        "profile.html",
+        user=user,
+        total_booking_count=len(active_bookings),
+        attended_count=attended_count,
+        no_show_count=no_show_count,
+        upcoming_count=upcoming_count
+    )
 
 @app.route("/forgot-password", methods=["GET", "POST"])
 @limiter.limit("3 per 15 minutes", methods=["POST"])
