@@ -414,14 +414,19 @@ def book():
 
     duration = end_time - start_time
 
-    if duration > timedelta(hours=2):
-        flash("Bookings may not be longer than 2 hours.")
+    if duration > timedelta(minutes=90):
+        flash("Bookings may not be longer than 1 hour 30 minutes.")
         return redirect(url_for("home"))
 
     today = datetime.now(ZoneInfo("Asia/Bahrain")).date()
+    latest_booking_date = today + timedelta(days=7)
 
     if booking_date < today:
         flash("You cannot book a date in the past.")
+        return redirect(url_for("home"))
+
+    if booking_date > latest_booking_date:
+        flash("Bookings can only be made up to 7 days in advance.")
         return redirect(url_for("home"))
 
     allowed_courts = ["Court 1", "Court 2"]
@@ -586,6 +591,12 @@ def edit_booking(id):
             flash("You cannot move a booking to a past date.")
             return redirect(url_for("edit_booking", id=id))
 
+        latest_booking_date = today + timedelta(days=7)
+
+        if booking_date > latest_booking_date:
+            flash("Bookings can only be made up to 7 days in advance.")
+            return redirect(url_for("edit_booking", id=id))
+
         if start_time >= end_time:
             flash("End time must be after start time.")
             return redirect(url_for("home"))
@@ -596,9 +607,9 @@ def edit_booking(id):
         
         duration = end_time - start_time
 
-        if duration > timedelta(hours=2):
-            flash("Bookings may not be longer than 2 hours.")
-            return redirect(url_for("home"))
+        if duration > timedelta(minutes=90):
+            flash("Bookings may not be longer than 1 hour 30 minutes.")
+            return redirect(url_for("edit_booking", id=id))
 
         existing = Booking.query.filter_by(date=date_input, court=court).all()
 
