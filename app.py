@@ -429,6 +429,16 @@ def book():
         flash("Bookings can only be made up to 7 days in advance.")
         return redirect(url_for("home"))
 
+    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
+    booking_start = datetime.combine(
+        booking_date,
+        start_time.time()
+    ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+
+    if booking_start <= now_bahrain:
+        flash("You cannot book a court for a time that has already passed.")
+        return redirect(url_for("home"))
+
     allowed_courts = ["Court 1", "Court 2"]
 
     if court not in allowed_courts:
@@ -519,8 +529,11 @@ def availability(date_input):
     except ValueError:
         return {"error": "Invalid date."}, 400
 
-    today = datetime.now(ZoneInfo("Asia/Bahrain")).date()
-    if requested_date < today:
+    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
+    today = now_bahrain.date()
+    latest_booking_date = today + timedelta(days=7)
+
+    if requested_date < today or requested_date > latest_booking_date:
         return {"slots": []}
 
     bookings = Booking.query.filter_by(date=date_input).filter(
@@ -534,10 +547,17 @@ def availability(date_input):
     while slot_start < closing:
         slot_end = slot_start + timedelta(minutes=30)
 
+        slot_datetime = datetime.combine(
+            requested_date,
+            slot_start.time()
+        ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+
         for court in ["Court 1", "Court 2"]:
-            available = True
+            available = slot_datetime > now_bahrain
 
             for booking in bookings:
+                if not available:
+                    break
                 if booking.court != court:
                     continue
 
@@ -595,6 +615,16 @@ def edit_booking(id):
 
         if booking_date > latest_booking_date:
             flash("Bookings can only be made up to 7 days in advance.")
+            return redirect(url_for("edit_booking", id=id))
+
+        now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
+        booking_start = datetime.combine(
+            booking_date,
+            start_time.time()
+        ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+
+        if booking_start <= now_bahrain:
+            flash("You cannot move a booking to a time that has already passed.")
             return redirect(url_for("edit_booking", id=id))
 
         if start_time >= end_time:
