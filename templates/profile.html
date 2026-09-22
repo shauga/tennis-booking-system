@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Profile | Compound Tennis Booking</title>
 <style>
-:root{--accent:#79d143;--accent-dark:#4ea326;--glass:rgba(15,19,16,.82);--border:rgba(255,255,255,.15);--text:#fff;--muted:rgba(255,255,255,.7)}
+:root{--accent:#79d143;--accent-dark:#4ea326;--glass:rgba(15,19,16,.82);--border:rgba(255,255,255,.15);--text:#fff;--muted:rgba(255,255,255,.7);--danger:#ffb5b5}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;max-width:100%;overflow-x:hidden}
 body{min-height:100vh;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);background:linear-gradient(rgba(0,0,0,.62),rgba(0,0,0,.84)),url("https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1900&q=85");background-size:cover;background-position:center;background-attachment:fixed}
@@ -15,9 +15,20 @@ body{min-height:100vh;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);
 .profile-hero{display:flex;align-items:center;gap:17px}.avatar{width:76px;height:76px;flex:0 0 76px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--accent-dark),var(--accent));font-size:23px;font-weight:900;box-shadow:0 12px 30px rgba(78,163,38,.3)}.profile-copy h1{font-size:28px}.profile-copy p{margin-top:4px;color:var(--muted);font-size:13px}.role-pill{display:inline-block;margin-top:9px;padding:6px 9px;border-radius:999px;background:rgba(121,209,67,.13);color:#dfffd0;font-size:10px;font-weight:850;text-transform:capitalize}
 .stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{padding:15px;text-align:center;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(255,255,255,.06)}.stat strong{display:block;color:var(--accent);font-size:25px}.stat span{display:block;margin-top:4px;color:var(--muted);font-size:10px}
 .section-title{margin-bottom:15px}.section-title h2{font-size:21px}.section-title p{margin-top:4px;color:var(--muted);font-size:12px}
-.details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.detail{padding:14px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09)}.detail span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em}.detail strong{display:block;margin-top:5px;font-size:14px;overflow-wrap:anywhere}
+.flash{margin-bottom:14px;padding:12px 14px;border-radius:12px;font-size:12px;font-weight:750;border:1px solid rgba(255,255,255,.12)}
+.flash.success{background:rgba(78,163,38,.17);color:#dfffd0;border-color:rgba(121,209,67,.25)}
+.flash.error{background:rgba(180,40,40,.18);color:var(--danger);border-color:rgba(255,100,100,.22)}
+.locked{margin-bottom:13px;padding:14px;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09)}
+.locked span,.field label{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;font-weight:750}
+.locked strong{display:block;margin-top:5px;font-size:14px}
+.edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{min-width:0}.field.mobile{grid-column:1/-1}
+.field input,.field select{width:100%;min-width:0;margin-top:7px;padding:13px 14px;border:1px solid rgba(255,255,255,.14);border-radius:11px;background:rgba(255,255,255,.94);color:#182019;outline:none;font-size:14px}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(121,209,67,.14)}
+.helper{margin-top:6px;color:var(--muted);font-size:10px;line-height:1.4}
+.save{width:100%;min-height:49px;margin-top:15px;border:0;border-radius:11px;background:linear-gradient(135deg,var(--accent-dark),var(--accent));color:white;font-weight:850;font-size:13px;cursor:pointer}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}.action{min-height:48px;display:grid;place-items:center;padding:10px;border-radius:10px;text-decoration:none;color:white;font-weight:800;font-size:13px}.primary{background:linear-gradient(135deg,var(--accent-dark),var(--accent))}.secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
-@media(max-width:650px){body{background-attachment:scroll}.page{padding:20px 13px 36px}.profile-card,.stats-card,.details-card{padding:18px 14px;border-radius:18px}.profile-hero{align-items:flex-start}.avatar{width:62px;height:62px;flex-basis:62px;font-size:19px}.profile-copy h1{font-size:23px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.details{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.action{min-height:52px}}
+@media(max-width:650px){body{background-attachment:scroll}.page{padding:20px 13px 36px}.profile-card,.stats-card,.details-card{padding:18px 14px;border-radius:18px}.profile-hero{align-items:flex-start}.avatar{width:62px;height:62px;flex-basis:62px;font-size:19px}.profile-copy h1{font-size:23px}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.edit-grid{grid-template-columns:1fr}.field.mobile{grid-column:auto}.actions{grid-template-columns:1fr}.action,.save{min-height:52px}.field input,.field select{font-size:16px}}
 </style>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile.css') }}">
 <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
@@ -28,15 +39,19 @@ body{min-height:100vh;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);
 <main class="page">
     <a class="back" href="{{ url_for('home') }}">← Back to Dashboard</a>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+
     <section class="profile-card">
         <div class="profile-hero">
             <div class="avatar">{{ user.username[:2] | upper }}</div>
             <div class="profile-copy">
                 <h1>{{ user.username }}</h1>
                 <p>Your resident account and booking activity.</p>
-                <span class="role-pill">
-                    {% if user.role == "player" %}Resident{% else %}{{ user.role }}{% endif %}
-                </span>
+                <span class="role-pill">{% if user.role == "player" %}Resident{% else %}{{ user.role }}{% endif %}</span>
             </div>
         </div>
     </section>
@@ -52,13 +67,45 @@ body{min-height:100vh;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);
     </section>
 
     <section class="details-card">
-        <div class="section-title"><h2>Resident details</h2><p>Information linked to this account.</p></div>
-        <div class="details">
-            <div class="detail"><span>Username</span><strong>{{ user.username }}</strong></div>
-            <div class="detail"><span>Mobile</span><strong>{{ user.mobile_number }}</strong></div>
-            <div class="detail"><span>Building</span><strong>{{ user.building or "-" }}</strong></div>
-            <div class="detail"><span>Flat</span><strong>{{ user.flat_number or "-" }}</strong></div>
-        </div>
+        <div class="section-title"><h2>Resident details</h2><p>Update the contact and house details linked to your account.</p></div>
+
+        <div class="locked"><span>Username</span><strong>{{ user.username }} 🔒</strong></div>
+
+        <form method="POST" action="{{ url_for('profile') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div class="edit-grid">
+                <div class="field">
+                    <label for="building">Building</label>
+                    <select id="building" name="building" required>
+                        <option value="">Select building</option>
+                        <option value="GS1" {% if user.building == "GS1" %}selected{% endif %}>GS1</option>
+                        <option value="GS2" {% if user.building == "GS2" %}selected{% endif %}>GS2</option>
+                        <option value="GS3" {% if user.building == "GS3" %}selected{% endif %}>GS3</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="flat_number">Flat / House number</label>
+                    <input id="flat_number" name="flat_number" type="text"
+                           value="{{ user.flat_number or '' }}"
+                           placeholder="Enter flat / house number" required>
+                    <div class="helper">Only one account can use the same building + flat/house number.</div>
+                </div>
+
+                <div class="field mobile">
+                    <label for="mobile_number">Mobile number</label>
+                    <input id="mobile_number" name="mobile_number" type="tel"
+                           inputmode="numeric" maxlength="8"
+                           value="{{ user.mobile_number or '' }}"
+                           placeholder="8-digit Bahrain mobile number"
+                           autocomplete="tel" required>
+                    <div class="helper">Must be 8 digits, start with 3 or 6, and not belong to another account.</div>
+                </div>
+            </div>
+
+            <button class="save" type="submit">Save Changes</button>
+        </form>
 
         <div class="actions">
             <a class="action primary" href="{{ url_for('reset') }}">🔒 Change Password</a>
@@ -74,6 +121,10 @@ body{min-height:100vh;font-family:"Segoe UI",Arial,sans-serif;color:var(--text);
 </main>
 
 <script>
+const mobileInput = document.getElementById("mobile_number");
+mobileInput.addEventListener("input", () => {
+    mobileInput.value = mobileInput.value.replace(/\D/g, "").slice(0, 8);
+});
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
         navigator.serviceWorker.register("{{ url_for('static', filename='service-worker.js') }}");

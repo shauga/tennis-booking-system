@@ -340,6 +340,15 @@ def register():
                 error="An account already uses this mobile number."
             )
 
+        if building and flat_number and User.query.filter_by(
+            building=building,
+            flat_number=flat_number
+        ).first():
+            return render_template(
+                "register.html",
+                error="An account already exists for this building and flat/house number."
+            )
+
         user = User(
             username=username,
             password=generate_password_hash(password),
@@ -1072,12 +1081,66 @@ def delete_user(user_id):
     return redirect(url_for("admin"))
 
 
-@app.route("/profile")
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
     user = User.query.get_or_404(session["user_id"])
+
+    if request.method == "POST":
+        building = request.form.get("building", "").strip()
+        flat_number = request.form.get("flat_number", "").strip()
+        mobile_number = request.form.get("mobile_number", "").strip()
+
+        if not building or not flat_number:
+            flash("Building and flat/house number are required.", "error")
+            return redirect(url_for("profile"))
+
+        if (
+            not mobile_number.isdigit()
+            or len(mobile_number) != 8
+            or mobile_number[0] not in ["3", "6"]
+        ):
+            flash(
+                "Mobile number must be exactly 8 digits and start with 3 or 6.",
+                "error"
+            )
+            return redirect(url_for("profile"))
+
+        mobile_owner = User.query.filter(
+            User.mobile_number == mobile_number,
+            User.id != user.id
+        ).first()
+
+        if mobile_owner:
+            flash(
+                "Another account already uses this mobile number.",
+                "error"
+            )
+            return redirect(url_for("profile"))
+
+        house_owner = User.query.filter(
+            User.building == building,
+            User.flat_number == flat_number,
+            User.id != user.id
+        ).first()
+
+        if house_owner:
+            flash(
+                "Another account already exists for this building and flat/house number.",
+                "error"
+            )
+            return redirect(url_for("profile"))
+
+        user.building = building
+        user.flat_number = flat_number
+        user.mobile_number = mobile_number
+        db.session.commit()
+
+        flash("Profile details updated successfully.", "success")
+        return redirect(url_for("profile"))
+
     now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
 
     user_bookings = Booking.query.filter_by(
