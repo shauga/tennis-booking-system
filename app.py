@@ -261,13 +261,33 @@ def home():
     upcoming = []
     history = []
 
-    for booking in user_bookings:
-        booking_date = datetime.strptime(booking.date, "%Y-%m-%d").date()
+    # Use the full Bahrain date and time so completed bookings
+    # move to history immediately after their end time.
+    now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
 
-        if booking_date >= today:
+    for booking in user_bookings:
+        try:
+            booking_end = datetime.strptime(
+                f"{booking.date} {booking.end}",
+                "%Y-%m-%d %H:%M"
+            ).replace(tzinfo=ZoneInfo("Asia/Bahrain"))
+        except ValueError:
+            continue
+
+        if booking_end > now_bahrain:
             upcoming.append(booking)
         else:
             history.append(booking)
+
+    # Display only the 5 most recent past bookings.
+    history.sort(
+        key=lambda b: datetime.strptime(
+            f"{b.date} {b.end}",
+            "%Y-%m-%d %H:%M"
+        ),
+        reverse=True
+    )
+    history = history[:5]
 
     return render_template(
         "index.html",
