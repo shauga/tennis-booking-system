@@ -100,6 +100,17 @@ def is_conflict(new_start, new_end, existing_start, existing_end):
     return new_start < existing_end and new_end > existing_start
 
 
+def is_valid_flat_number(flat_number):
+    """Valid flats: 101-140 through 501-540."""
+    flat_number = str(flat_number).strip()
+    if not flat_number.isdigit() or len(flat_number) != 3:
+        return False
+    flat = int(flat_number)
+    floor = flat // 100
+    unit = flat % 100
+    return 1 <= floor <= 5 and 1 <= unit <= 40
+
+
 def format_bahrain_phone(mobile_number):
     mobile_number = mobile_number.strip()
 
@@ -315,6 +326,12 @@ def register():
         building = request.form.get("building", "").strip()
         flat_number = request.form.get("flat_number", "").strip()
         mobile_number = request.form["mobile_number"].strip()
+
+        if not is_valid_flat_number(flat_number):
+            return render_template(
+                "register.html",
+                error="Flat number must be between 101-140, 201-240, 301-340, 401-440, or 501-540."
+            )
 
         if (
             not mobile_number.isdigit()
@@ -1141,6 +1158,13 @@ def profile():
 
         if not building or not flat_number:
             flash("Building and flat/house number are required.", "error")
+            return redirect(url_for("profile"))
+
+        if not is_valid_flat_number(flat_number):
+            flash(
+                "Flat number must be between 101-140, 201-240, 301-340, 401-440, or 501-540.",
+                "error"
+            )
             return redirect(url_for("profile"))
 
         if (

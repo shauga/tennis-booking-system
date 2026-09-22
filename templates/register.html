@@ -440,10 +440,14 @@
                     <label for="flat_number">Flat number</label>
 
                     <input
-                        type="text"
+                        type="number"
                         id="flat_number"
                         name="flat_number"
-                        placeholder="Flat number"
+                        placeholder="e.g. 101, 235, 540"
+                        min="101"
+                        max="540"
+                        step="1"
+                        inputmode="numeric"
                         required
                     >
                 </div>
@@ -542,6 +546,19 @@
 
             if (password !== confirmation) {
                 alert("Passwords do not match.");
+                return false;
+            }
+
+            const flatInput = document.getElementById("flat_number");
+            const flat = Number(flatInput.value);
+            const floor = Math.floor(flat / 100);
+            const unit = flat % 100;
+            const validFlat = Number.isInteger(flat) &&
+                floor >= 1 && floor <= 5 && unit >= 1 && unit <= 40;
+
+            if (!validFlat) {
+                alert("Enter a valid flat number: 101-140, 201-240, 301-340, 401-440, or 501-540.");
+                flatInput.focus();
                 return false;
             }
 

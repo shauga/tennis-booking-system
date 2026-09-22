@@ -465,7 +465,7 @@
         }
 
         /* VISUAL BOOKING FLOW */
-        .visual-booking-form{display:grid;gap:18px}.booking-step{padding:16px;border:1px solid rgba(255,255,255,.11);border-radius:15px;background:rgba(255,255,255,.055)}.booking-step-title{display:flex;align-items:center;gap:11px;margin-bottom:13px}.booking-step-title>span{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--accent-dark),var(--accent));font-weight:850}.booking-step-title div{display:grid;gap:2px}.booking-step-title strong{font-size:14px}.booking-step-title small{color:var(--muted);font-size:12px}.court-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.court-choice,.duration-choice,.visual-slot{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.075);color:white;border-radius:12px;cursor:pointer;transition:.18s ease}.court-choice{min-height:105px;padding:14px;display:grid;place-items:center;gap:3px}.court-choice b{font-size:25px}.court-choice small{color:var(--muted)}.court-choice.active,.duration-choice.active,.visual-slot.selected{border-color:rgba(121,209,67,.7);background:rgba(121,209,67,.18);box-shadow:0 0 0 3px rgba(121,209,67,.08)}.duration-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.duration-choice{min-height:44px;padding:8px;font-size:12px;font-weight:750}.visual-slots-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.visual-slot{min-height:46px;padding:9px 6px;font-weight:800}.visual-slot:disabled{cursor:not-allowed;opacity:.38;background:rgba(150,150,150,.08);text-decoration:line-through}.visual-empty{grid-column:1/-1;padding:14px;text-align:center;color:var(--muted);font-size:13px}.booking-selection-summary{padding:13px 14px;border-radius:12px;background:rgba(121,209,67,.09);border:1px solid rgba(121,209,67,.18);color:#dfffd0;font-size:13px;font-weight:700;text-align:center}.primary-button:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}@media(max-width:760px){.duration-grid{grid-template-columns:1fr 1fr}.visual-slots-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.court-choice{min-height:92px}}
+        .visual-booking-form{display:grid;gap:18px}.booking-step{padding:16px;border:1px solid rgba(255,255,255,.11);border-radius:15px;background:rgba(255,255,255,.055)}.booking-step-title{display:flex;align-items:center;gap:11px;margin-bottom:13px}.booking-step-title>span{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(135deg,var(--accent-dark),var(--accent));font-weight:850}.booking-step-title div{display:grid;gap:2px}.booking-step-title strong{font-size:14px}.booking-step-title small{color:var(--muted);font-size:12px}.court-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.court-choice,.duration-choice,.visual-slot{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.075);color:white;border-radius:12px;cursor:pointer;transition:.18s ease}.court-choice{min-height:105px;padding:14px;display:grid;place-items:center;gap:3px}.court-choice b{font-size:25px}.court-choice small{color:var(--muted)}.court-choice.active,.duration-choice.active,.visual-slot.selected{border-color:rgba(121,209,67,.7);background:rgba(121,209,67,.18);box-shadow:0 0 0 3px rgba(121,209,67,.08)}.duration-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.duration-choice{min-height:44px;padding:8px;font-size:12px;font-weight:750}.visual-slots-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.visual-slot{min-height:46px;padding:9px 6px;font-weight:800}.visual-slot:disabled{cursor:not-allowed;opacity:.38;background:rgba(150,150,150,.08);text-decoration:line-through}.visual-empty{grid-column:1/-1;padding:14px;text-align:center;color:var(--muted);font-size:13px}.booking-selection-summary{padding:13px 14px;border-radius:12px;background:rgba(121,209,67,.09);border:1px solid rgba(121,209,67,.18);color:#dfffd0;font-size:13px;font-weight:700;text-align:center}.primary-button:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}@media(max-width:760px){.duration-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.visual-slots-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.court-choice{min-height:92px}}
 
         /* CALENDAR */
 
@@ -2419,11 +2419,12 @@
                     </div>
 
                     <div class="booking-step">
-                        <div class="booking-step-title"><span>3</span><div><strong>Choose duration</strong><small>Maximum booking length is 1.5  hours.</small></div></div>
+                        <div class="booking-step-title"><span>3</span><div><strong>Choose duration</strong><small>Maximum booking length is 1.5 hours.</small></div></div>
                         <div class="duration-grid">
                             <button type="button" class="duration-choice" data-minutes="30">30 min</button>
                             <button type="button" class="duration-choice active" data-minutes="60">1 hour</button>
                             <button type="button" class="duration-choice" data-minutes="90">1.5 hours</button>
+                            
                         </div>
                     </div>
 
@@ -2848,7 +2849,15 @@
                 banner.classList.remove("show");
             }
 
-            refreshNextBooking(calendar);
+            if (ownOngoing) {
+                // While the user's booking is in progress, the ongoing banner is
+                // the primary status. Hide the separate "starts in" card.
+                const nextBookingCard = document.getElementById("nextBookingCard");
+                if (nextBookingCard) nextBookingCard.hidden = true;
+            } else {
+                refreshNextBooking(calendar);
+            }
+
             finishStatusLoading();
         }
 
