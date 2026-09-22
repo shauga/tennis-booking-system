@@ -716,6 +716,18 @@
             }
         }
 
+
+        .danger-zone { border-color: rgba(217, 69, 69, 0.38); }
+        .danger-zone .section-header h2 { color: #ff8b8b; }
+        .danger-box { display:grid; grid-template-columns:1.4fr 1fr; gap:24px; align-items:center; padding:22px; border:1px solid rgba(217,69,69,.28); border-radius:16px; background:rgba(217,69,69,.08); }
+        .danger-copy strong { display:block; margin-bottom:8px; color:#ff9a9a; font-size:17px; }
+        .danger-copy p { color:var(--muted); line-height:1.6; font-size:13px; }
+        .danger-box form { display:flex; flex-direction:column; gap:10px; }
+        .danger-box label { color:rgba(255,255,255,.9); font-size:12px; font-weight:700; }
+        .danger-button { width:100%; background:linear-gradient(135deg,#a92525,#df4545); }
+        .danger-button:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(217,69,69,.28); }
+        @media (max-width:700px) { .danger-box { grid-template-columns:1fr; padding:17px; } .danger-button { width:100%; min-height:52px; } }
+
         @media (max-width: 1150px) {
             .stats-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1168,6 +1180,26 @@
             {% endif %}
         </section>
 
+
+        <section class="glass-card danger-zone" id="danger-zone">
+            <div class="section-header">
+                <h2>⚠️ Danger Zone</h2>
+                <p>Permanently remove all resident accounts and their booking history. Landlord and guard accounts will not be affected.</p>
+            </div>
+            <div class="danger-box">
+                <div class="danger-copy">
+                    <strong>Delete all resident accounts</strong>
+                    <p>This action cannot be undone. All accounts with the Resident role and all bookings belonging to those residents will be permanently deleted.</p>
+                </div>
+                <form method="POST" action="{{ url_for('delete_all_residents') }}" onsubmit="return confirmDeleteAllResidents();">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <label for="delete-confirmation">Type <strong>DELETE</strong> to confirm</label>
+                    <input id="delete-confirmation" name="confirmation" type="text" autocomplete="off" placeholder="Type DELETE" required>
+                    <button type="submit" class="danger-button">Delete All Residents</button>
+                </form>
+            </div>
+        </section>
+
         <section class="glass-card" id="bookings">
             <div class="section-header">
                 <h2>Manage Bookings</h2>
@@ -1337,6 +1369,20 @@
             {{ date_values|tojson }},
             "Bookings by Date"
         );
+
+
+        function confirmDeleteAllResidents() {
+            const confirmation = document.getElementById("delete-confirmation").value.trim();
+            if (confirmation !== "DELETE") {
+                alert("Type DELETE exactly to continue.");
+                return false;
+            }
+            return confirm(
+                "Are you absolutely sure?\n\n" +
+                "This will permanently delete ALL resident accounts and ALL bookings belonging to those residents.\n\n" +
+                "Landlord and guard accounts will remain."
+            );
+        }
 
         window.setTimeout(function () {
             document.querySelectorAll(".flash").forEach(function (message) {

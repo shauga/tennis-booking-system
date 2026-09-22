@@ -1081,6 +1081,52 @@ def delete_user(user_id):
     return redirect(url_for("admin"))
 
 
+@app.route("/delete-all-residents", methods=["POST"])
+def delete_all_residents():
+    if session.get("role") != "landlord":
+        abort(403)
+
+    confirmation = request.form.get("confirmation", "").strip()
+
+    if confirmation != "DELETE":
+        flash("Deletion cancelled. Type DELETE exactly to confirm.", "error")
+        return redirect(url_for("admin"))
+
+    resident_ids = [
+        user.id
+        for user in User.query.filter_by(role="player").all()
+    ]
+
+    if not resident_ids:
+        flash("There are no resident accounts to delete.")
+        return redirect(url_for("admin"))
+
+    try:
+        Booking.query.filter(
+            Booking.user_id.in_(resident_ids)
+        ).delete(synchronize_session=False)
+
+        deleted_count = User.query.filter(
+            User.id.in_(resident_ids),
+            User.role == "player"
+        ).delete(synchronize_session=False)
+
+        db.session.commit()
+        flash(
+            f"{deleted_count} resident account(s) and their bookings were deleted.",
+            "success"
+        )
+    except Exception:
+        db.session.rollback()
+        app.logger.exception("Failed to delete all resident accounts.")
+        flash(
+            "Unable to delete resident accounts. No changes were saved.",
+            "error"
+        )
+
+    return redirect(url_for("admin"))
+
+
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
     if not session.get("user_id"):
