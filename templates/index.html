@@ -518,6 +518,68 @@
             background: #3e9a39;
         }
 
+        /* DISTINCT COLOUR CODES */
+        .ongoing-colour {
+            background: #8b5cf6;
+        }
+
+        .court-one-colour {
+            background: #2563eb;
+        }
+
+        .court-two-colour {
+            background: #a855f7;
+        }
+
+        .court-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 72px;
+            padding: 6px 9px;
+            border-radius: 999px;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .court-badge.court-one {
+            background: #2563eb;
+        }
+
+        .court-badge.court-two {
+            background: #a855f7;
+        }
+
+        .court-choice[data-court="Court 1"] {
+            border-color: rgba(37, 99, 235, .42);
+        }
+
+        .court-choice[data-court="Court 2"] {
+            border-color: rgba(168, 85, 247, .42);
+        }
+
+        .court-choice[data-court="Court 1"].active {
+            border-color: #60a5fa;
+            background: rgba(37, 99, 235, .20);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+        }
+
+        .court-choice[data-court="Court 2"].active {
+            border-color: #c084fc;
+            background: rgba(168, 85, 247, .20);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, .10);
+        }
+
+        .court-status-item[data-court-card="Court 1"] {
+            border-left: 4px solid #2563eb;
+        }
+
+        .court-status-item[data-court-card="Court 2"] {
+            border-left: 4px solid #a855f7;
+        }
+
         #calendar {
             padding: 18px;
 
@@ -2460,7 +2522,9 @@
                     <span><b class="orange"></b> No Show</span>
                     <span><b class="grey"></b> Cancelled</span>
                     <span><b class="green"></b> Available</span>
-                    <span><b class="green"></b> Ongoing</span>
+                    <span><b class="ongoing-colour"></b> Ongoing</span>
+                    <span><b class="court-one-colour"></b> Court 1</span>
+                    <span><b class="court-two-colour"></b> Court 2</span>
                 </div>
 
                 <div id="calendar"></div>
@@ -2502,7 +2566,11 @@
                                     <td>{{ b.date }}</td>
                                     <td>{{ b.start }}</td>
                                     <td>{{ b.end }}</td>
-                                    <td>{{ b.court }}</td>
+                                    <td>
+                                        <span class="court-badge {{ 'court-one' if b.court == 'Court 1' else 'court-two' }}">
+                                            {{ b.court }}
+                                        </span>
+                                    </td>
 
                                     <td>
                                         {% if b.status == "booked" %}
@@ -2601,7 +2669,11 @@
                                     <td>{{ b.date }}</td>
                                     <td>{{ b.start }}</td>
                                     <td>{{ b.end }}</td>
-                                    <td>{{ b.court }}</td>
+                                    <td>
+                                        <span class="court-badge {{ 'court-one' if b.court == 'Court 1' else 'court-two' }}">
+                                            {{ b.court }}
+                                        </span>
+                                    </td>
 
                                     <td>
                                         {% if b.status == "booked" %}
@@ -3139,7 +3211,10 @@
                                     </strong>
 
                                     <span>
-                                        ${court} • ${status}
+                                        <span class="court-badge ${court === "Court 1" ? "court-one" : "court-two"}">
+                                            ${court}
+                                        </span>
+                                        • ${status}
                                     </span>
                                 </div>
                             </div>
