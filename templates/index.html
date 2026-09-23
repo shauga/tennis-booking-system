@@ -518,18 +518,12 @@
             background: #3e9a39;
         }
 
-        /* DISTINCT COLOUR CODES */
         .ongoing-colour {
             background: #8b5cf6;
         }
 
-        .court-one-colour {
-            background: #2563eb;
-        }
-
-        .court-two-colour {
-            background: #a855f7;
-        }
+        .court-one-colour { background: #2563eb; }
+        .court-two-colour { background: #a855f7; }
 
         .court-badge {
             display: inline-flex;
@@ -538,47 +532,14 @@
             min-width: 72px;
             padding: 6px 9px;
             border-radius: 999px;
-            color: #ffffff;
+            color: #fff;
             font-size: 11px;
             font-weight: 800;
             white-space: nowrap;
         }
 
-        .court-badge.court-one {
-            background: #2563eb;
-        }
-
-        .court-badge.court-two {
-            background: #a855f7;
-        }
-
-        .court-choice[data-court="Court 1"] {
-            border-color: rgba(37, 99, 235, .42);
-        }
-
-        .court-choice[data-court="Court 2"] {
-            border-color: rgba(168, 85, 247, .42);
-        }
-
-        .court-choice[data-court="Court 1"].active {
-            border-color: #60a5fa;
-            background: rgba(37, 99, 235, .20);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
-        }
-
-        .court-choice[data-court="Court 2"].active {
-            border-color: #c084fc;
-            background: rgba(168, 85, 247, .20);
-            box-shadow: 0 0 0 3px rgba(168, 85, 247, .10);
-        }
-
-        .court-status-item[data-court-card="Court 1"] {
-            border-left: 4px solid #2563eb;
-        }
-
-        .court-status-item[data-court-card="Court 2"] {
-            border-left: 4px solid #a855f7;
-        }
+        .court-badge.court-one { background: #2563eb; }
+        .court-badge.court-two { background: #a855f7; }
 
         #calendar {
             padding: 18px;
@@ -2429,27 +2390,6 @@
 
         </section>
 
-        <section class="glass-card heatmap-card" id="heatmapSection">
-            <div class="section-heading">
-                <h2>Popular Playing Times</h2>
-                <p>Darker blocks indicate periods that have historically been booked more often.</p>
-            </div>
-
-            <div class="heatmap-legend">
-                <span>Quieter</span>
-                <div class="heatmap-scale">
-                    <i data-level="0"></i>
-                    <i data-level="1"></i>
-                    <i data-level="2"></i>
-                    <i data-level="3"></i>
-                    <i data-level="4"></i>
-                </div>
-                <span>Busier</span>
-            </div>
-
-            <div class="heatmap-grid" id="heatmapGrid" aria-label="Booking popularity by time"></div>
-        </section>
-
         <section class="main-grid">
 
             <article class="glass-card booking-card" id="bookSection">
@@ -2507,8 +2447,8 @@
 
                 <div class="section-heading calendar-heading-row">
                     <div>
-                        <h2>Availability Calendar</h2>
-                        <p>Select any date to see available booking slots.</p>
+                        <h2>Court Schedule</h2>
+                        <p>View all Court 1 and Court 2 reservations for the selected Saturday-to-Saturday period. Choose a date to check availability.</p>
                     </div>
 
                     <div class="calendar-quick-controls">
@@ -2604,16 +2544,6 @@
                                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                                 <button type="submit" class="cancel-link">Cancel</button>
                                             </form>
-
-                                            <form
-                                                class="inline-action-form"
-                                                method="POST"
-                                                action="{{ url_for('delete_booking', id=b.id) }}"
-                                                onsubmit="return confirm('Are you sure you want to permanently delete this booking?');"
-                                            >
-                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                                <button type="submit" class="delete-link">Delete</button>
-                                            </form>
                                         {% else %}
                                             -
                                         {% endif %}
@@ -2705,6 +2635,29 @@
 
             {% endif %}
 
+        </section>
+
+    
+
+        <section class="glass-card heatmap-card" id="heatmapSection">
+            <div class="section-heading">
+                <h2>Popular Playing Times</h2>
+                <p>Darker blocks indicate periods that have historically been booked more often.</p>
+            </div>
+
+            <div class="heatmap-legend">
+                <span>Quieter</span>
+                <div class="heatmap-scale">
+                    <i data-level="0"></i>
+                    <i data-level="1"></i>
+                    <i data-level="2"></i>
+                    <i data-level="3"></i>
+                    <i data-level="4"></i>
+                </div>
+                <span>Busier</span>
+            </div>
+
+            <div class="heatmap-grid" id="heatmapGrid" aria-label="Booking popularity by time"></div>
         </section>
 
     </main>
@@ -3128,8 +3081,15 @@
         window.addEventListener("resize", updateActiveMobileNav);
         updateActiveMobileNav();
 
+        function localDateKey(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
         function statusColor(status) {
-            if (status === "ongoing") return "#2e7d32";
+            if (status === "ongoing") return "#8b5cf6";
             if (status === "attended") return "#1976d2";
             if (status === "no-show") return "#f57c00";
             if (status === "cancelled") return "#757575";
@@ -3172,10 +3132,10 @@
             }
 
             list.innerHTML = days.map((day) => {
-                const dayKey = day.toISOString().slice(0, 10);
+                const dayKey = localDateKey(day);
 
                 const dayEvents = events.filter((event) => {
-                    return event.start.toISOString().slice(0, 10) === dayKey;
+                    return localDateKey(event.start) === dayKey;
                 });
 
                 const heading = new Intl.DateTimeFormat("en-US", {
@@ -3211,10 +3171,7 @@
                                     </strong>
 
                                     <span>
-                                        <span class="court-badge ${court === "Court 1" ? "court-one" : "court-two"}">
-                                            ${court}
-                                        </span>
-                                        • ${status}
+                                        ${court} • ${status}
                                     </span>
                                 </div>
                             </div>
@@ -3226,7 +3183,7 @@
                         </div>
                     `;
 
-                const todayKey = new Date().toISOString().slice(0, 10);
+                const todayKey = localDateKey(new Date());
                 const todayClass = dayKey === todayKey ? " today-card" : "";
 
                 return `
@@ -3414,7 +3371,7 @@
                     calendar.today();
                     renderMobileDayList(calendar);
 
-                    const todayValue = new Date().toISOString().slice(0, 10);
+                    const todayValue = localDateKey(new Date());
                     document.getElementById("dateInput").value = todayValue;
                     loadAvailability(todayValue);
                 });

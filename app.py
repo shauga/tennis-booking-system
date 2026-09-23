@@ -292,7 +292,11 @@ def home():
         except ValueError:
             continue
 
-        if booking_end > now_bahrain:
+        # Cancelled reservations belong in history immediately,
+        # even if their original booking time is still in the future.
+        if booking.status == "cancelled":
+            history.append(booking)
+        elif booking_end > now_bahrain:
             upcoming.append(booking)
         else:
             history.append(booking)
