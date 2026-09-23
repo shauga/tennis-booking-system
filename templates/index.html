@@ -2131,7 +2131,8 @@
             }
         }
 
-    </style>
+    .booking-window-note{display:block;margin-top:7px;color:rgba(255,255,255,.65);font-size:11px;line-height:1.4}
+</style>
     <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/mobile.css') }}">
@@ -2407,7 +2408,8 @@
 
                     <div class="booking-step">
                         <div class="booking-step-title"><span>1</span><div><strong>Choose a date</strong><small>Pick the day you want to play.</small></div></div>
-                        <input id="dateInput" type="date" name="date" min="{{ today_date }}" required>
+                        <input id="dateInput" type="date" name="date" min="{{ today_date }}" required max="{{ booking_window_end }}">
+<small class="booking-window-note">Bookings are available within the current Saturday-to-Saturday window.</small>
                     </div>
 
                     <div class="booking-step">

@@ -100,6 +100,14 @@ def is_conflict(new_start, new_end, existing_start, existing_end):
     return new_start < existing_end and new_end > existing_start
 
 
+def get_booking_window(reference_date):
+    """Return the active Saturday-to-Saturday booking window, inclusive."""
+    days_since_saturday = (reference_date.weekday() - 5) % 7
+    window_start = reference_date - timedelta(days=days_since_saturday)
+    window_end = window_start + timedelta(days=7)
+    return window_start, window_end
+
+
 def is_valid_flat_number(flat_number):
     """Valid flats: 101-140 through 501-540."""
     flat_number = str(flat_number).strip()
@@ -254,8 +262,7 @@ def home():
         Booking.status != "cancelled"
     ).count()
 
-    week_start = today - timedelta(days=today.weekday())
-    week_end = week_start + timedelta(days=6)
+    week_start, week_end = get_booking_window(today)
 
     week_used = Booking.query.filter(
         Booking.user_id == session["user_id"],
@@ -310,6 +317,7 @@ def home():
         week_used=week_used,
         no_shows=no_shows,
         today_date=today.strftime("%Y-%m-%d"),
+        booking_window_end=week_end.strftime("%Y-%m-%d"),
         current_user=current_user,
         greeting=greeting,
         heatmap_slots=heatmap_slots
@@ -465,14 +473,14 @@ def book():
         return redirect(url_for("home"))
 
     today = datetime.now(ZoneInfo("Asia/Bahrain")).date()
-    latest_booking_date = today + timedelta(days=7)
+    booking_window_start, booking_window_end = get_booking_window(today)
 
     if booking_date < today:
         flash("You cannot book a date in the past.")
         return redirect(url_for("home"))
 
-    if booking_date > latest_booking_date:
-        flash("Bookings can only be made up to 7 days in advance.")
+    if booking_date > booking_window_end:
+        flash("Bookings are only available within the current Saturday-to-Saturday window.")
         return redirect(url_for("home"))
 
     now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
@@ -502,11 +510,7 @@ def book():
         flash("You may only make 2 bookings per day.")
         return redirect(url_for("home"))
 
-    week_start = booking_date - timedelta(
-        days=booking_date.weekday()
-    )
-
-    week_end = week_start + timedelta(days=6)
+    week_start, week_end = get_booking_window(today)
 
     weekly_bookings = Booking.query.filter(
         Booking.user_id == session["user_id"],
@@ -577,9 +581,9 @@ def availability(date_input):
 
     now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
     today = now_bahrain.date()
-    latest_booking_date = today + timedelta(days=7)
+    booking_window_start, booking_window_end = get_booking_window(today)
 
-    if requested_date < today or requested_date > latest_booking_date:
+    if requested_date < today or requested_date > booking_window_end:
         return {"slots": []}
 
     bookings = Booking.query.filter_by(date=date_input).filter(
@@ -657,10 +661,10 @@ def edit_booking(id):
             flash("You cannot move a booking to a past date.")
             return redirect(url_for("edit_booking", id=id))
 
-        latest_booking_date = today + timedelta(days=7)
+        booking_window_start, booking_window_end = get_booking_window(today)
 
-        if booking_date > latest_booking_date:
-            flash("Bookings can only be made up to 7 days in advance.")
+        if booking_date > booking_window_end:
+            flash("Bookings are only available within the current Saturday-to-Saturday window.")
             return redirect(url_for("edit_booking", id=id))
 
         now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
