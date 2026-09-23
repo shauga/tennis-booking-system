@@ -2155,6 +2155,32 @@
         }
 
     .booking-window-note{display:block;margin-top:7px;color:rgba(255,255,255,.65);font-size:11px;line-height:1.4}
+
+        @media (max-width: 760px) {
+            #calendarTodayShortcut {
+                display: none !important;
+            }
+
+            .upcoming-card .action-link,
+            .upcoming-card .cancel-link {
+                width: 78px !important;
+                min-width: 78px !important;
+                min-height: 36px !important;
+                padding: 8px 10px !important;
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                box-sizing: border-box;
+                text-align: center;
+            }
+
+            .upcoming-card .inline-action-form {
+                display: inline-block;
+                width: 78px;
+                margin: 0;
+            }
+        }
+
 </style>
     <link
     rel="stylesheet"
@@ -2503,7 +2529,7 @@
                         <tbody>
                             {% for b in upcoming %}
                                 <tr>
-                                    <td>{{ b.date }}</td>
+                                    <td>{{ b.date[8:10] }}-{{ b.date[5:7] }}-{{ b.date[0:4] }}</td>
                                     <td>{{ b.start }}</td>
                                     <td>{{ b.end }}</td>
                                     <td>
@@ -2596,7 +2622,7 @@
                         <tbody>
                             {% for b in history %}
                                 <tr>
-                                    <td>{{ b.date }}</td>
+                                    <td>{{ b.date[8:10] }}-{{ b.date[5:7] }}-{{ b.date[0:4] }}</td>
                                     <td>{{ b.start }}</td>
                                     <td>{{ b.end }}</td>
                                     <td>
@@ -3080,6 +3106,12 @@
 
         window.addEventListener("resize", updateActiveMobileNav);
         updateActiveMobileNav();
+
+        function displayDateDMY(value) {
+            if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return value || "";
+            const [year, month, day] = value.split("-");
+            return `${day}-${month}-${year}`;
+        }
 
         function localDateKey(date) {
             const year = date.getFullYear();
