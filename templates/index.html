@@ -2197,6 +2197,42 @@
     rel="apple-touch-icon"
     href="{{ url_for('static', filename='icons/icon-192.png') }}"
 >
+
+<style>
+@media (max-width: 760px) {
+    /* Keep the resident booking action buttons identical in size on phones. */
+    #upcomingSection td:last-child {
+        white-space: nowrap;
+    }
+
+    #upcomingSection td:last-child > a.edit-link,
+    #upcomingSection td:last-child > form.inline-action-form > button.cancel-link {
+        width: 64px !important;
+        min-width: 64px !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        padding: 0 8px !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        line-height: 1 !important;
+        font-size: 12px !important;
+        font-weight: 800 !important;
+        vertical-align: middle !important;
+    }
+
+    #upcomingSection td:last-child > form.inline-action-form {
+        display: inline-block !important;
+        width: 64px !important;
+        margin: 0 0 0 6px !important;
+        padding: 0 !important;
+        vertical-align: middle !important;
+    }
+}
+</style>
+
 </head>
 
 <body>
