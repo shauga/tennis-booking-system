@@ -365,15 +365,6 @@ def register():
                 error="An account already uses this mobile number."
             )
 
-        if building and flat_number and User.query.filter_by(
-            building=building,
-            flat_number=flat_number
-        ).first():
-            return render_template(
-                "register.html",
-                error="An account already exists for this building and flat/house number."
-            )
-
         user = User(
             username=username,
             password=generate_password_hash(password),
@@ -1190,19 +1181,6 @@ def profile():
         if mobile_owner:
             flash(
                 "Another account already uses this mobile number.",
-                "error"
-            )
-            return redirect(url_for("profile"))
-
-        house_owner = User.query.filter(
-            User.building == building,
-            User.flat_number == flat_number,
-            User.id != user.id
-        ).first()
-
-        if house_owner:
-            flash(
-                "Another account already exists for this building and flat/house number.",
                 "error"
             )
             return redirect(url_for("profile"))
