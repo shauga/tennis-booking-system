@@ -119,6 +119,15 @@ def is_valid_flat_number(flat_number):
     return 1 <= floor <= 5 and 1 <= unit <= 40
 
 
+def valid_flats_for_floor(floor):
+    if floor == "GF":
+        return ["50", "51", "52"]
+    if floor in ["1", "2", "3", "4", "5"]:
+        n = int(floor)
+        return [str(x) for x in range(n * 100 + 1, n * 100 + 41)]
+    return []
+
+
 def format_bahrain_phone(mobile_number):
     mobile_number = mobile_number.strip()
 
@@ -330,43 +339,46 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    form_data = {"username": "", "building": "", "floor": "", "flat_number": "", "mobile_number": ""}
+
     if request.method == "POST":
-
-        username = request.form["username"].strip()
-        password = request.form["password"]
-        role = "player"
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
         building = request.form.get("building", "").strip()
+        floor = request.form.get("floor", "").strip()
         flat_number = request.form.get("flat_number", "").strip()
-        mobile_number = request.form["mobile_number"].strip()
+        mobile_number = request.form.get("mobile_number", "").strip()
 
-        if not is_valid_flat_number(flat_number):
+        form_data = {
+            "username": username, "building": building, "floor": floor,
+            "flat_number": flat_number, "mobile_number": mobile_number
+        }
+
+        if floor not in ["GF", "1", "2", "3", "4", "5"]:
+            return render_template("register.html", error="Please select a valid floor.", form_data=form_data)
+
+        if flat_number not in valid_flats_for_floor(floor):
             return render_template(
                 "register.html",
-                error="Flat number must be between 101-140, 201-240, 301-340, 401-440, or 501-540."
+                error="Please select a valid flat number for the chosen floor.",
+                form_data=form_data
             )
 
-        if (
-            not mobile_number.isdigit()
-            or len(mobile_number) != 8
-            or mobile_number[0] not in ["3", "6"]
-        ):
+        if not mobile_number.isdigit() or len(mobile_number) != 8 or mobile_number[0] not in ["3", "6"]:
             return render_template(
                 "register.html",
-                error="Mobile number must be exactly 8 digits and start with 3 or 6."
+                error="Mobile number must be exactly 8 digits and start with 3 or 6.",
+                form_data=form_data
             )
 
         if User.query.filter_by(username=username).first():
-            return render_template(
-                "register.html",
-                error="Username already exists"
-            )
+            return render_template("register.html", error="Username already exists.", form_data=form_data)
 
-        if User.query.filter_by(
-            mobile_number=mobile_number
-        ).first():
+        if User.query.filter_by(mobile_number=mobile_number).first():
             return render_template(
                 "register.html",
-                error="An account already uses this mobile number."
+                error="An account already uses this mobile number.",
+                form_data=form_data
             )
 
         user = User(
@@ -374,17 +386,15 @@ def register():
             password=generate_password_hash(password),
             flat_number=flat_number,
             mobile_number=mobile_number,
-            role=role,
+            role="player",
             building=building
         )
-
         db.session.add(user)
         db.session.commit()
-
         flash("Account created successfully.")
         return redirect(url_for("login"))
 
-    return render_template("register.html")
+    return render_template("register.html", form_data=form_data)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -475,7 +485,7 @@ def book():
         return redirect(url_for("home"))
 
     if booking_date > booking_window_end:
-        flash("Bookings are only available within the current Saturday-to-Saturday window.")
+        flash("Bookings can only be made one week in advance.")
         return redirect(url_for("home"))
 
     now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))
@@ -659,7 +669,7 @@ def edit_booking(id):
         booking_window_start, booking_window_end = get_booking_window(today)
 
         if booking_date > booking_window_end:
-            flash("Bookings are only available within the current Saturday-to-Saturday window.")
+            flash("Bookings can only be made one week in advance.")
             return redirect(url_for("edit_booking", id=id))
 
         now_bahrain = datetime.now(ZoneInfo("Asia/Bahrain"))

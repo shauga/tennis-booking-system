@@ -337,6 +337,12 @@
     rel="apple-touch-icon"
     href="{{ url_for('static', filename='icons/icon-192.png') }}"
 >
+<style>
+.residence-select-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.select-field label{display:block;margin-bottom:7px;font-size:12px;font-weight:700}
+.residence-select-grid select{width:100%;min-height:48px;padding:0 12px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.92);color:#222;font:inherit}
+@media(max-width:650px){.residence-select-grid{grid-template-columns:1fr}.residence-select-grid select{min-height:52px;font-size:16px}}
+</style>
 </head>
 
 <body>
@@ -373,7 +379,7 @@
                     placeholder="Choose a username"
                     autocomplete="username"
                     required
-                >
+                 value="{{ form_data.username if form_data else '' }}">
             </div>
 
             <div class="input-group">
@@ -439,18 +445,18 @@
                 <div class="input-group">
                     <label for="flat_number">Flat number</label>
 
-                    <input
-                        type="number"
-                        id="flat_number"
-                        name="flat_number"
-                        placeholder="e.g. 101, 240, 501, 540"
-                        min="101"
-                        max="540"
-                        step="1"
-                        inputmode="numeric"
-                        required
-                    >
-                <small style="display:block;margin-top:7px;color:rgba(255,255,255,.68);font-size:12px;line-height:1.4;">Valid flats: 101–140, 201–240, 301–340, 401–440, or 501–540. Multiple residents may use the same flat.</small>
+                    <div class="residence-select-grid">
+<div class="select-field"><label for="floor">Floor</label>
+<select id="floor" name="floor" required>
+<option value="">Select floor</option>
+<option value="GF" {% if form_data and form_data.floor == 'GF' %}selected{% endif %}>GF</option>
+{% for n in range(1, 6) %}<option value="{{ n }}" {% if form_data and form_data.floor == n|string %}selected{% endif %}>Floor {{ n }}</option>{% endfor %}
+</select></div>
+<div class="select-field"><label for="flat_number">Flat number</label>
+<select id="flat_number" name="flat_number" data-selected="{{ form_data.flat_number if form_data else '' }}" required disabled>
+<option value="">Select floor first</option>
+</select></div></div>
+                
                 </div>
 
             </div>
@@ -465,7 +471,7 @@
                     placeholder="Enter your mobile number"
                     autocomplete="tel"
                     required
-                >
+                 value="{{ form_data.mobile_number if form_data else '' }}">
             </div>
 
             <button type="submit" class="register-button">
@@ -576,5 +582,22 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+<script>
+(function(){
+ const floor=document.getElementById("floor"), flat=document.getElementById("flat_number");
+ if(!floor||!flat)return;
+ function values(f){
+   if(f==="GF")return ["50","51","52"];
+   const n=Number(f), a=[]; if(n>=1&&n<=5) for(let x=n*100+1;x<=n*100+40;x++)a.push(String(x)); return a;
+ }
+ function fill(restore){
+   const vals=values(floor.value), saved=restore?flat.dataset.selected:"";
+   flat.innerHTML=`<option value="">${vals.length?"Select flat":"Select floor first"}</option>`;
+   vals.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;if(v===saved)o.selected=true;flat.appendChild(o)});
+   flat.disabled=!vals.length;
+ }
+ floor.addEventListener("change",()=>{flat.dataset.selected="";fill(false)}); fill(true);
+})();
+</script>
 </body>
 </html>

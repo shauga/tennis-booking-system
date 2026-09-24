@@ -3500,5 +3500,23 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const input=document.querySelector('form[action="{{ url_for("book") }}"] input[name="date"]') || document.querySelector('input[name="date"]');
+ if(!input)return;
+ const maxDate="{{ booking_window_end }}";
+ function clear(){const e=document.getElementById("advanceDateError");if(e)e.remove();input.setCustomValidity("");}
+ function validate(){
+   clear();
+   if(input.value && input.value>maxDate){
+     const e=document.createElement("div");e.id="advanceDateError";e.textContent="Bookings can only be made one week in advance.";
+     e.style.cssText="margin-top:8px;padding:9px 11px;border-radius:9px;background:rgba(211,47,47,.14);border:1px solid rgba(255,110,110,.35);color:#ffd6d6;font-size:12px;font-weight:700";
+     input.insertAdjacentElement("afterend",e);input.setCustomValidity("Bookings can only be made one week in advance.");return false;
+   } return true;
+ }
+ input.addEventListener("change",validate);input.addEventListener("input",validate);
+ const form=input.closest("form");if(form)form.addEventListener("submit",e=>{if(!validate()){e.preventDefault();input.reportValidity();}});
+});
+</script>
 </body>
 </html>
