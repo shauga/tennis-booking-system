@@ -436,9 +436,9 @@
 
                     <select name="building" id="building" required>
                         <option value="">Select building</option>
-                        <option value="GS1">GS1</option>
-                        <option value="GS2">GS2</option>
-                        <option value="GS3">GS3</option>
+                        <option value="GS1" {% if form_data and form_data.building == 'GS1' %}selected{% endif %}>GS1</option>
+                        <option value="GS2" {% if form_data and form_data.building == 'GS2' %}selected{% endif %}>GS2</option>
+                        <option value="GS3" {% if form_data and form_data.building == 'GS3' %}selected{% endif %}>GS3</option>
                     </select>
                 </div>
 
@@ -556,16 +556,12 @@
                 return false;
             }
 
+            const building = document.getElementById("building").value;
+            const floor = document.getElementById("floor").value;
             const flatInput = document.getElementById("flat_number");
-            const flat = Number(flatInput.value);
-            const floor = Math.floor(flat / 100);
-            const unit = flat % 100;
-            const validFlat = Number.isInteger(flat) &&
-                floor >= 1 && floor <= 5 && unit >= 1 && unit <= 40;
 
-            if (!validFlat) {
-                alert("Enter a valid flat number: 101-140, 201-240, 301-340, 401-440, or 501-540.");
-                flatInput.focus();
+            if (!building || !floor || !flatInput.value) {
+                alert("Please select your building, floor and flat number.");
                 return false;
             }
 
@@ -583,20 +579,80 @@ if ("serviceWorker" in navigator) {
 </script>
 
 <script>
-(function(){
- const floor=document.getElementById("floor"), flat=document.getElementById("flat_number");
- if(!floor||!flat)return;
- function values(f){
-   if(f==="GF")return ["50","51","52"];
-   const n=Number(f), a=[]; if(n>=1&&n<=5) for(let x=n*100+1;x<=n*100+40;x++)a.push(String(x)); return a;
- }
- function fill(restore){
-   const vals=values(floor.value), saved=restore?flat.dataset.selected:"";
-   flat.innerHTML=`<option value="">${vals.length?"Select flat":"Select floor first"}</option>`;
-   vals.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;if(v===saved)o.selected=true;flat.appendChild(o)});
-   flat.disabled=!vals.length;
- }
- floor.addEventListener("change",()=>{flat.dataset.selected="";fill(false)}); fill(true);
+(function () {
+    const building = document.getElementById("building");
+    const floor = document.getElementById("floor");
+    const flat = document.getElementById("flat_number");
+    if (!building || !floor || !flat) return;
+
+    const savedBuilding = building.value;
+    const savedFloor = floor.value;
+    const savedFlat = flat.dataset.selected || "";
+
+    function floorsForBuilding(value) {
+        if (value === "GS1") return ["GF", "1", "2", "3", "4", "5"];
+        if (value === "GS2" || value === "GS3") return ["1", "2", "3", "4", "5"];
+        return [];
+    }
+
+    function flatsForSelection(buildingValue, floorValue) {
+        const values = [];
+        if (!floorValue) return values;
+
+        if (buildingValue === "GS1") {
+            if (floorValue === "GF") return ["50", "51", "52"];
+            const n = Number(floorValue);
+            for (let x = n * 100 + 1; x <= n * 100 + 40; x++) values.push(String(x));
+        } else if (buildingValue === "GS2") {
+            const n = Number(floorValue);
+            for (let x = n * 100 + 1; x <= n * 100 + 14; x++) values.push(String(x));
+        } else if (buildingValue === "GS3") {
+            const n = Number(floorValue);
+            for (let unit = 1; unit <= 4; unit++) values.push(String(n * 10 + unit));
+        }
+        return values;
+    }
+
+    function fillFloors(restore) {
+        const selected = restore ? savedFloor : "";
+        const floors = floorsForBuilding(building.value);
+        floor.innerHTML = '<option value="">' + (floors.length ? 'Select floor' : 'Select building first') + '</option>';
+        floors.forEach(value => {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = value === "GF" ? "GF" : `Floor ${value}`;
+            if (value === selected) option.selected = true;
+            floor.appendChild(option);
+        });
+        floor.disabled = !floors.length;
+        fillFlats(restore);
+    }
+
+    function fillFlats(restore) {
+        const selected = restore ? savedFlat : "";
+        const values = flatsForSelection(building.value, floor.value);
+        flat.innerHTML = '<option value="">' + (values.length ? 'Select flat' : 'Select floor first') + '</option>';
+        values.forEach(value => {
+            const option = document.createElement("option");
+            option.value = value;
+            option.textContent = value;
+            if (value === selected) option.selected = true;
+            flat.appendChild(option);
+        });
+        flat.disabled = !values.length;
+    }
+
+    building.addEventListener("change", () => {
+        flat.dataset.selected = "";
+        fillFloors(false);
+    });
+    floor.addEventListener("change", () => {
+        flat.dataset.selected = "";
+        fillFlats(false);
+    });
+
+    if (savedBuilding) building.value = savedBuilding;
+    fillFloors(true);
 })();
 </script>
 </body>

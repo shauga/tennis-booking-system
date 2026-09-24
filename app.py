@@ -108,25 +108,39 @@ def get_booking_window(reference_date):
     return window_start, window_end
 
 
-def is_valid_flat_number(flat_number):
-    """Valid flats: 101-140 through 501-540."""
-    flat_number = str(flat_number).strip()
-    if not flat_number.isdigit() or len(flat_number) != 3:
-        return False
-    flat = int(flat_number)
-    floor = flat // 100
-    unit = flat % 100
-    return 1 <= floor <= 5 and 1 <= unit <= 40
-
-
-def valid_flats_for_floor(floor):
-    if floor == "GF":
-        return ["50", "51", "52"]
-    if floor in ["1", "2", "3", "4", "5"]:
-        n = int(floor)
-        return [str(x) for x in range(n * 100 + 1, n * 100 + 41)]
+def valid_floors_for_building(building):
+    """Return the permitted floors for each compound building."""
+    if building == "GS1":
+        return ["GF", "1", "2", "3", "4", "5"]
+    if building in ["GS2", "GS3"]:
+        return ["1", "2", "3", "4", "5"]
     return []
 
+
+def valid_flats_for_building_floor(building, floor):
+    """Return valid flat numbers for the selected building and floor."""
+    if floor not in valid_floors_for_building(building):
+        return []
+
+    if building == "GS1":
+        if floor == "GF":
+            return ["50", "51", "52"]
+        n = int(floor)
+        return [str(x) for x in range(n * 100 + 1, n * 100 + 41)]
+
+    if building == "GS2":
+        n = int(floor)
+        return [str(x) for x in range(n * 100 + 1, n * 100 + 15)]
+
+    if building == "GS3":
+        n = int(floor)
+        return [str(n * 10 + unit) for unit in range(1, 5)]
+
+    return []
+
+
+def is_valid_flat_number(building, floor, flat_number):
+    return str(flat_number).strip() in valid_flats_for_building_floor(building, floor)
 
 def format_bahrain_phone(mobile_number):
     mobile_number = mobile_number.strip()
@@ -354,13 +368,24 @@ def register():
             "flat_number": flat_number, "mobile_number": mobile_number
         }
 
-        if floor not in ["GF", "1", "2", "3", "4", "5"]:
-            return render_template("register.html", error="Please select a valid floor.", form_data=form_data)
-
-        if flat_number not in valid_flats_for_floor(floor):
+        if building not in ["GS1", "GS2", "GS3"]:
             return render_template(
                 "register.html",
-                error="Please select a valid flat number for the chosen floor.",
+                error="Please select a valid building.",
+                form_data=form_data
+            )
+
+        if floor not in valid_floors_for_building(building):
+            return render_template(
+                "register.html",
+                error="Please select a valid floor for the chosen building.",
+                form_data=form_data
+            )
+
+        if not is_valid_flat_number(building, floor, flat_number):
+            return render_template(
+                "register.html",
+                error="Please select a valid flat number for the chosen building and floor.",
                 form_data=form_data
             )
 
