@@ -2261,7 +2261,7 @@
     <nav class="navbar">
 
         <div class="navbar-brand">
-            <div class="brand-icon">ðŸŽ¾</div>
+            <div class="brand-icon">&#127934;</div>
 
             <div class="brand-text">
                 <h1>Resident Dashboard</h1>
@@ -2291,7 +2291,7 @@
             <div class="greeting-row">
                 <div>
                     <p class="greeting-kicker">{{ greeting }}</p>
-                    <h2>{{ current_user.username }} ðŸ‘‹</h2>
+                    <h2>{{ current_user.username }} &#128075;</h2>
                     <p>
                         Check live court availability, reserve a court and manage your bookings.
                     </p>
@@ -2305,25 +2305,25 @@
 
         <section class="quick-actions" aria-label="Quick actions">
             <a class="quick-action-card" href="#bookSection">
-                <span class="quick-action-icon">ðŸŽ¾</span>
+                <span class="quick-action-icon">&#127934;</span>
                 <strong>Book Court</strong>
                 <small>Reserve a time</small>
             </a>
 
             <a class="quick-action-card" href="#upcomingSection">
-                <span class="quick-action-icon">ðŸ—“ï¸</span>
+                <span class="quick-action-icon">🗓️</span>
                 <strong>My Bookings</strong>
                 <small>View reservations</small>
             </a>
 
             <a class="quick-action-card" href="#calendarSection">
-                <span class="quick-action-icon">ðŸ“…</span>
+                <span class="quick-action-icon">&#128197;</span>
                 <strong>Calendar</strong>
                 <small>Check availability</small>
             </a>
 
             <a class="quick-action-card" href="{{ url_for('profile') }}">
-                <span class="quick-action-icon">ðŸ‘¤</span>
+                <span class="quick-action-icon">&#128100;</span>
                 <strong>Profile</strong>
                 <small>Account details</small>
             </a>
@@ -2331,7 +2331,7 @@
 
         <section class="install-app-card" id="installAppCard" hidden>
             <div class="install-app-copy">
-                <div class="install-app-icon">ðŸ“²</div>
+                <div class="install-app-icon">📲</div>
                 <div>
                     <strong>Install Tennis Booking</strong>
                     <p id="installAppText">Add the app to your home screen for faster access.</p>
@@ -2343,7 +2343,7 @@
                     Install
                 </button>
                 <button type="button" class="install-dismiss" id="dismissInstallApp" aria-label="Dismiss">
-                    Ã—
+                    ×
                 </button>
             </div>
         </section>
@@ -2354,10 +2354,10 @@
                     {% for category, message in messages %}
                         <div class="toast {{ category }}" data-toast>
                             <div class="toast-icon {% if category == 'success' %}success-burst{% endif %}">
-                                {% if category == "success" %}âœ“{% elif category == "warning" %}âš {% else %}âœ•{% endif %}
+                                {% if category == "success" %}&#10003;{% elif category == "warning" %}&#9888;{% else %}✕{% endif %}
                             </div>
                             <div class="toast-copy">{{ message }}</div>
-                            <button type="button" class="toast-close" aria-label="Dismiss notification">Ã—</button>
+                            <button type="button" class="toast-close" aria-label="Dismiss notification">×</button>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -2366,11 +2366,11 @@
 
         {% if no_shows >= 3 %}
             <div class="danger">
-                âš  You have reached three no-shows. Your booking access is currently blocked.
+                &#9888; You have reached three no-shows. Your booking access is currently blocked.
             </div>
         {% elif no_shows == 2 %}
             <div class="warning">
-                âš  You have two no-shows. One more no-show will block future bookings.
+                &#9888; You have two no-shows. One more no-show will block future bookings.
             </div>
         {% endif %}
 
@@ -2381,7 +2381,7 @@
                         <span class="pulse-dot" aria-hidden="true"></span>
                         LIVE BOOKING
                     </div>
-                    <strong id="ongoingTitle">ðŸŽ¾ Your booking is ongoing</strong>
+                    <strong id="ongoingTitle">&#127934; Your booking is ongoing</strong>
                     <p id="ongoingDetail"></p>
                 </div>
 
@@ -2400,7 +2400,7 @@
 
         <section class="glass-card next-booking-card" id="nextBookingCard" hidden>
             <div class="next-booking-left">
-                <div class="next-booking-icon">â±ï¸</div>
+                <div class="next-booking-icon">&#9201;&#65039;</div>
                 <div>
                     <span class="next-booking-eyebrow">YOUR NEXT BOOKING</span>
                     <h3 id="nextBookingTitle">Court</h3>
@@ -2423,18 +2423,18 @@
             <div class="court-status-grid">
                 <article class="court-status-item is-loading" data-court-card="Court 1">
                     <div class="court-status-top">
-                        <span class="court-status-name">ðŸŽ¾ Court 1</span>
+                        <span class="court-status-name">&#127934; Court 1</span>
                         <span class="court-status-pill available-now" data-court-pill>Available</span>
                     </div>
-                    <p class="court-status-detail" data-court-detail>Checking availabilityâ€¦</p>
+                    <p class="court-status-detail" data-court-detail>Checking availability…</p>
                 </article>
 
                 <article class="court-status-item is-loading" data-court-card="Court 2">
                     <div class="court-status-top">
-                        <span class="court-status-name">ðŸŽ¾ Court 2</span>
+                        <span class="court-status-name">&#127934; Court 2</span>
                         <span class="court-status-pill available-now" data-court-pill>Available</span>
                     </div>
-                    <p class="court-status-detail" data-court-detail>Checking availabilityâ€¦</p>
+                    <p class="court-status-detail" data-court-detail>Checking availability…</p>
                 </article>
             </div>
         </section>
@@ -2452,19 +2452,19 @@
             <div class="dashboard-grid">
 
                 <article class="stat-box">
-                    <div class="stat-icon">ðŸ“…</div>
+                    <div class="stat-icon">&#128197;</div>
                     <h3>{{ today_used }} / 2</h3>
                     <p>Bookings Today</p>
                 </article>
 
                 <article class="stat-box">
-                    <div class="stat-icon">ðŸ—“ï¸</div>
+                    <div class="stat-icon">🗓️</div>
                     <h3>{{ week_used }} / 5</h3>
                     <p>Bookings This Week</p>
                 </article>
 
                 <article class="stat-box">
-                    <div class="stat-icon">âš ï¸</div>
+                    <div class="stat-icon">&#9888;&#65039;</div>
                     <h3>{{ no_shows }} / 3</h3>
                     <p>No Shows</p>
                 </article>
@@ -2501,8 +2501,8 @@
                     <div class="booking-step">
                         <div class="booking-step-title"><span>2</span><div><strong>Choose a court</strong><small>Select Court 1 or Court 2.</small></div></div>
                         <div class="court-choice-grid">
-                            <button type="button" class="court-choice" data-court="Court 1"><b>ðŸŽ¾</b><strong>Court 1</strong><small>Tap to select</small></button>
-                            <button type="button" class="court-choice" data-court="Court 2"><b>ðŸŽ¾</b><strong>Court 2</strong><small>Tap to select</small></button>
+                            <button type="button" class="court-choice" data-court="Court 1"><b>&#127934;</b><strong>Court 1</strong><small>Tap to select</small></button>
+                            <button type="button" class="court-choice" data-court="Court 2"><b>&#127934;</b><strong>Court 2</strong><small>Tap to select</small></button>
                         </div>
                     </div>
 
@@ -2642,7 +2642,7 @@
             {% else %}
 
                 <div class="empty enhanced-empty">
-                    <div class="empty-icon">ðŸŽ¾</div>
+                    <div class="empty-icon">&#127934;</div>
                     <strong>No upcoming bookings</strong>
                     <p>Your next reservation will appear here.</p>
                     <a href="#bookSection" class="empty-action">Book a Court</a>
@@ -2712,7 +2712,7 @@
             {% else %}
 
                 <div class="empty enhanced-empty">
-                    <div class="empty-icon">ðŸ—‚ï¸</div>
+                    <div class="empty-icon">🗂️</div>
                     <strong>No booking history yet</strong>
                     <p>Completed and cancelled reservations will appear here.</p>
                 </div>
@@ -2761,10 +2761,10 @@
     </div>
 
     <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-        <a href="#homeSection" data-nav-target="homeSection"><span>ðŸ </span>Home</a>
-        <a href="#bookSection" data-nav-target="bookSection"><span>ðŸŽ¾</span>Book</a>
-        <a href="#calendarSection" data-nav-target="calendarSection"><span>ðŸ“…</span>Calendar</a>
-        <a href="{{ url_for('profile') }}"><span>ðŸ‘¤</span>Profile</a>
+        <a href="#homeSection" data-nav-target="homeSection"><span>&#127968;</span>Home</a>
+        <a href="#bookSection" data-nav-target="bookSection"><span>&#127934;</span>Book</a>
+        <a href="#calendarSection" data-nav-target="calendarSection"><span>&#128197;</span>Calendar</a>
+        <a href="{{ url_for('profile') }}"><span>&#128100;</span>Profile</a>
     </nav>
 
     <script>
@@ -2864,10 +2864,10 @@
             }).format(nextEvent.start);
 
             document.getElementById("nextBookingTitle").textContent =
-                `ðŸŽ¾ ${nextEvent.extendedProps.court}`;
+                `&#127934; ${nextEvent.extendedProps.court}`;
 
             document.getElementById("nextBookingDetail").textContent =
-                `${dayLabel} â€¢ ${formatClock(nextEvent.start)} â€“ ${formatClock(nextEvent.end)}`;
+                `${dayLabel} &#8226; ${formatClock(nextEvent.start)} &#8211; ${formatClock(nextEvent.end)}`;
 
             document.getElementById("nextBookingCountdown").textContent =
                 formatCountdown(nextEvent.start - now);
@@ -2906,7 +2906,7 @@
                     const remaining = formatCountdown(currentEvent.end - now);
 
                     detail.textContent =
-                        `Available at ${formatClock(currentEvent.end)} â€¢ ${remaining} remaining`;
+                        `Available at ${formatClock(currentEvent.end)} &#8226; ${remaining} remaining`;
                 } else {
                     pill.textContent = "Available";
                     pill.classList.remove("in-use");
@@ -2938,7 +2938,7 @@
                 );
 
                 document.getElementById("ongoingTitle").textContent =
-                    `ðŸŽ¾ ${ownOngoing.extendedProps.court}`;
+                    `&#127934; ${ownOngoing.extendedProps.court}`;
 
                 document.getElementById("ongoingDetail").textContent =
                     `Your court is reserved until ${formatClock(ownOngoing.end)}.`;
@@ -3032,8 +3032,8 @@
 
                 summary.innerHTML = `
                     <strong>${court}</strong><br>
-                    ðŸ“… ${date}<br>
-                    ðŸ•’ ${start} â€“ ${end}
+                    &#128197; ${date}<br>
+                    🕒 ${start} &#8211; ${end}
                 `;
 
                 backdrop.classList.add("show");
@@ -3046,7 +3046,7 @@
             confirmButton.addEventListener("click", () => {
                 confirmed = true;
                 confirmButton.disabled = true;
-                confirmButton.textContent = "Bookingâ€¦";
+                confirmButton.textContent = "Booking…";
                 form.requestSubmit();
             });
 
@@ -3257,11 +3257,11 @@
                                 <div>
                                     <strong>
                                         ${startTime}
-                                        ${endTime ? " â€“ " + endTime : ""}
+                                        ${endTime ? " &#8211; " + endTime : ""}
                                     </strong>
 
                                     <span>
-                                        ${court} â€¢ ${status}
+                                        ${court} &#8226; ${status}
                                     </span>
                                 </div>
                             </div>
@@ -3328,7 +3328,7 @@
                     document.getElementById("startInput").value = slot.start;
                     document.getElementById("endInput").value = minutesToClock(endMin);
                     document.getElementById("courtInput").value = selectedCourt;
-                    document.getElementById("bookingSelectionSummary").textContent = `${selectedCourt} â€¢ ${date} â€¢ ${slot.start} â€“ ${minutesToClock(endMin)}`;
+                    document.getElementById("bookingSelectionSummary").textContent = `${selectedCourt} &#8226; ${date} &#8226; ${slot.start} &#8211; ${minutesToClock(endMin)}`;
                     document.getElementById("visualBookButton").disabled = false;
                 });
                 grid.appendChild(btn);
@@ -3338,7 +3338,7 @@
         async function loadAvailability(date) {
             const grid = document.getElementById("visualSlots");
             if (!date) return;
-            grid.innerHTML = '<div class="visual-empty">Checking availabilityâ€¦</div>';
+            grid.innerHTML = '<div class="visual-empty">Checking availability…</div>';
             document.getElementById("visualBookButton").disabled = true;
             document.getElementById("startInput").value = ""; document.getElementById("endInput").value = "";
             try {
@@ -3385,12 +3385,12 @@
                 if(!modal||!event)return;
                 const p=event.extendedProps||{};
                 document.getElementById("bookingPopupResident").textContent=p.resident_name||"Unknown resident";
-                document.getElementById("bookingPopupFlat").textContent=[p.building,p.flat_number?`Flat ${p.flat_number}`:""].filter(Boolean).join(" â€¢ ")||"Not available";
+                document.getElementById("bookingPopupFlat").textContent=[p.building,p.flat_number?`Flat ${p.flat_number}`:""].filter(Boolean).join(" &#8226; ")||"Not available";
                 document.getElementById("bookingPopupCourt").textContent=p.court||"Court";
                 const d=event.startStr?event.startStr.substring(0,10):"";
                 document.getElementById("bookingPopupDate").textContent=typeof displayDateDMY==="function"?displayDateDMY(d):d;
                 const a=event.start?formatClock(event.start):"", b=event.end?formatClock(event.end):"";
-                document.getElementById("bookingPopupTime").textContent=b?`${a} â€“ ${b}`:a;
+                document.getElementById("bookingPopupTime").textContent=b?`${a} &#8211; ${b}`:a;
                 modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";
             }
             function closeBookingDetails(){const m=document.getElementById("bookingDetailsModal");if(!m)return;m.classList.remove("open");m.setAttribute("aria-hidden","true");document.body.style.overflow=""}
@@ -3457,8 +3457,8 @@
                             return {
                                 html: `
                                     <div class="calendar-event-card">
-                                        <strong>ðŸŽ¾ ${court}</strong>
-                                        <span>${start}${status ? " â€¢ " + status : ""}</span>
+                                        <strong>&#127934; ${court}</strong>
+                                        <span>${start}${status ? " &#8226; " + status : ""}</span>
                                     </div>
                                 `
                             };
@@ -3577,14 +3577,14 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 <div class="booking-details-modal" id="bookingDetailsModal" aria-hidden="true">
 <div class="booking-details-card" role="dialog" aria-modal="true">
-<button type="button" class="booking-details-close" id="bookingDetailsClose" aria-label="Close">Ã—</button>
+<button type="button" class="booking-details-close" id="bookingDetailsClose" aria-label="Close">×</button>
 <h3>Booking details</h3><p class="booking-details-subtitle">Resident information for this reservation.</p>
 <div class="booking-details-grid">
-<div class="booking-detail-item full"><span>Resident</span><strong id="bookingPopupResident">â€”</strong></div>
-<div class="booking-detail-item"><span>Residence</span><strong id="bookingPopupFlat">â€”</strong></div>
-<div class="booking-detail-item"><span>Court</span><strong id="bookingPopupCourt">â€”</strong></div>
-<div class="booking-detail-item"><span>Date</span><strong id="bookingPopupDate">â€”</strong></div>
-<div class="booking-detail-item"><span>Time</span><strong id="bookingPopupTime">â€”</strong></div>
+<div class="booking-detail-item full"><span>Resident</span><strong id="bookingPopupResident">&#8212;</strong></div>
+<div class="booking-detail-item"><span>Residence</span><strong id="bookingPopupFlat">&#8212;</strong></div>
+<div class="booking-detail-item"><span>Court</span><strong id="bookingPopupCourt">&#8212;</strong></div>
+<div class="booking-detail-item"><span>Date</span><strong id="bookingPopupDate">&#8212;</strong></div>
+<div class="booking-detail-item"><span>Time</span><strong id="bookingPopupTime">&#8212;</strong></div>
 </div></div></div>
 </body>
 </html>
