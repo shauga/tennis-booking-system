@@ -2331,7 +2331,7 @@
 
         <section class="install-app-card" id="installAppCard" hidden>
             <div class="install-app-copy">
-                <div class="install-app-icon">ðŸ“²</div>
+                <div class="install-app-icon">Install</div>
                 <div>
                     <strong>Install Tennis Booking</strong>
                     <p id="installAppText">Add the app to your home screen for faster access.</p>
@@ -2343,7 +2343,7 @@
                     Install
                 </button>
                 <button type="button" class="install-dismiss" id="dismissInstallApp" aria-label="Dismiss">
-                    Ã—
+                    X
                 </button>
             </div>
         </section>
@@ -2354,10 +2354,10 @@
                     {% for category, message in messages %}
                         <div class="toast {{ category }}" data-toast>
                             <div class="toast-icon {% if category == 'success' %}success-burst{% endif %}">
-                                {% if category == "success" %}&#10003;{% elif category == "warning" %}&#9888;{% else %}âœ•{% endif %}
+                                {% if category == "success" %}&#10003;{% elif category == "warning" %}&#9888;{% else %}X{% endif %}
                             </div>
                             <div class="toast-copy">{{ message }}</div>
-                            <button type="button" class="toast-close" aria-label="Dismiss notification">Ã—</button>
+                            <button type="button" class="toast-close" aria-label="Dismiss notification">X</button>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -2426,7 +2426,7 @@
                         <span class="court-status-name">&#127934; Court 1</span>
                         <span class="court-status-pill available-now" data-court-pill>Available</span>
                     </div>
-                    <p class="court-status-detail" data-court-detail>Checking availabilityâ€¦</p>
+                    <p class="court-status-detail" data-court-detail>Checking availability...</p>
                 </article>
 
                 <article class="court-status-item is-loading" data-court-card="Court 2">
@@ -2434,7 +2434,7 @@
                         <span class="court-status-name">&#127934; Court 2</span>
                         <span class="court-status-pill available-now" data-court-pill>Available</span>
                     </div>
-                    <p class="court-status-detail" data-court-detail>Checking availabilityâ€¦</p>
+                    <p class="court-status-detail" data-court-detail>Checking availability...</p>
                 </article>
             </div>
         </section>
@@ -2864,10 +2864,10 @@
             }).format(nextEvent.start);
 
             document.getElementById("nextBookingTitle").textContent =
-                `&#127934; ${nextEvent.extendedProps.court}`;
+                `Court: ${nextEvent.extendedProps.court}`;
 
             document.getElementById("nextBookingDetail").textContent =
-                `${dayLabel} &#8226; ${formatClock(nextEvent.start)} &#8211; ${formatClock(nextEvent.end)}`;
+                `${dayLabel} - ${formatClock(nextEvent.start)} - ${formatClock(nextEvent.end)}`;
 
             document.getElementById("nextBookingCountdown").textContent =
                 formatCountdown(nextEvent.start - now);
@@ -2906,7 +2906,7 @@
                     const remaining = formatCountdown(currentEvent.end - now);
 
                     detail.textContent =
-                        `Available at ${formatClock(currentEvent.end)} &#8226; ${remaining} remaining`;
+                        `Available at ${formatClock(currentEvent.end)} - ${remaining} remaining`;
                 } else {
                     pill.textContent = "Available";
                     pill.classList.remove("in-use");
@@ -2938,7 +2938,7 @@
                 );
 
                 document.getElementById("ongoingTitle").textContent =
-                    `&#127934; ${ownOngoing.extendedProps.court}`;
+                    `Court: ${ownOngoing.extendedProps.court}`;
 
                 document.getElementById("ongoingDetail").textContent =
                     `Your court is reserved until ${formatClock(ownOngoing.end)}.`;
@@ -3033,7 +3033,7 @@
                 summary.innerHTML = `
                     <strong>${court}</strong><br>
                     &#128197; ${date}<br>
-                    ðŸ•’ ${start} &#8211; ${end}
+                    Time: ${start} &#8211; ${end}
                 `;
 
                 backdrop.classList.add("show");
@@ -3046,7 +3046,7 @@
             confirmButton.addEventListener("click", () => {
                 confirmed = true;
                 confirmButton.disabled = true;
-                confirmButton.textContent = "Bookingâ€¦";
+                confirmButton.textContent = "Booking...";
                 form.requestSubmit();
             });
 
@@ -3328,7 +3328,7 @@
                     document.getElementById("startInput").value = slot.start;
                     document.getElementById("endInput").value = minutesToClock(endMin);
                     document.getElementById("courtInput").value = selectedCourt;
-                    document.getElementById("bookingSelectionSummary").textContent = `${selectedCourt} &#8226; ${date} &#8226; ${slot.start} &#8211; ${minutesToClock(endMin)}`;
+                    document.getElementById("bookingSelectionSummary").textContent = `${selectedCourt} - ${date} - ${slot.start} - ${minutesToClock(endMin)}`;
                     document.getElementById("visualBookButton").disabled = false;
                 });
                 grid.appendChild(btn);
@@ -3338,7 +3338,7 @@
         async function loadAvailability(date) {
             const grid = document.getElementById("visualSlots");
             if (!date) return;
-            grid.innerHTML = '<div class="visual-empty">Checking availabilityâ€¦</div>';
+            grid.innerHTML = '<div class="visual-empty">Checking availability...</div>';
             document.getElementById("visualBookButton").disabled = true;
             document.getElementById("startInput").value = ""; document.getElementById("endInput").value = "";
             try {
@@ -3577,7 +3577,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 <div class="booking-details-modal" id="bookingDetailsModal" aria-hidden="true">
 <div class="booking-details-card" role="dialog" aria-modal="true">
-<button type="button" class="booking-details-close" id="bookingDetailsClose" aria-label="Close">Ã—</button>
+<button type="button" class="booking-details-close" id="bookingDetailsClose" aria-label="Close">X</button>
 <h3>Booking details</h3><p class="booking-details-subtitle">Resident information for this reservation.</p>
 <div class="booking-details-grid">
 <div class="booking-detail-item full"><span>Resident</span><strong id="bookingPopupResident">&#8212;</strong></div>
