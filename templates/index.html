@@ -2311,7 +2311,7 @@
             </a>
 
             <a class="quick-action-card" href="#upcomingSection">
-                <span class="quick-action-icon">🗓️</span>
+                <span class="quick-action-icon">ðŸ—“ï¸</span>
                 <strong>My Bookings</strong>
                 <small>View reservations</small>
             </a>
@@ -2331,7 +2331,7 @@
 
         <section class="install-app-card" id="installAppCard" hidden>
             <div class="install-app-copy">
-                <div class="install-app-icon">📲</div>
+                <div class="install-app-icon">ðŸ“²</div>
                 <div>
                     <strong>Install Tennis Booking</strong>
                     <p id="installAppText">Add the app to your home screen for faster access.</p>
@@ -2343,7 +2343,7 @@
                     Install
                 </button>
                 <button type="button" class="install-dismiss" id="dismissInstallApp" aria-label="Dismiss">
-                    ×
+                    Ã—
                 </button>
             </div>
         </section>
@@ -2354,10 +2354,10 @@
                     {% for category, message in messages %}
                         <div class="toast {{ category }}" data-toast>
                             <div class="toast-icon {% if category == 'success' %}success-burst{% endif %}">
-                                {% if category == "success" %}&#10003;{% elif category == "warning" %}&#9888;{% else %}✕{% endif %}
+                                {% if category == "success" %}&#10003;{% elif category == "warning" %}&#9888;{% else %}âœ•{% endif %}
                             </div>
                             <div class="toast-copy">{{ message }}</div>
-                            <button type="button" class="toast-close" aria-label="Dismiss notification">×</button>
+                            <button type="button" class="toast-close" aria-label="Dismiss notification">Ã—</button>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -2426,7 +2426,7 @@
                         <span class="court-status-name">&#127934; Court 1</span>
                         <span class="court-status-pill available-now" data-court-pill>Available</span>
                     </div>
-                    <p class="court-status-detail" data-court-detail>Checking availability…</p>
+                    <p class="court-status-detail" data-court-detail>Checking availabilityâ€¦</p>
                 </article>
 
                 <article class="court-status-item is-loading" data-court-card="Court 2">
@@ -2434,7 +2434,7 @@
                         <span class="court-status-name">&#127934; Court 2</span>
                         <span class="court-status-pill available-now" data-court-pill>Available</span>
                     </div>
-                    <p class="court-status-detail" data-court-detail>Checking availability…</p>
+                    <p class="court-status-detail" data-court-detail>Checking availabilityâ€¦</p>
                 </article>
             </div>
         </section>
@@ -2458,7 +2458,7 @@
                 </article>
 
                 <article class="stat-box">
-                    <div class="stat-icon">🗓️</div>
+                    <div class="stat-icon">ðŸ—“ï¸</div>
                     <h3>{{ week_used }} / 5</h3>
                     <p>Bookings This Week</p>
                 </article>
@@ -2712,7 +2712,7 @@
             {% else %}
 
                 <div class="empty enhanced-empty">
-                    <div class="empty-icon">🗂️</div>
+                    <div class="empty-icon">ðŸ—‚ï¸</div>
                     <strong>No booking history yet</strong>
                     <p>Completed and cancelled reservations will appear here.</p>
                 </div>
@@ -3033,7 +3033,7 @@
                 summary.innerHTML = `
                     <strong>${court}</strong><br>
                     &#128197; ${date}<br>
-                    🕒 ${start} &#8211; ${end}
+                    ðŸ•’ ${start} &#8211; ${end}
                 `;
 
                 backdrop.classList.add("show");
@@ -3046,7 +3046,7 @@
             confirmButton.addEventListener("click", () => {
                 confirmed = true;
                 confirmButton.disabled = true;
-                confirmButton.textContent = "Booking…";
+                confirmButton.textContent = "Bookingâ€¦";
                 form.requestSubmit();
             });
 
@@ -3338,7 +3338,7 @@
         async function loadAvailability(date) {
             const grid = document.getElementById("visualSlots");
             if (!date) return;
-            grid.innerHTML = '<div class="visual-empty">Checking availability…</div>';
+            grid.innerHTML = '<div class="visual-empty">Checking availabilityâ€¦</div>';
             document.getElementById("visualBookButton").disabled = true;
             document.getElementById("startInput").value = ""; document.getElementById("endInput").value = "";
             try {
@@ -3385,12 +3385,12 @@
                 if(!modal||!event)return;
                 const p=event.extendedProps||{};
                 document.getElementById("bookingPopupResident").textContent=p.resident_name||"Unknown resident";
-                document.getElementById("bookingPopupFlat").textContent=[p.building,p.flat_number?`Flat ${p.flat_number}`:""].filter(Boolean).join(" &#8226; ")||"Not available";
+                document.getElementById("bookingPopupFlat").textContent=[p.building,p.flat_number?`Flat ${p.flat_number}`:""].filter(Boolean).join(" - ")||"Not available";
                 document.getElementById("bookingPopupCourt").textContent=p.court||"Court";
                 const d=event.startStr?event.startStr.substring(0,10):"";
                 document.getElementById("bookingPopupDate").textContent=typeof displayDateDMY==="function"?displayDateDMY(d):d;
                 const a=event.start?formatClock(event.start):"", b=event.end?formatClock(event.end):"";
-                document.getElementById("bookingPopupTime").textContent=b?`${a} &#8211; ${b}`:a;
+                document.getElementById("bookingPopupTime").textContent=b?`${a} - ${b}`:a;
                 modal.classList.add("open");modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";
             }
             function closeBookingDetails(){const m=document.getElementById("bookingDetailsModal");if(!m)return;m.classList.remove("open");m.setAttribute("aria-hidden","true");document.body.style.overflow=""}
@@ -3577,7 +3577,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 <div class="booking-details-modal" id="bookingDetailsModal" aria-hidden="true">
 <div class="booking-details-card" role="dialog" aria-modal="true">
-<button type="button" class="booking-details-close" id="bookingDetailsClose" aria-label="Close">×</button>
+<button type="button" class="booking-details-close" id="bookingDetailsClose" aria-label="Close">Ã—</button>
 <h3>Booking details</h3><p class="booking-details-subtitle">Resident information for this reservation.</p>
 <div class="booking-details-grid">
 <div class="booking-detail-item full"><span>Resident</span><strong id="bookingPopupResident">&#8212;</strong></div>
