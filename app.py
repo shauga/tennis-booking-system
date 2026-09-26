@@ -220,6 +220,8 @@ def home():
 
     events = []
 
+    calendar_user_lookup = {user.id: user for user in User.query.all()}
+
     for b in bookings:
         try:
             booking_start = datetime.strptime(
@@ -265,7 +267,10 @@ def home():
             "extendedProps": {
                 "court": b.court,
                 "booking_status": display_status,
-                "owner_id": b.user_id
+                "owner_id": b.user_id,
+                "resident_name": calendar_user_lookup[b.user_id].username if b.user_id in calendar_user_lookup else "Unknown resident",
+                "building": calendar_user_lookup[b.user_id].building if b.user_id in calendar_user_lookup else "",
+                "flat_number": calendar_user_lookup[b.user_id].flat_number if b.user_id in calendar_user_lookup else ""
             }
         })
 
